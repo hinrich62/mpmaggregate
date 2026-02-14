@@ -1,0 +1,734 @@
+---
+title: "Aggregating a general-to-general MPM"
+author:
+  - name: "Richard A. Hinrichsen"
+    orcid: "0000-0003-0761-3005"
+output:
+  rmarkdown::html_vignette:
+    number_sections: false
+    mathjax: default
+vignette: >
+  %\VignetteIndexEntry{Aggregating a general-to-general MPM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+**ORCID:** <https://orcid.org/0000-0003-0761-3005>
+
+## Overview
+
+Matrix population models (MPMs) often differ in the number and definition of life-cycle 
+stages used to represent population structure, making comparisons difficult. This is 
+particularly common for size- or stage-structured models, where fine-grained stage 
+definitions may be aggregated to facilitate analysis, interpretation, 
+or comparison of MPMs.
+
+In this vignette, we demonstrate how to aggregate a general MPM 
+to another general MPM using the `mpmaggregate` package. Unlike 
+aggregation approaches that modify the projection interval, general-to-general MPM
+aggregation reconciles differences in stage resolution while leaving the projection
+interval unchanged. Multiple fine-grained stages are combined into a smaller 
+set of biologically meaningful stages, yielding a simplified representation of the life 
+cycle.
+
+As a worked example, we use a size-structured matrix population model for *Rourea induta* 
+originally published by Hoffmann (1999) and obtained from the COMPADRE database 
+(Salguero-Gómez et al., 2015), accessed via `Rcompadre` (Jones et al., 2022). 
+The model contains multiple fine-grained size stages and is therefore well suited 
+to illustrate how aggregation can be used to simplify stage structure while preserving 
+key demographic properties (Salguero-Gómez & Plotkin, 2010).
+
+Throughout the vignette, we emphasize interpretation: how aggregation alters the 
+representation of the life cycle, what demographic information is preserved, and how 
+the resulting aggregated model can be used for comparison or subsequent demographic 
+analyses, such as estimating population growth rates, generation time, or elasticities. 
+Although *Rourea induta* is used here as an example, the approach is broadly applicable 
+to general stage-structured matrix population models across taxa.
+
+In addition, we emphasize how different aggregators influence the reduced model. 
+The vignette compares all four alternative aggregation approaches of `mpm_aggregate()`, 
+which differ in the demographic quantities they are designed to preserve and in the 
+criteria used to fit aggregated transitions. By examining similarities and differences 
+among these approaches, we illustrate how methodological choices affect the structure 
+and interpretation of aggregated stage-structured models.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+## Packages
+We begin by loading the packages used to access matrix population models, perform 
+matrix aggregation, and format output for display.
+```{r packages}
+library(mpmaggregate)
+library(Rcompadre)
+library(kableExtra)
+```
+
+## Data acquisition
+To demonstrate general-to-general aggregation, we use a 14 × 14 matrix population 
+model for *Rourea induta* (MatrixID 246781) from the COMPADRE database (Hoffmann 1999),
+which has a projection interval of 1 year.
+
+```{r fetch-comadre}
+compadre <- cdb_fetch("compadre")
+iii <- (compadre$Genus == "Rourea") & (compadre$Species == "induta")
+compadre.rourea.induta<- compadre[iii, ]
+
+# Development note: save metadata for future use
+#write.table(cdb_metadata(compadre.rourea.induta),file="C:/Users/Rich/projects/mpmaggregate/inst/extdata/rourea-induta.csv",sep=",", col.names=NA)
+
+#return the matrix A from compadre.rourea.induta
+#associated with MatrixID matid
+get_matrix <- function(matid) {
+  compadre2 <- compadre.rourea.induta[compadre.rourea.induta$MatrixID == matid, ]
+   matA <- matA(compadre2)[[1]];
+   matU <- matU(compadre2)[[1]];
+   matF <- matF(compadre2)[[1]]
+   matC <- matC(compadre2)[[1]];
+   return(list(matA=matA,matU=matU,matF=matF,matC=matC))}
+
+mats <- get_matrix(246781)
+matA <- mats$matA
+matU <- mats$matU
+matF <- mats$matF
+matC <- mats$matC
+matF <- matF + matC
+
+#sanity check
+stopifnot(all.equal(unname(matA), unname(matU + matF)))
+
+#1                active          Seedling
+#2                active            Sucker
+#3                active         1-1 .9 mm
+#4                active         2-3 .9 mm
+#5                active         4-5 .9 mm
+#6                active         6-7 .9 mm
+#7                active        8-.9 .9 mm
+#8                active       10-14 .9 mm
+#9                active        15-19.9 mm
+#10               active          20-29 mm
+#11               active          30-39 mm
+#12               active          40-49 mm
+#13               active          50-69 mm
+#14               active            70+ mm
+
+#form the aggregated groups, leaving Seedling and Sucker stages alone
+groups <- list(
+  c(1),                #Seedling
+  c(2),                #Sucker
+  c(3, 4, 5, 6),       #1-7.9 mm
+  c(7, 8, 9, 10),      #8-29 mm
+  c( 11, 12, 13, 14)   #30+ mm
+)
+```
+## Helper functions for demographic quantities
+
+We compute:
+
+- \(\lambda\): spectral radius of \( \mathbf{A} \)
+- \(R_0\): spectral radius of \( \mathbf{F} \left( \mathbf{I} - \mathbf{U} \right)^{-1} \)
+- \(T_a\): generation time (years) under the \(\lambda\) framework
+- \(T_c\): cohort generation time (years) under the \(R_0\) framework
+
+```{r helpers}
+`%||%` <- function(x, y) if (!is.null(x)) x else y
+
+get_R0 <- function(U, F) {
+  I <- diag(nrow(U))
+  N <- solve(I - U)
+  K <- F %*% N
+  spectral_radius(K)
+}
+
+get_Ta <- function(U, F) {
+  generation_time(F, U, framework = "lambda")$generation_time
+}
+
+get_Tc <- function(U, F) {
+  generation_time(F, U, framework = "R0")$generation_time
+}
+```
+
+## Aggregate in four ways
+
+We aggregate the model using the following four combinations of framework and criterion:
+
+1. `framework = "lambda"`, `criterion = "standard"`
+2. `framework = "lambda"`, `criterion = "elasticity"`
+3. `framework = "R0"`, `criterion = "standard"`
+4. `framework = "R0"`, `criterion = "elasticity"`
+
+In the \(\lambda\) framework, we consider both standard aggregation and elasticity-consistent 
+aggregation. Standard aggregation follows the method of Hooley (2000), while elasticity-consistent 
+aggregation uses the "genealogical collapsing" method of Bienvenu et al. (2017). Both approaches 
+maintain the consistency of the asymptotic population growth rate \(\lambda\) and 
+stable stage distribution. Elasticity-consistent aggregation additionally maintains
+consistency of the reproductive values and the elasticities of \(\lambda\) with respect 
+to matrix entries.
+
+We extend these approaches to the \(R_0\) framework, where standard aggregation 
+maintains the consistency of the net reproductive rate \(R_0\) and the cohort stable 
+stage distribution. Elasticity-consistent aggregation in this framework additionally 
+maintains consistency of the cohort reproductive values and the elasticities of \(R_0\) with respect 
+to matrix entries. 
+
+```{r aggregate}
+agg1 <- mpm_aggregate(
+  matU = matU,
+  matF = matF,
+  groups = groups,
+  framework = "lambda",
+  criterion = "standard"
+)
+
+agg2 <- mpm_aggregate(
+  matU = matU,
+  matF = matF,
+  groups = groups,
+  framework = "lambda",
+  criterion = "elasticity"
+)
+
+agg3 <- mpm_aggregate(
+  matU = matU,
+  matF = matF,
+  groups = groups,
+  framework = "R0",
+  criterion = "standard"
+)
+
+agg4 <- mpm_aggregate(
+  matU = matU,
+  matF = matF,
+  groups = groups,
+  framework = "R0",
+  criterion = "elasticity"
+)
+
+# Extract aggregated U and F robustly (in case object field names differ by version)
+extract_U <- function(x) x$matUk_agg %||% x$matU_agg %||% x$matUagg %||% x$U
+extract_F <- function(x) x$matFk_agg %||% x$matF_agg %||% x$matFagg %||% x$F
+extract_A <- function(x) x$matAk_agg %||% x$matA_agg %||% x$matAagg %||% x$A
+
+as_ufA <- function(x) {
+  U <- extract_U(x)
+  F <- extract_F(x)
+  A <- extract_A(x)
+  if (is.null(A) && !is.null(U) && !is.null(F)) A <- U + F
+  list(U = U, F = F, A = A)
+}
+
+m0 <- list(U = matU, F = matF, A = matA)
+m1 <- as_ufA(agg1)
+m2 <- as_ufA(agg2)
+m3 <- as_ufA(agg3)
+m4 <- as_ufA(agg4)
+
+
+eff <- c(NA,agg1$effectiveness,agg2$effectiveness,agg3$effectiveness,agg4$effectiveness)
+
+models <- list(
+  "Original"                  = m0,
+  "Agg lambda + standard"     = m1,
+  "Agg lambda + elasticity"   = m2,
+  "Agg R0 + standard"         = m3,
+  "Agg R0 + elasticity"       = m4
+)
+
+model_labels <- c(
+  Original         = "Original",
+  Agg_lambda_std   = "Agg &lambda; + standard",
+  Agg_lambda_elast = "Agg &lambda; + elasticity",
+  Agg_R0_std       = "Agg R<sub>0</sub> + standard",
+  Agg_R0_elast     = "Agg R<sub>0</sub> + elasticity"
+)
+
+names(models) <- c(
+  "Original",
+  "Agg_lambda_std",
+  "Agg_lambda_elast",
+  "Agg_R0_std",
+  "Agg_R0_elast"
+)
+
+# Basic checks
+stopifnot(all(sapply(models, function(m) !is.null(m$A))))
+#stopifnot(all(sapply(models, function(m) nrow(m$A) == length(groups))))
+
+#show aggregated matrices
+print("Agg λ + standard")
+m1$A
+print("Agg λ + elasticity")
+m2$A
+print("Agg R0 + standard")
+m3$A
+print("Agg R0 + elasticity")
+m4$A
+
+```
+
+**Important.** Elasticity-consistent aggregation can, in some cases, produce biologically 
+infeasible parameter values (Bienvenu et al. 2017). As seen in the aggregated matrices above, 
+aggregation under the \(\lambda\) framework yields a model with a survival probability 
+greater than 1 (1.12). A similar issue arises under the \(R_0\) framework, where 
+elasticity-consistent aggregation results in a survival probability of 1.22. This issue 
+does not occur when using standard aggregation in the \(\lambda\) framework 
+(Hooley, 2000) or in the \(R_0\) framework.
+
+## Compare \(\lambda\), \(R_0\), \(T_a\), and \(T_c\) in a table
+
+```{r results-table}
+
+results <- data.frame(
+  Model  = unname(model_labels[names(models)]),
+  lambda = sapply(models, function(m) spectral_radius(m$A)),
+  R0     = sapply(models, function(m) get_R0(m$U, m$F)),
+  Ta     = sapply(models, function(m) get_Ta(m$U, m$F)),
+  Tc     = sapply(models, function(m) get_Tc(m$U, m$F)),
+  Effectiveness = eff,
+  row.names = NULL,
+  stringsAsFactors = FALSE
+)
+
+n_rows <- nrow(results)
+
+knitr::kable(
+  results,
+  col.names = c(
+    "Model",
+    "<em>&lambda;</em>",
+    "<em>R</em><sub>0</sub>",
+    "<em>T</em><sub>a</sub> (years)",
+    "<em>T</em><sub>c</sub> (years)",
+    "<em>&rho;</em><sup>2</sup>"
+  ),
+  digits = 3,
+  caption = paste0(
+  "<strong>Table 1.</strong> Comparison of demographic properties for the original ",
+  "stage-structured matrix population model of <em>Rourea induta</em> ",
+  "(COMPADRE MatrixID 246781) and four aggregated versions. The original 14 stages ",
+  "are collapsed to 5 while leaving the Seedling and Sucker stages unchanged. ",
+  "&ldquo;Standard&rdquo; denotes use of a standard aggregator and ",
+  "&ldquo;elasticity&rdquo; denotes elasticity-consistent aggregation. ",
+  "<em>T</em><sub>a</sub> is generation time (years) in the <em>&lambda;</em> framework and ",
+  "<em>T</em><sub>c</sub> is cohort generation time (years) in the ",
+  "<em>R</em><sub>0</sub> framework. ",
+  "<em>&rho;</em><sup>2</sup> quantifies aggregation effectiveness, with values closer to 1 ",
+  "indicating closer agreement between the aggregated and reference models."
+  ),
+  format = "html",
+  escape = FALSE
+) |>
+  kable_styling(full_width = TRUE) |>
+  row_spec(0, extra_css = "border-bottom: 2px solid black;") |>
+  row_spec(nrow(results), extra_css = "border-bottom: 2px solid black;") |>
+  footnote(
+    general_title = "",
+    general = paste0(
+      "<span style='font-size: 90%;'>",
+      "<strong>Note.</strong> The projection interval associated with the population ",
+      "growth rate (<em>&lambda;</em>) is 1 year.</span>"
+    ),
+    footnote_as_chunk = TRUE,
+    escape = FALSE
+  )
+```
+
+
+**How to read Table 1.** The first row reports the true demographic parameters of 
+the original matrix population model for *Rourea induta* (Hoffmann 1999), while the 
+remaining rows report estimates obtained from aggregated versions of the MPM. 
+Generation time is preserved under “Agg λ + elasticity,” and cohort generation time 
+is preserved under “Agg R₀ + elasticity.” All aggregated models achieve near-perfect 
+aggregation, with effectiveness values exceeding 0.99.
+
+### Interpretation notes
+
+- Aggregation under the \(\lambda\) framework prioritizes preservation of long-term population growth.
+- Aggregation under the \(R_0\) framework emphasizes lifetime reproductive output.
+
+## Elasticities of \(\lambda\): making them comparable across models
+
+To make the elasticities of the original model comparable with those of the
+aggregated models, we transform the original elasticity matrix to the
+aggregated stage structure as
+
+\[
+\mathbf{E}^{\mathrm{true}}_{\mathrm{agg}}
+=
+\mathbf{P}\, \mathbf{E}\!\bigl(\mathbf{A}\bigr)\, \mathbf{P}^{\top},
+\]
+
+where \( \mathbf{E}\!\bigl(\mathbf{A}\bigr) \) is the elasticity of
+\( \lambda \) with respect to the entries of the original projection
+matrix \( \mathbf{A} \), and \( \mathbf{P} \) is the partitioning matrix
+induced by `groups`. Elasticities for each aggregated model are then
+computed directly from its aggregated projection matrix, and the results
+for all models are plotted together.
+
+```{r elasticities}
+P <- mpm_partition(groups=groups, n=nrow(matA))
+# Elasticity matrices in aggregated space (k x k) for each model
+E_A <- elasticity(matA=matA,framework="lambda")$elasticity
+E_list <- list(
+  "Original" = P %*% E_A %*% t(P),
+  "Agg lambda + standard" = elasticity(matA=m1$A,framework="lambda")$elasticity,
+  "Agg lambda + elasticity" = elasticity(matA=m2$A,framework="lambda")$elasticity,
+  "Agg R0 + standard" = elasticity(matA=m3$A,framework="lambda")$elasticity,
+  "Agg R0 + elasticity" = elasticity(matA=m4$A,framework="lambda")$elasticity
+)
+
+# Build a long data.frame for all nonzero entries (row-major order)
+to_long <- function(M, model_name) {
+  idx <- which(M != 0, arr.ind = TRUE)
+  data.frame(
+    model = model_name,
+    row = idx[, 1],
+    col = idx[, 2],
+    entry = paste(idx[, 1], idx[, 2], sep = ","),
+    elasticity = M[idx],
+    stringsAsFactors = FALSE
+  )
+}
+
+elast_df <- do.call(rbind, Map(to_long, E_list, names(E_list)))
+
+# Keep positive values for log scale
+elast_df <- elast_df[elast_df$elasticity > 0, ]
+
+# Row-major ordering: row 1 entries first, row 2 second, rows 3+ third, etc.
+elast_df <- elast_df[order(elast_df$row, elast_df$col), ]
+
+models_order <- names(E_list)
+entries <- unique(elast_df$entry)
+
+# Create matrix for barplot: rows = models (5), cols = entries
+elast_mat <- sapply(models_order, function(m) {
+  elast_df$elasticity[elast_df$model == m]
+})
+elast_mat <- t(elast_mat)
+rownames(elast_mat) <- models_order
+colnames(elast_mat) <- entries
+```
+
+### Plot elasticities of \(\lambda\) by matrix entry
+
+Each x-axis category corresponds to a matrix entry \([i,j]\) that is nonzero in at least 
+one of the five projection matrices. Within each category, elasticities are shown for 
+the original model and the four aggregated models.
+
+**Figure 1. Elasticities of \(\lambda\) with respect to matrix entries.**  
+Bars are grouped by matrix entry, with colors indicating the different five models. Because 
+elasticities sum to 1 within each matrix, the figure illustrates how the influence on 
+\(\lambda\) is distributed across life-history components. The models shown in the 
+legend correspond to those described in Table 1.
+
+
+```{r lambda-elasticity-plot, fig.width=12}
+# Build biologically meaningful entry labels
+# Build (row, col) vectors in the exact column order of elast_mat
+rc <- do.call(rbind, strsplit(colnames(elast_mat), ","))
+r_vec <- as.integer(rc[, 1])
+c_vec <- as.integer(rc[, 2])
+
+make_entry_label <- function(r, c) {
+  if (r == 1) {
+    bquote(F[1, .(c)])
+  } else if (r == 2) {
+    bquote(C[2, .(c)])
+  } else {
+    bquote(U[.(r), .(c)])
+  }
+}
+
+entry_labels <- mapply(make_entry_label, r_vec, c_vec, SIMPLIFY = FALSE)
+
+
+# Colors by model
+# Same colors as the vital-rate plot for consistency
+cols <- c("#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e")
+
+# Leave room for left legend and long x labels
+op <- par(mar = c(7, 6, 4, 2))
+
+bp <- barplot(
+  elast_mat,
+  beside = TRUE,
+  log = "y",
+  col = cols,
+  border = NA,
+  ylab = expression("Elasticity of " * lambda * " (log scale)"),
+  xaxt = "n",
+  space = c(0.2, 1)   # ← this is the key line
+)
+
+axis(
+  side = 1,
+  at = colMeans(bp),
+  labels = entry_labels,
+  las = 2,
+  cex.axis = 0.9
+)
+
+legend(
+  "topleft",
+  legend = c(
+    "Original",
+    expression(paste("Agg ", lambda, " + standard")),
+    expression(paste("Agg ", lambda, " + elasticity")),
+    expression(paste("Agg ", R[0], " + standard")),
+    expression(paste("Agg ", R[0], " + elasticity"))
+  ),
+  fill = cols,
+  bty = "n",
+  inset = 0.02
+)
+
+par(op)
+```
+
+**How to read Figure 1.** Each x-axis label corresponds to a vital rate represented by 
+a matrix entry \([i,j]\). Fertility entries \(F[i,j]\) describe sexual reproduction, 
+representing the contribution of individuals in stage \(i\) to seedling production 
+over the projection interval. Clonal reproduction entries \(C[i,j]\) represent the 
+contribution of individuals in stage \(i\) to the production of suckers over the 
+projection interval. Survival and transition entries \(U[i,j]\) give the probability 
+that an individual in stage \(i\) survives and transitions to stage \(j\) over the 
+projection interval.
+
+
+## Elasticities of \(R_0\): making them comparable across models
+
+To make the elasticities of the original model comparable with those of the
+aggregated models, we transform the original elasticity matrix to the
+aggregated stage structure as
+
+\[
+\mathbf{E}^{\mathrm{true}}_{\mathrm{agg}}
+=
+\mathbf{P}\, \mathbf{E}\!\bigl(\mathbf{A}\bigr)\, \mathbf{P}^{\top},
+\]
+
+where \( \mathbf{E}\!\bigl(\mathbf{A}\bigr) \) is the elasticity of
+\( R_0 \) with respect to the entries of the original projection
+matrix \( \mathbf{A} \), and \( \mathbf{P} \) is the partitioning matrix
+induced by `groups`. Elasticities for each aggregated model are then
+computed directly from its aggregated projection matrix, and the results
+for all models are plotted together.
+
+```{r elasticities of R0}
+P <- mpm_partition(groups=groups, n=nrow(matA))
+# Elasticity matrices in aggregated space (k x k) for each model
+E_A <- elasticity(matF=matF,matU=matU,framework="R0", normalize=TRUE)$elasticity
+E_list <- list(
+  "Original" = P %*% E_A %*% t(P),
+  "Agg lambda + standard" = elasticity(matF=m1$F, matU=m1$U,framework="R0", normalize=TRUE)$elasticity,
+  "Agg lambda + elasticity" = elasticity(matF=m2$F, matU=m2$U,framework="R0", normalize=TRUE)$elasticity,
+  "Agg R0 + standard" = elasticity(matF=m3$F, matU=m3$U,framework="R0", normalize=TRUE)$elasticity,
+  "Agg R0 + elasticity" = elasticity(matF=m4$F, matU=m4$U,framework="R0", normalize=TRUE)$elasticity
+)
+
+# Build a long data.frame for all nonzero entries (row-major order)
+to_long <- function(M, model_name) {
+  idx <- which(M != 0, arr.ind = TRUE)
+  data.frame(
+    model = model_name,
+    row = idx[, 1],
+    col = idx[, 2],
+    entry = paste(idx[, 1], idx[, 2], sep = ","),
+    elasticity = M[idx],
+    stringsAsFactors = FALSE
+  )
+}
+
+elast_df <- do.call(rbind, Map(to_long, E_list, names(E_list)))
+
+# Keep positive values for log scale
+elast_df <- elast_df[elast_df$elasticity > 0, ]
+
+# Row-major ordering: row 1 entries first, row 2 second, rows 3+ third, etc.
+elast_df <- elast_df[order(elast_df$row, elast_df$col), ]
+
+models_order <- names(E_list)
+entries <- unique(elast_df$entry)
+
+# Create matrix for barplot: rows = models (5), cols = entries
+elast_mat2 <- sapply(models_order, function(m) {
+  elast_df$elasticity[elast_df$model == m]
+})
+elast_mat2 <- t(elast_mat2)
+rownames(elast_mat2) <- models_order
+colnames(elast_mat2) <- entries
+```
+
+### Plot elasticities of \(R_0\) by matrix entry
+
+Each x-axis category corresponds to a matrix entry \([i,j]\) that is nonzero in at least 
+one of the five projection matrices. Within each category, elasticities are shown for 
+the original model and the four aggregated models.
+
+**Figure 2. Elasticities of \(R_0\) with respect to matrix entries.**  
+Bars are grouped by matrix entry, with colors indicating the five different models. Elasticities 
+are normalized to sum to 1 within each matrix, so the figure illustrates how the 
+contribution to \(R_0\) is distributed across life-history components. The models shown 
+in the legend correspond to those described in Table 1.
+
+
+```{r elasticity-R0-plot, fig.width=12, fig.height=6}
+# Build biologically meaningful entry labels
+# Build (row, col) vectors in the exact column order of elast_mat
+rc <- do.call(rbind, strsplit(colnames(elast_mat2), ","))
+r_vec <- as.integer(rc[, 1])
+c_vec <- as.integer(rc[, 2])
+
+make_entry_label <- function(r, c) {
+  if (r == 1) {
+    bquote(F[1, .(c)])
+  } else if (r == 2) {
+    bquote(C[2, .(c)])
+  } else {
+    bquote(U[.(r), .(c)])
+  }
+}
+
+entry_labels <- mapply(make_entry_label, r_vec, c_vec, SIMPLIFY = FALSE)
+
+
+# Colors by model
+# Same colors as the vital-rate plot for consistency
+cols <- c("#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e")
+
+# Leave room for left legend and long x labels
+op <- par(mar = c(7, 6, 4, 2))
+
+bp <- barplot(
+  elast_mat2,
+  beside = TRUE,
+  log = "y",
+  col = cols,
+  border = NA,
+  ylab = expression("Normalized elasticity of " * R[0] * " (log scale)"),
+  xaxt = "n",
+  space = c(0.2, 1)   # ← this is the key line
+)
+
+axis(
+  side = 1,
+  at = colMeans(bp),
+  labels = entry_labels,
+  las = 2,
+  cex.axis = 0.9
+)
+
+legend(
+  "topleft",
+  legend = c(
+    "Original",
+    expression(paste("Agg ", lambda, " + standard")),
+    expression(paste("Agg ", lambda, " + elasticity")),
+    expression(paste("Agg ", R[0], " + standard")),
+    expression(paste("Agg ", R[0], " + elasticity"))
+  ),
+  fill = cols,
+  bty = "n",
+  inset = 0.02
+)
+
+par(op)
+```
+**How to read Figure 2.** Each x-axis label corresponds to a vital rate represented by 
+a matrix entry \([i,j]\). Fertility entries \(F[i,j]\) describe sexual reproduction, 
+representing the contribution of individuals in stage \(i\) to seedling production 
+over the projection interval. Clonal reproduction entries \(C[i,j]\) represent the 
+contribution of individuals in stage \(i\) to the production of suckers over the 
+projection interval. Survival and transition entries \(U[i,j]\) give the probability 
+that an individual in stage \(i\) survives and transitions to stage \(j\) over the 
+projection interval.
+
+Across both Figures 1 and 2, the majority of elasticity is concentrated in a small 
+number of vital rates. In particular, three survival terms—\(U[3,3]\), \(U[4,4]\), 
+and \(U[5,5]\)—account for most of the total elasticity. These entries 
+correspond to stasis within the larger size classes and indicate that population 
+performance, whether measured by \(\lambda\) or \(R_0\), is driven primarily by 
+persistence in these stages. This pattern is consistent across the original and 
+aggregated models, suggesting that aggregation preserves the dominant contributors 
+to asymptotic population dynamics.
+
+## Comparing elasticities of \(\lambda\) and \(R_0\)
+There is remarkable consistency between the elasticities in the \(\lambda\) and \(R_0\) 
+frameworks. In both cases, the same three matrix entries account for the majority of elasticity 
+mass, indicating strong agreement in the demographic processes identified as most 
+influential. These shared entries account for 96% of the total elasticity mass in the 
+\(\lambda\) framework and 94% in the \(R_0\) framework. Elasticities in the \(R_0\) 
+framework are normalized to sum to 1, whereas elasticities in the \(\lambda\) framework 
+require no such normalization because they already sum to 1 by definition.
+
+```{r lambda-vs.-R0-elasticities}
+#compare elasticities of top 3 vital rates
+#top three elasticities in lambda framework
+sum(elast_mat[,c(9,13,15)])/5
+#top three elasticities in R0 framework
+sum(elast_mat2[,c(9,13,15)])/5
+```
+## Summary
+
+Across aggregation methods, estimates of \(\lambda\) and \(R_0\) in Table 1 are broadly 
+similar, indicating that aggregation preserves overall conclusions about population 
+growth. Differences among methods are small and largely reflect whether aggregation 
+prioritizes long-term growth (\(\lambda\)) or lifetime reproduction (\(R_0\)). In 
+contrast, generation time estimates clearly differ between frameworks: generation 
+time in the \(\lambda\) framework (\(T_a\)) and cohort generation time in the \(R_0\) 
+framework (\(T_c\)) reflect fundamentally different perspectives on the pace of life.
+
+Particularly striking is that \(\lambda\) is close to 1 (within 1%), yet 
+\(R_0\) is not. If \(\lambda\) were exactly equal to 1, then \(R_0\) would also necessarily 
+equal 1, and all corresponding demographic quantities would coincide across the two frameworks. 
+That the demographic quantities differ greatly here, reveals how sensitive demographic 
+parameters can sometimes be to even small deviations of the stable growth rate around 
+unity.
+
+Despite these differences in scalar demographic quantities, elasticity patterns are 
+remarkably consistent across frameworks. Elasticities of \(\lambda\) and 
+\(R_0\) identify the same matrix entries as dominant contributors, with most of the elasticity 
+mass shared between them. This consistency suggests that, in this example, the 
+demographic processes driving population growth and reproductive output are essentially 
+the same, even when different aggregation objectives are used.
+
+## References
+
+Bienvenu, F., Akçay, E., Legendre, S. and McCandlish, D.M. 2017. The genealogical
+decomposition of a matrix population model with applications to the aggregation
+of stages. Theoretical Population Biology, 115, 69-80. 
+https://doi.org/10.1016/j.tpb.2017.04.002
+
+Hoffmann, W.A., 1999. Fire and population dynamics of woody plants in a neotropical 
+savanna: matrix model projections. Ecology, 80(4), 1354-1369.
+https://doi.org/10.1890/0012-9658(1999)080[1354:FAPDOW]2.0.CO;2
+
+Hooley, D. E. 2000. Collapsed matrices with (almost) the same eigenstuff. The 
+College Mathematics Journal, 31(4), 297–299. https://doi.org/10.1080/07468342.2000.11974162
+
+Jones, O. R., Barks, P., Stott, I., James, T. D., Levin, S., Petry, W. K., Capdevila, P., 
+Che-Castaldo, J., Jackson, J., Römer, G., Schuette, C., Thomas, C. C., & Salguero-Gómez, R. 2022. 
+Rcompadre and Rage—Two R packages to facilitate the use of the COMPADRE and COMADRE
+databases and calculation of life-history traits from matrix population models. 
+Methods in Ecology and Evolution, 13(4), 770–781. https://doi.org/10.1111/2041-210X.13792
+
+Salguero-Gómez R., & Plotkin, J. B. (2010). Matrix dimensions bias demographic 
+inferences: implications for comparative plant demography. The American Naturalist, 
+176(6), 710–722. https://doi.org/10.1086/657044
+
+Salguero-Gómez, R., Jones, O. R., Archer, C. R., Buckley, Y. M., Che-Castaldo, J., 
+Caswell, H., Hodgson, D., Scheuerlein, A., Conde, D. A., Brinks, E., de Buhr, H., 
+Farack, C., Gottschalk, F., Hartmann, A., Henning, A., Hoppe, G., Römer, G., 
+Runge, J., Ruoff, T., Wille, J., Zeh, S., Davison, R., Vieregg, D., Baudisch, A., 
+Altwegg, R., Colchero, F., Dong, M., de Kroon, H., Lebreton, J. -D., Metcalf, C. J. E., 
+Neel, M. M., Parker, I. M., Takada, T., Valverde, T., Vélez-Espino, L. A., Wardle, G. M., 
+Franco, M., & Vaupel, J. W. (2015). The COMPADRE Plant Matrix Database: an open 
+online repository for plant demography. Journal of Ecology, 103, 202–218. 
+https://doi.org/10.1111/1365-2745.12334

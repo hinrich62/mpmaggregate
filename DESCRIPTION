@@ -1,18 +1,38 @@
 Package: mpmaggregate
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
+Title: Aggregate Matrix Population Models
+Version: 0.1.1
 Authors@R: c(
-    person(
-      "Jane", "Doe",
-      email = "jane@example.com",
-      role = c("aut", "cre")
-    )
+      person(c("Richard", "A."), "Hinrichsen", , "r.hinrichsen.ecology@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-0761-3005")),
+      person("Roberto", "Salguero-Gomez", , "rob.salguero@zoo.ox.ac.uk", role = "aut",
+           comment = c(ORCID = "0000-0002-6085-4433")),
+      person("Hiroyuki", "Yokomizo", ,"hiroyuki.yokomizo@nies.go.jp", role="aut",
+           comment = c(ORCID = "0000-0001-9814-8465"))
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Maintainer: Richard A. Hinrichsen <r.hinrichsen.ecology@gmail.com>
+Description: Aggregates matrix population models (MPMs) in both the lambda (stable 
+    growth rate) and R0 (net reproductive rate) frameworks, including standard and 
+    elasticity-consistent aggregators. Standard aggregation in the lambda framework 
+    maintains consistent lambda and stable stage distribution, while standard aggregation 
+    in the R0 framework maintains consistent R0 and cohort stable stage distribution. 
+    Elasticity-consistent aggregators maintain these same consistencies with respect
+    to chosen framework and additionally preserves consistent reproductive values in 
+    the lambda framework and cohort reproductive values in the R0 framework. Aggregation 
+    can take the form of general-to-general MPM (mpm_aggregate) or Leslie-to-Leslie
+    MPM (leslie_aggregate).
+License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
-URL: https://github.com/hinrich62/mpmaggregate
-BugReports: https://github.com/hinrich62/mpmaggregate/issues
+Imports:
+    expm
+Suggests:
+    testthat (>= 3.0.0),
+    roxygen2,
+    knitr,
+    rmarkdown,
+    Rcompadre,
+    kableExtra,
+    rphylopic
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+RoxygenNote: 7.3.3

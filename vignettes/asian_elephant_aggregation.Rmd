@@ -1,0 +1,874 @@
+---
+title: "Aggregating Asian Elephant Matrix Population Models for Comparative Demography with mpmaggregate"
+author:
+  - name: "Richard A. Hinrichsen"
+    orcid: "0000-0003-0761-3005"
+output:
+  rmarkdown::html_vignette:
+    number_sections: false
+    mathjax: default
+vignette: >
+  %\VignetteIndexEntry{Aggregating Asian Elephant Matrix Population Models for Comparative Demography with mpmaggregate}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+**ORCID:** <https://orcid.org/0000-0003-0761-3005>
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+
+## Overview
+
+Age-structured matrix population models (MPMs) often differ in both age-class resolution 
+and projection interval, even when describing the same species. This creates 
+a common practical problem in comparative demography: how can models that represent 
+life cycles at different temporal scales be made comparable?
+
+In this vignette, we demonstrate how to use the package **`mpmaggregate`** to aggregate a 
+fine-grained, annual (1-year) Asian elephant Leslie MPM into a coarser, 5-year 
+Leslie MPM, and then compare the aggregated model to an independently parameterized coarser 
+Leslie model representing a different population. Because age classes in a Leslie model 
+are defined by the model’s time step, aggregating from 1-year to 5-year intervals 
+necessarily redefines the age-class structure (i.e., age classes become 5-year bins) 
+while producing transitions appropriate to the longer projection interval.
+
+We illustrate this aggregation and comparison using two Asian elephant populations from
+**COMADRE** database (Salguero‐Gómez et al. 2016) accessed via **`Rcompadre`** (Jones et al. 2022):
+
+- Population/model ID: **249273** — a coarser model with a 5-year projection interval, 
+Nagarhole National Park population, India (Chelliah et al. 2013)  
+- Population/model ID: **249274** — a fine-grained model with a 1-year projection interval, 
+Periyar Reserve population, India (Goswami et al. 2014)
+
+Both MPMs are Leslie matrix models parameterized using a post-breeding census formulation. 
+Our primary focus is the aggregation of the model for the Priiyar Reserve population
+with an annual projection interval to a model with a 5-year projection interval. To do this, we use 
+`leslie_aggregate()`, which performs Leslie-to-Leslie MPM aggregation under four alternative assumptions 
+defined by the choice of demographic **framework** (`"lambda"` or `"R0"`) and 
+**criterion** (`"standard"` or `"elasticity"`):
+
+1. `framework = "lambda"`, `criterion = "standard"`  
+2. `framework = "lambda"`, `criterion = "elasticity"`  
+3. `framework = "R0"`, `criterion = "standard"`  
+4. `framework = "R0"`, `criterion = "elasticity"`
+
+`criterion = "elasticity"` implies elasticity-consitent aggregation (Hinrichsen et al., 2026).
+
+Throughout, we emphasize uncovering the important demographic differences between the two
+Asian elephant populations, using $\lambda$, $R_0$, generation times, and elasticities.  We also 
+examine at how results differ depending on  framework 
+(`"lambda"` or `"R0"`) and criterion  (`"standard"` or `"elasticity"`).
+
+## Packages
+We begin by loading the packages used to access matrix population models, perform 
+matrix aggregation, and format output for display.
+```{r packages}
+library(mpmaggregate)
+library(Rcompadre)
+library(kableExtra)
+library(rphylopic)
+```
+## Data acquisition (COMADRE via Rcompadre)
+
+We download a stable COMADRE release using `cdb_fetch()`, then subset to 
+the two matrices of interest.
+
+```{r fetch-comadre}
+comadre <- cdb_fetch("comadre", version = "4.23.3.1")
+iii <- (comadre$Genus == "Elephas") & (comadre$Species == "maximus")
+comadre.asian.elephant <- comadre[iii, ]
+
+# Development note: save metadata for future use
+#write.table(cdb_metadata(comadre.asian.elephant),file="C:/Users/Rich/projects/mpmaggregate/inst/extdata/elephas-maximus.csv",sep=",", col.names=NA)
+```
+
+### Subset to the two Asian elephant matrices
+
+**Important:** COMADRE/COMPADRE use a matrix identifier column that is named  `MatrixID`.
+
+```{r subset-elephant}
+#return the matrix A from comadre.asian.elephant
+#associated with MatrixID matid
+get_matrix <- function(matid) {
+  comadre2 <- comadre.asian.elephant[comadre.asian.elephant$MatrixID == matid, ]
+  A <- matA(comadre2)[[1]]
+  return(A)
+}
+
+matA.coarse <- get_matrix(249273) # Asian elephant Leslie matrix with projection interval of 5 years
+matA.fine <- get_matrix(249274) #Asian elephant Leslie matrix with projection interval of 1 year
+
+#confine to females
+matA.coarse <- matA.coarse[1:12, 1:12]
+
+#make matA.fine a true Leslie matrix
+matA.fine[60, 60] <- 0
+
+#verify projection intervals and matrix dimensionality
+comadre.asian.elephant$MatrixID
+comadre.asian.elephant$ProjectionInterval
+c(nrow(matA.coarse), nrow(matA.fine))
+
+```
+
+## Define the aggregation target
+
+We aggregate Periyar Reserve Asian elephant MPM from an annual time step to a 5-year time step, allowing
+us to directly compare its vital rates to those of the Nagarhole National Park Asian elephant MPM.
+
+Rigorous methods for Leslie-to-Leslie MPM aggregation are implemented using the function 
+`leslie_aggregate()`, which provides four aggregation options. If the goal is to preserve 
+the asymptotic population growth rate, one uses `framework = "lambda"`. Alternatively, 
+if the goal is to preserve the net reproductive rate, one uses `framework = "R0"`.
+
+Within either framework, aggregation can be performed using a standard or an 
+elasticity-consistent criterion. The standard aggregator ensures consistency of the stable age 
+distribution implied by the model, while the elasticity-consistent aggregator additionally 
+ensures consistency of reproductive values. In the `R0` framework, the stable age distribution 
+is the cohort stable age distribution, and reproductive values are the 
+cohort reproductive values.
+
+We now run `leslie_aggregate()` under the four combinations.
+
+## Run aggregation under four option sets
+```{r leslie-aggregation}
+
+res <- leslie_aggregate(
+  matA.fine,
+  ngroups = 12,
+  framework = "lambda",
+  criterion = "standard"
+)
+matB.lambda.stand <- res$matAk_agg
+matB.lambda.stand.eff <- res$effectiveness
+
+res <- leslie_aggregate(
+  matA.fine,
+  ngroups = 12,
+  framework = "lambda",
+  criterion = "elasticity"
+)
+matB.lambda.elast <- res$matAk_agg
+matB.lambda.elast.eff <- res$effectiveness
+
+res <- leslie_aggregate(
+  matA.fine,
+  ngroups = 12,
+  framework = "R0",
+  criterion = "standard"
+)
+matB.R0.stand <- res$matAk_agg
+matB.R0.stand.eff<- res$effectiveness
+
+res <- leslie_aggregate(
+  matA.fine,
+  ngroups = 12,
+  framework = "R0",
+  criterion = "elasticity"
+)
+matB.R0.elast <- res$matAk_agg
+matB.R0.elast.eff <- res$effectiveness
+```
+## Comparison to an existing coarse (5-year) matrix
+
+The COMADRE matrix for Asian elephants in the Nagarhole National Park already has 
+`ProjectionInterval == 5`, so we compare the aggregated annual-to-5-year matrices 
+for Asian elephants in the Periyar Reserve against it.
+
+## Demographic metrics for Leslie matrices 
+
+For Leslie matrices, fertility rates occupy the first row, while survival probabilities 
+occupy the subdiagonal. This structure allows direct decomposition of the projection 
+matrix \( \mathbf{A} \) into survival probability \( \mathbf{U} \)and fertility 
+rate \( \mathbf{F} \)components.
+
+```{r leslie-metrics}
+
+leslie_UF <- function(A) {
+  F <- matrix(0, nrow(A), ncol(A))
+  F[1, ] <- A[1, ]
+  U <- A
+  U[1, ] <- 0
+  list(U = U, F = F)
+}
+
+get_R0_leslie <- function(A) {
+  uf <- leslie_UF(A)
+  U <- uf$U
+  F <- uf$F
+  
+  I <- diag(nrow(U))
+  N <- solve(I - U)
+  K <- F %*% N
+  spectral_radius(K)
+}
+
+get_generation_time_lambda <- function(A) {
+  uf <- leslie_UF(A)
+  U <- uf$U
+  F <- uf$F
+  I <- diag(nrow(U))
+  N <- solve(I - U)
+  gt = generation_time(F, U, framework = "lambda")$generation_time
+  return(gt)
+}
+
+get_generation_time_R0 <- function(A) {
+  uf <- leslie_UF(A)
+  U <- uf$U
+  F <- uf$F
+  I <- diag(nrow(U))
+  N <- solve(I - U)
+  gt = generation_time(F, U, framework = "R0")$generation_time
+  return(gt)
+}
+
+```
+
+## Comparison of λ and \(R_0\) across five models. First develop a list of models with associated projection matrices
+
+```{r define-models}
+models <- list(
+  "Orig. coarse"             = matA.coarse,
+  "Agg λ + standard"         = matB.lambda.stand,
+  "Agg λ + elasticity"       = matB.lambda.elast,
+  "Agg R0 + standard"        = matB.R0.stand,
+  "Agg R0 + elasticity"      = matB.R0.elast
+)
+```
+
+## Next table the results for λ and \(R_0\)
+
+```{r lambda - r0 - table}
+
+results <- data.frame(
+  Model  = names(models),
+  lambda = sapply(models, spectral_radius),
+  R0     = sapply(models, get_R0_leslie),
+  Ta     = sapply(models, get_generation_time_lambda)*5,  #measure in years
+  Tc     = sapply(models, get_generation_time_R0)*5,      #measure in years
+  Eff    = c(NA,matB.lambda.stand.eff,matB.lambda.elast.eff,
+             matB.R0.stand.eff,matB.R0.elast.eff),
+  row.names = NULL,
+  stringsAsFactors = FALSE
+)
+
+n_rows <- nrow(results)
+
+knitr::kable(
+  results,
+  col.names = c(
+    "Model",
+    "<em>&lambda;</em>",
+    "<em>R</em><sub>0</sub>",
+    "<em>T</em><sub>a</sub> (years)",
+    "<em>T</em><sub>c</sub> (years)",
+    "<em>&rho;</em><sup>2</sup>"
+  ),
+  digits = 3,
+  caption = paste0(
+  "<strong>Table 1.</strong> Demographic comparison between two Asian elephant populations, ",
+  "represented by an original coarse-stage Leslie model from Nagarhole National Park ",
+  "(MatrixID 249273) and aggregated versions of a Leslie model from Periyar Reserve ",
+  "(MatrixID 249274). Metrics include population growth rate (<em>&lambda;</em>), ",
+  "net reproductive rate (<em>R</em><sub>0</sub>), generation time (years; ",
+  "<em>T</em><sub>a</sub>), cohort generation time (years; ",
+  "<em>T</em><sub>c</sub>), and aggregation effectiveness (<em>&rho;</em><sup>2</sup>). ",
+  "&ldquo;Standard&rdquo; denotes use of a standard aggregator and ",
+  "&ldquo;elasticity&rdquo; denotes elasticity-consistent aggregation."
+  ),
+  format = "html",
+  escape = FALSE
+) |>
+  kable_styling(full_width = TRUE) |>
+  row_spec(0, extra_css = "border-bottom: 2px solid black;") |>
+  row_spec(nrow(results), extra_css = "border-bottom: 2px solid black;") |>
+  footnote(
+    general_title = "",
+    general = paste0(
+      "<span style='font-size: 90%;'>",
+      "<strong>Note.</strong> The projection interval associated with the population ",
+      "growth rate (<em>&lambda;</em>) is 5 years.</span>"
+    ),
+    footnote_as_chunk = TRUE,
+    escape = FALSE
+  )
+```
+
+
+**How to read Table 1.** Across aggregation approaches, estimates of \(\lambda\) and \(R_0\) 
+for the Periyar Reserve population are similar and indicate faster population growth 
+and shorter generation time relative to the Nagarhole National Park population. Each row 
+corresponds to a Leslie matrix population model: the original coarse model from Nagarhole 
+National Park (COMADRE) and four aggregated versions derived from the annual Periyar Reserve 
+model. Differences among the aggregated models reflect the aggregation objective 
+(preserving \(\lambda\) versus preserving \(R_0\)) and the fitting criterion 
+(standard versus elasticity-consistent). Values of aggregation effectiveness, 
+\(\rho^2\), indicate good agreement with the original model for the Periyar Reserve 
+population.
+
+### Interpretation notes
+
+- Aggregation under the \(\lambda\) framework prioritizes preservation of long-term population growth.
+- Aggregation under the \(R_0\) framework emphasizes lifetime reproductive output.
+
+## Plot figures
+**Figure 1. Vital rates across five Leslie models.**
+Panel (a) shows fertility rates (first-row entries of the Leslie matrix, \(F_i\)).
+Panel (b) shows survival probabilities (subdiagonal entries, \(S_i = A_{i+1,i}\)).
+Bars are grouped by vital rate; within each group, colors correspond to the five 
+different models (original coarse model for the Nagarhole National Park population  
+and four 5-year aggregations of the model for the Periyar Reserve population). 
+Only vital rates that are nonzero in at least one model are shown. The models in 
+the Figure Legend are as described in the caption of Table 1.
+
+
+```{r vital-rates-barplot, fig.height=8, fig.width=10}
+#Asian elephant
+uuid <- "7c9ab182-175d-4f02-96d0-09c1e5212bff"
+img <- get_phylopic(uuid = uuid,
+                    format = "raster",
+                    height = 691)
+
+# ---- Helpers to extract Leslie vital rates from A ----
+extract_fertility <- function(A) {
+  as.numeric(A[1, ])
+}
+
+extract_survival <- function(A) {
+  n <- nrow(A)
+  s_sub  <- A[cbind(2:n, 1:(n - 1))]  # A[i+1, i]
+  c(s_sub)
+}
+
+model_names <- names(models)
+
+# Choose distinct colors for the 5 models (base R friendly)
+cols <- c("#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e")
+
+# Build rate-by-model matrices so:
+# rows = models (5 bars), cols = vital rates (groupings)
+F_by_model <- t(sapply(models, extract_fertility))  # 5 x n
+S_by_model <- t(sapply(models, extract_survival))   # 5 x n-1
+
+# Name columns (vital rates)
+n <- nrow(models[[1]])
+colnames(F_by_model) <- paste0("F", 1:n)
+colnames(S_by_model) <- c(paste0("S", 1:(n - 1)))
+
+# Keep only vital rates that are nonzero in at least one model
+keep_F <- colSums(abs(F_by_model) > 0) > 0
+keep_S <- colSums(abs(S_by_model) > 0) > 0
+
+F_plot <- F_by_model[, keep_F, drop = FALSE]
+S_plot <- S_by_model[, keep_S, drop = FALSE]
+
+# Leave extra space on the right for a legend that won't overlap bars
+op <- par(
+  mfrow = c(2, 1),
+  mar = c(7, 4, 3, 7),
+  oma = c(0, 0, 0, 0)
+)
+
+op <- par(
+  mfrow = c(2, 1),
+  mar = c(5, 4, 1.5, 7),
+  oma = c(0, 0, 0, 0)
+)
+
+ylim = c(0, max(F_plot))
+mydiff = ylim[2] - ylim[1]
+ylim[2] = ylim[2] + .3 * mydiff
+
+# Panel (a): Fertility rates
+barplot(
+  F_plot,
+  ylim = ylim,
+  beside = TRUE,
+  col = cols,
+  border = "white",
+  las = 2,
+  ylab = "Fertility rate",
+  main = "Fertility rates"
+)
+mtext("(a)",
+      side = 3,
+      adj = 0,
+      line = 0.2)
+lims <-  par("usr")
+mydiff <- lims[4] - lims[3]
+add_phylopic_base(
+  img = img,
+  x =  NULL,
+  y = mydiff * .9,
+  height =  .3 * mydiff * dim(img)[1] / 1024
+)
+
+# One legend for both panels, placed in the right margin of the top panel
+par(xpd = NA)
+legend(
+  "topright",
+  inset = c(-0.18, 0.00),
+  legend = model_names,
+  fill = cols,
+  bty = "n",
+  cex = 0.9
+)
+par(xpd = FALSE)
+ylim <-  c(0, max(S_plot))
+mydiff <- ylim[2] - ylim[1]
+ylim[2] <- ylim[2] + .3 * mydiff
+
+# Panel (b): Survival probs
+barplot(
+  S_plot,
+  ylim = ylim,
+  beside = TRUE,
+  col = cols,
+  border = "white",
+  las = 2,
+  ylab = "Survival probability",
+  main = "Survival probabilities"
+)
+mtext("(b)",
+      side = 3,
+      adj = 0,
+      line = 0.2)
+lims <-  par("usr")
+mydiff <- lims[4] - lims[3]
+add_phylopic_base(
+  img = img,
+  x =  NULL,
+  y = mydiff * .9,
+  height =  .3 * mydiff * dim(img)[1] / 1024
+)
+
+# Legend for bottom panel (same placement logic)
+par(xpd = NA)
+legend(
+  "topright",
+  inset = c(-0.18, 0.00),
+  legend = model_names,
+  fill = cols,
+  bty = "n",
+  cex = 0.9
+)
+par(xpd = FALSE)
+
+par(op)
+```
+**How to read Figure 1.** Each x-axis label is a vital rate. For fertility, \(F_i\) 
+is the contribution of age class \(i\) to newborns over the projection interval. 
+For survival, \(S_i\) is the probability of surviving and advancing from age class \(i\) 
+to \(i+1\) over the projection interval. Because the four aggregated matrices are 
+all 5-year models, differences among them reflect the aggregation objective
+(\(\lambda\) vs \(R_0\)) and the fitting criterion (standard vs elasticity-consistent), 
+rather than differences in projection interval. The figure shows that the Nagarhole 
+National Park population has lower growth rate than the Periyar Reserve population 
+due to lower fertility rates.The silhouette is from PhyloPic 
+(https://www.phylopic.org; Keesey, 2023) and were added using the rphylopic R 
+package (Gearty & Jones, 2023). The silhouette was contributed as follows: 
+"Elephas maximus" by  T. Michael Keesey (2011; CC BY 3.0).
+
+**Figure 2. Elasticities of \(\lambda\) with respect to matrix entries.**
+Elasticities quantify the proportional effect on \(\lambda\) of proportional changes 
+in each vital rate. Panel (a) shows elasticities with respect to fertility rates 
+(first row), and panel (b) shows elasticities with respect to survival probabilities 
+(subdiagonal). Bars are grouped by vital rate, with colors indicating the five
+different models (original coarse model for the Nagarhole National Park population  
+and four 5-year aggregations of the model for the Periyar Reserve population). 
+Elasticities sum to 1 within each matrix, so the panels show how the influence 
+on \(\lambda\) is distributed across life-history components. The models in the 
+figure legend are as described in the caption of Table 1.
+
+
+```{r lambda-elasticities-barplot, fig.height=8, fig.width=10}
+
+#Asian elephant
+uuid <- "7c9ab182-175d-4f02-96d0-09c1e5212bff"
+img <- get_phylopic(uuid = uuid,
+                    format = "raster",
+                    height = 691)
+
+# Compute elasticity matrices for each model (same dimensions as A)
+E_models <- lapply(models, function(A) {
+  E <- mpmaggregate::elasticity(A, framework = "lambda")$elasticity
+  as.matrix(E)
+})
+
+# ---- Helpers to extract Leslie elasticities from an elasticity matrix ----
+extract_fertility_elast <- function(E) {
+  as.numeric(E[1, ])
+}
+
+extract_survival_elast <- function(E) {
+  n <- nrow(E)
+  e_sub  <- E[cbind(2:n, 1:(n - 1))]  # elasticity of A[i+1, i]
+  as.numeric(e_sub)
+}
+
+model_names <- names(models)
+
+# Same colors as the vital-rate plot for consistency
+cols <- c("#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e")
+
+# Build elasticity-by-model matrices so:
+# rows = models (5 bars), cols = vital rates (groupings)
+F_el_by_model <- t(sapply(E_models, extract_fertility_elast))  # 5 x n
+S_el_by_model <- t(sapply(E_models, extract_survival_elast))   # 5 x n-1
+
+# Name columns (vital rates)
+n <- nrow(models[[1]])
+colnames(F_el_by_model) <- paste0("F", 1:n)
+colnames(S_el_by_model) <- c(paste0("S", 1:(n - 1)))
+
+# Keep only elasticities that are nonzero in at least one model
+keep_F <- colSums(abs(F_el_by_model) > 0) > 0
+keep_S <- colSums(abs(S_el_by_model) > 0) > 0
+
+F_el_plot <- F_el_by_model[, keep_F, drop = FALSE]
+S_el_plot <- S_el_by_model[, keep_S, drop = FALSE]
+
+# Leave extra space on the right for legends that won't overlap bars
+op <- par(
+  mfrow = c(2, 1),
+  mar = c(7, 4, 3, 7),
+  oma = c(0, 0, 0, 0)
+)
+
+op <- par(
+  mfrow = c(2, 1),
+  mar = c(5, 4, 1.5, 7),
+  oma = c(0, 0, 0, 0)
+)
+
+# Panel (a): Elasticities with respect to fertility rates
+barplot(
+  F_el_plot,
+  beside = TRUE,
+  ylim = c(0, 0.20),
+  col = cols,
+  border = "white",
+  las = 2,
+  ylab = "Elasticity of λ",
+  main = "Elasticities with respect to fertility rates"
+)
+mtext("(a)",
+      side = 3,
+      adj = 0,
+      line = 0.2)
+lims <-  par("usr")
+mydiff <- lims[4] - lims[3]
+add_phylopic_base(
+  img = img,
+  x =  NULL,
+  y = mydiff * .75,
+  height =  .3 * mydiff * dim(img)[1] / 1024
+)
+par(xpd = NA)
+legend(
+  "topright",
+  inset = c(-0.15, -0.05),
+  legend = model_names,
+  fill = cols,
+  bty = "n",
+  cex = 0.9
+)
+par(xpd = FALSE)
+
+# Panel (b): Elasticities with respect to survival probabilities
+barplot(
+  S_el_plot,
+  beside = TRUE,
+  ylim = c(0, .20),
+  col = cols,
+  border = "white",
+  las = 2,
+  ylab = "Elasticity of λ",
+  main = "Elasticities with respect to survival probabilities"
+)
+mtext("(b)",
+      side = 3,
+      adj = 0,
+      line = 0.2)
+lims <-  par("usr")
+mydiff <- lims[4] - lims[3]
+add_phylopic_base(
+  img = img,
+  x =  NULL,
+  y = mydiff * .75,
+  height =  .3 * mydiff * dim(img)[1] / 1024
+)
+
+par(xpd = NA)
+legend(
+  "topright",
+  inset = c(-0.15, -0.05),
+  legend = model_names,
+  fill = cols,
+  bty = "n",
+  cex = 0.9
+)
+par(xpd = FALSE)
+
+par(op)
+```
+**How to read Figure 2.** A larger elasticity (of lambda with respect to matrix 
+entries) for a given vital rate means that small proportional changes to that vital 
+rate would have a comparatively larger effect on long-term population growth. For 
+Asian elephants, elasticities are  concentrated in survival probabilities rather 
+than fertility rates, reflecting the strong influence of survivorship on \(\lambda\). 
+Aggregation methods yield similar elasticities.  Fertility rates and late-life 
+survival probabilities have higher elasticities in the Nagarhole National Park 
+population than in the Periyar Reserve population.The silhouette is from PhyloPic 
+(https://www.phylopic.org; Keesey, 2023) and were added using the rphylopic R 
+package (Gearty & Jones, 2023). The silhouette was contributed as follows: 
+"Elephas maximus" by  T. Michael Keesey (2011; CC BY 3.0).
+
+**Figure 3. Elasticities of \(R_0\) with respect to matrix entries.**
+Elasticities quantify the proportional effect on \(R_0\) of proportional changes 
+in each vital rate. Panel (a) shows elasticities with respect to fertility rates 
+(first row), and panel (b) shows elasticities with respect to survival probabilities 
+(subdiagonal). Bars are grouped by vital rate, with colors indicating the five
+different models ((original coarse model for the Nagarhole National Park population  
+and four 5-year aggregations of the model for the Periyar Reserve population).
+Elasticities are normalized to sum to 1 within each matrix, so the panels 
+show how the influence on \(R_0\) is distributed across life-history components. 
+The models in the figure legend are as described in caption of Table 1.
+
+
+```{r R0-elasticities-barplot, fig.height=8, fig.width=10}
+
+#Asian elephant
+uuid <- "7c9ab182-175d-4f02-96d0-09c1e5212bff"
+img <- get_phylopic(uuid = uuid,
+                    format = "raster",
+                    height = 691)
+
+# Compute elasticity matrices for each model (same dimensions as A)
+# These are elasticities of R0 wrt to matrix entries
+# normalized to sum to 1.
+E_models <- lapply(models, function(A) {
+  n <- nrow(A)
+  matU <- A
+  matU[1,] <- 0
+  matF <- matrix(0,n,n)
+  matF[1,] <- A[1,]
+  E <- mpmaggregate::elasticity(matA=NULL, matF = matF, matU = matU, 
+                  framework = "R0", normalize = TRUE)$elasticity
+  as.matrix(E)
+})
+
+# ---- Helpers to extract Leslie elasticities from an elasticity matrix ----
+extract_fertility_elast <- function(E) {
+  as.numeric(E[1, ])
+}
+
+extract_survival_elast <- function(E) {
+  n <- nrow(E)
+  e_sub  <- E[cbind(2:n, 1:(n - 1))]  # elasticity of A[i+1, i]
+  as.numeric(e_sub)
+}
+
+model_names <- names(models)
+
+# Same colors as the vital-rate plot for consistency
+cols <- c("#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e")
+
+# Build elasticity-by-model matrices so:
+# rows = models (5 bars), cols = vital rates (groupings)
+F_el_by_model <- t(sapply(E_models, extract_fertility_elast))  # 5 x n
+S_el_by_model <- t(sapply(E_models, extract_survival_elast))   # 5 x n-1
+
+# Name columns (vital rates)
+n <- nrow(models[[1]])
+colnames(F_el_by_model) <- paste0("F", 1:n)
+colnames(S_el_by_model) <- c(paste0("S", 1:(n - 1)))
+
+# Keep only elasticities that are nonzero in at least one model
+keep_F <- colSums(abs(F_el_by_model) > 0) > 0
+keep_S <- colSums(abs(S_el_by_model) > 0) > 0
+
+F_el_plot2 <- F_el_by_model[, keep_F, drop = FALSE]
+S_el_plot2 <- S_el_by_model[, keep_S, drop = FALSE]
+
+# Leave extra space on the right for legends that won't overlap bars
+op <- par(
+  mfrow = c(2, 1),
+  mar = c(7, 4, 3, 7),
+  oma = c(0, 0, 0, 0)
+)
+
+op <- par(
+  mfrow = c(2, 1),
+  mar = c(5, 4, 1.5, 7),
+  oma = c(0, 0, 0, 0)
+)
+
+# Panel (a): Elasticities with respect to fertility rates
+barplot(
+  F_el_plot2,
+  beside = TRUE,
+  ylim = c(0, 0.20),
+  col = cols,
+  border = "white",
+  las = 2,
+  ylab = expression("Normalized elasticity of " * R[0] * ""),
+  main = "Elasticities with respect to fertility rates"
+)
+mtext("(a)",
+      side = 3,
+      adj = 0,
+      line = 0.2)
+lims <-  par("usr")
+mydiff <- lims[4] - lims[3]
+add_phylopic_base(
+  img = img,
+  x =  NULL,
+  y = mydiff * .75,
+  height =  .3 * mydiff * dim(img)[1] / 1024
+)
+par(xpd = NA)
+legend(
+  "topright",
+  inset = c(-0.15, -0.05),
+  legend = model_names,
+  fill = cols,
+  bty = "n",
+  cex = 0.9
+)
+par(xpd = FALSE)
+
+# Panel (b): Elasticities with respect to survival probabilities
+barplot(
+  S_el_plot2,
+  beside = TRUE,
+  ylim = c(0, .20),
+  col = cols,
+  border = "white",
+  las = 2,
+  ylab = expression("Normalized elasticity of " * R[0] * ""),
+  main = "Elasticities with respect to survival probabilities"
+)
+mtext("(b)",
+      side = 3,
+      adj = 0,
+      line = 0.2)
+lims <-  par("usr")
+mydiff <- lims[4] - lims[3]
+add_phylopic_base(
+  img = img,
+  x =  NULL,
+  y = mydiff * .75,
+  height =  .3 * mydiff * dim(img)[1] / 1024
+)
+
+par(xpd = NA)
+legend(
+  "topright",
+  inset = c(-0.15, -0.05),
+  legend = model_names,
+  fill = cols,
+  bty = "n",
+  cex = 0.9
+)
+par(xpd = FALSE)
+
+par(op)
+```
+**How to read Figure 3.** A larger elasticity (of \(R_0\) with respect to matrix 
+entries) for a given vital rate means that small proportional changes to that vital 
+rate would have a comparatively larger effect on long-term population growth. For 
+Asian elephants, elasticities are  concentrated in survival probabilities rather 
+than fertility rates, reflecting the strong influence of survivorship on \(R_0\). 
+Aggregation methods yield similar elasticities.  Fertility rates and late-life 
+survival probabilities have higher elasticities in the Nagarhole National Park 
+population than in the Periyar Reserve population.The silhouette is from PhyloPic 
+(https://www.phylopic.org; Keesey, 2023) and were added using the rphylopic R 
+package (Gearty & Jones, 2023). The silhouette was contributed as follows: 
+"Elephas maximus" by  T. Michael Keesey (2011; CC BY 3.0).
+
+### Comparing elasticities of \(\lambda\) and \(R_0\)
+
+We compare elasticities of \(\lambda\) and \(R_0\) primarily through visual 
+inspection, focusing on the relative distribution of elasticity mass between fertility 
+and survival components of the matrix.
+
+Across models, elasticity patterns under the \(\lambda\) and \(R_0\) frameworks are 
+similar. In both cases, elasticities are dominated by survival transitions, 
+consistent with the life history of long-lived species such as Asian elephants. The 
+allocation of elasticity mass to fertility terms differs only slightly between the 
+two frameworks.
+
+Specifically, the total elasticity mass associated with fertility rates is 0.17 under 
+the \(\lambda\) framework and 0.14 under the \(R_0\) framework. This small difference 
+indicates that elasticities of \(\lambda\) place slightly greater weight 
+on fertility than do elasticities of \(R_0\), although survival probability remains 
+the dominant contributor in both cases.
+
+```{r lambda-vs.-R0-elasticities}
+#compare elasticities with respect to fertility rates between frameworks 
+#fertility rates in lambda framework 
+  sum(F_el_plot)/5
+#fertility rates in R0 framework
+  sum(F_el_plot2)/5
+```
+
+## Summary
+
+This vignette demonstrates how age-structured matrix population models defined at 
+different projection intervals can be made comparable through aggregation using 
+`leslie_aggregate()`. By aggregating an annual Leslie model for the Asian elephant 
+Periyar Reserve population to a 5-year time step, we directly compared it to an independently 
+parameterized coarser model representing the Nagarhole National Park population.
+
+Estimates of \(\lambda\) and \(R_0\) for the Periyar Reserve population indicate faster 
+population growth and shorter generation time relative to the Nagarhole National Park 
+population (Table 1). The lower growth rate of the Nagarhole National Park population 
+is primarily attributable to lower fertility rates, as reflected in the aggregated 
+models (Figure 1). Elasticities indicate the survival probability dominates fertility rates
+as the most influential group of vital rates controlling \(\lambda\) and \(R_0\).
+
+
+## References
+
+Chelliah, K., Bukka, H. and Sukumar, R., 2013. Modeling harvest rates and numbers 
+from age and sex ratios: a demonstration for elephant populations. Biological 
+Conservation, 165, 54-61. https://doi.org/10.1016/j.biocon.2013.05.008
+
+Gearty, W., & Jones, L. A. 2023. rphylopic: An R package for fetching, transforming, 
+and visualising PhyloPic silhouettes. Methods in Ecology and Evolution, 2700-2708.
+https://doi.org/10.1111/2041-210X.14221
+
+Goswami, V.R., Vasudev, D. and Oli, M.K., 2014. The importance of conflict-induced 
+mortality for conservation planning in areas of human–elephant co-occurrence. Biological 
+Conservation, 176, 191-198. https://doi.org/10.1016/j.biocon.2014.05.026
+
+Hinrichsen, R. A. 2023. Aggregation of Leslie matrix models with application to 
+ten diverse animal species. Population Ecology, 65(3), 146-166.
+https://doi.org/10.1002/1438-390X.12149
+
+Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From theory to
+application: Elasticity-consistent aggregation of Leslie matrix population
+models for comparative demography. bioRxiv, preprint.
+https://doi.org/10.64898/2026.02.04.703802
+
+Jones, O. R., Barks, P., Stott, I., James, T. D., Levin, S., Petry, W. K., Capdevila, P., 
+Che-Castaldo, J., Jackson, J., Römer, G., Schuette, C., Thomas, C. C., & Salguero-Gómez, R. 2022. 
+Rcompadre and Rage—Two R packages to facilitate the use of the COMPADRE and COMADRE
+databases and calculation of life-history traits from matrix population models. 
+Methods in Ecology and Evolution, 3(4), 770–781. https://doi.org/10.1111/2041-210X.13792
+
+Salguero‐Gómez, R., Jones, O. R., Archer, C. R., Bein, C., de Buhr, H., Farack, C., 
+Gottschalk, F., Hartmann, A., Henning, A., Hoppe, G., Römer, G., Ruoff, T., Sommer, V., 
+Wille, J., Voigt, J., Zeh, S., Vieregg, D., Buckley, Y. M., Che‐Castaldo, J., Hodgson, D., 
+Scheuerlein, A., Caswell, H., & Vaupel, J. W. 2016. COMADRE: a global database of animal 
+demography. Journal of Animal Ecology, 85, 371–384. https://doi.org/10.1111/1365-2656.12482
+
