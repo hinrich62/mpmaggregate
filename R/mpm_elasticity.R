@@ -1,8 +1,8 @@
-#' Elasticity of \eqn{\lambda} or \eqn{R_0} with respect to entries of \code{matA}
+#' Elasticity of \eqn{\lambda} or \ifelse{latex}{\eqn{R_0}}{R0} with respect to entries of \code{matA}
 #'
-#' Compute elasticities of either the dominant eigenvalue \eqn{\lambda} (lambda
-#' framework) or the net reproductive rate \eqn{R_0} (R0 framework) with respect
-#' to the entries of the projection matrix \code{matA}.
+#' Compute elasticities of either the dominant eigenvalue \eqn{\lambda} (\eqn{\lambda}
+#' framework) or the net reproductive rate \eqn{R_0} (\eqn{R_0} framework) with respect
+#' to the entries of the population projection matrix \code{matA}.
 #'
 #' The function enforces a strict separation of inputs by framework:
 #' \itemize{
@@ -17,8 +17,8 @@
 #' Irreducibility of the resulting \code{matA} is enforced using the internal helper
 #' \code{.check_irreducible_hj} (defined elsewhere in the package).
 #'
-#' Eigen-elements (e.g., dominant eigenvalue, left and right eigenvectors) should be
-#' obtained via the workhorse function \code{\link{dominant_eigen}}.
+#' Eigen-elements (e.g., dominant eigenvalue, left and right eigenvectors) are
+#' obtained via the function \code{\link{dominant_eigen}}.
 #'
 #' @param matA A square projection matrix (numeric matrix). Required when
 #'   \code{framework = "lambda"}. Must be \code{NULL} when \code{framework = "R0"}.
@@ -45,10 +45,10 @@
 #' }
 #'
 #' @details
-#' \strong{Lambda framework.} Elasticity is the elasticity of \eqn{\lambda} with respect
+#' Lambda framework: Elasticity is the elasticity of \eqn{\lambda} with respect
 #' to the entries of \code{matA}.
 #'
-#' \strong{R0 framework.} Elasticity is the elasticity of \eqn{R_0} with respect
+#' R0 framework: Elasticity is the elasticity of \eqn{R_0} with respect
 #' to the entries of the internally constructed \code{matA}.
 #'
 #' @examples
@@ -58,7 +58,7 @@
 #'     0.3, 0.4),
 #'   nrow = 2, byrow = TRUE
 #' )
-#' out_lambda <- elasticity(matA = matA, framework = "lambda")
+#' out_lambda <- mpm_elasticity(matA = matA, framework = "lambda")
 #' str(out_lambda)
 #'
 #' ## R0 framework: matA constructed from matF and matU
@@ -72,17 +72,17 @@
 #'     0.0, 0.0),
 #'   nrow = 2, byrow = TRUE
 #' )
-#' out_R0 <- elasticity(matF = matF, matU = matU, framework = "R0")
+#' out_R0 <- mpm_elasticity(matF = matF, matU = matU, framework = "R0")
 #' str(out_R0)
 #'
 #' @references
-#'  Caswell, H. 2001. Matrix population models: construction, analysis and
-#'  interpretation (2nd ed.). Sinauer.
+#' Caswell, H. (2001). \emph{Matrix population models: construction, analysis and
+#' interpretation} (2nd ed.). Sinauer.
 #'
 #' @seealso \code{\link{dominant_eigen}}, \code{\link{spectral_radius}}
 #'
 #' @export
-elasticity <- function(matA = NULL,
+mpm_elasticity <- function(matA = NULL,
                        matF = NULL,
                        matU = NULL,
                        matC = NULL,

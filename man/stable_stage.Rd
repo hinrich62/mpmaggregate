@@ -25,7 +25,7 @@ is normalized so that \code{sum(w) = 1}.
 }
 \details{
 For matrix population models with nonegative irreducible matrix, stable stage densities are strictly
-positive (up to scaling).
+positive.
 }
 \examples{
 #irreducible example
@@ -37,17 +37,9 @@ A <- matrix(c(
 w <- stable_stage(A)
 w
 sum(w)
-#reducible example
-A<-rbind(c(1,1,0),
-         c(1,0,0),
-         c(0,1,0))
-
-w <- stable_stage(A)
-w
-sum(w)
 
 }
 \references{
-Caswell, H. 2001. Matrix population models: construction, analysis and
- interpretation (2nd ed.). Sinauer.
+Caswell, H. (2001). \emph{Matrix population models: construction, analysis and
+interpretation} (2nd ed.). Sinauer.
 }

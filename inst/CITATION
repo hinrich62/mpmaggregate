@@ -1,0 +1,14 @@
+citHeader("To cite the mpmaggregate package in publications:")
+
+citEntry(
+  entry = "Manual",
+  key = "mpmaggregate",
+  title = "mpmaggregate: Aggregate Matrix Population Models",
+  author = personList(
+    person(given = c("Richard","A."), family = "Hinrichsen"),
+    person(given = "Hiroyuki", family = "Yokomizo"),
+    person(given = "Roberto", family = "Salguero-Gomez")
+  ),
+  year = "2026",
+  note = paste("R package version", meta$Version)
+)

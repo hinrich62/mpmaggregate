@@ -53,7 +53,6 @@ aggregation, and format output for display.
 
 ```{r packages}
 library(mpmaggregate)
-library(Rcompadre)
 library(kableExtra)
 library(rphylopic)
 library(expm)
@@ -69,40 +68,66 @@ suitable candidate for Leslie-to-Leslie aggregation (Hinrichsen, 2023; Hinrichse
 The yellow-bellied marmot *Marmota flaviventris* is a large, stout-bodied ground squirrel
 (rodent) native to the mountainous regions of western North America.
 
-```{r fetch-comadre}
-comadre <- cdb_fetch("comadre", version = "4.23.3.1")
-iii <- (comadre$Genus == "Marmota") & (comadre$Species == "flaviventris")
-comadre.marmota.flaviventris <- comadre[iii, ]
+```{r}
+# Leslie population projection matrix for Marmota flaviventris
+# MatrixID = 249455
 
-# Development note: save metadata for future use
-# write.table(
-#   cdb_metadata(comadre.marmota.flaviventris),
-#   file = "C:/Users/Rich/projects/mpmaggregate/inst/extdata/marmota-flaviventris.csv",
-#   sep = ",",
-#   col.names = NA
-# )
+# Matrices can be retrieved with:
+# library(Rcompadre)
+# comadre <- cdb_fetch("comadre",version = "4.23.3.1")
+# mpm <- comadre[comadre$MatrixID == 249455, ]
+# matA <- matA(mpm)[[1]]
+# matU <- matU(mpm)[[1]]
+# matF <- matF(mpm)[[1]]
 
-# Return the matrices associated with MatrixID `matid`
-get_matrix <- function(matid) {
-  comadre2 <- comadre.marmota.flaviventris[comadre.marmota.flaviventris$MatrixID == matid, ]
-  matA <- matA(comadre2)[[1]]
-  matU <- matU(comadre2)[[1]]
-  matF <- matF(comadre2)[[1]]
-  matC <- matC(comadre2)[[1]]
-  list(matA = matA, matU = matU, matF = matF, matC = matC)
-}
+# Not run: requires Rcompadre and internet access
 
-mats <- get_matrix(249455)
+# Leslie population projection matrix
+matA <- matrix(c(
+  0.000000, 0.258040, 0.627254, 0.700037, 0.700037, 0.700037, 0.700037, 0.700037, 0.700037, 0.700037,
+  0.545125, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000,
+  0.000000, 0.498625, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000,
+  0.000000, 0.000000, 0.592875, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000,
+  0.000000, 0.000000, 0.000000, 0.643500, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000,
+  0.000000, 0.000000, 0.000000, 0.000000, 0.643500, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000,
+  0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.643500, 0.000000, 0.000000, 0.000000, 0.000000,
+  0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.643500, 0.000000, 0.000000, 0.000000,
+  0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.643500, 0.000000, 0.000000,
+  0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.643500, 0.000000
+), nrow = 10, byrow = TRUE)
 
-# Extract matrices and fold any C component into F
-matA <- mats$matA
-matU <- mats$matU
-matF <- mats$matF
-matC <- mats$matC
-matF <- matF + matC
+
+# Reproduction matrix
+matF <- matrix(c(
+  0, 0.25804, 0.627254, 0.700037, 0.700037, 0.700037, 0.700037, 0.700037, 0.700037, 0.700037,
+  0, 0,       0,        0,        0,        0,        0,        0,        0,        0,
+  0, 0,       0,        0,        0,        0,        0,        0,        0,        0,
+  0, 0,       0,        0,        0,        0,        0,        0,        0,        0,
+  0, 0,       0,        0,        0,        0,        0,        0,        0,        0,
+  0, 0,       0,        0,        0,        0,        0,        0,        0,        0,
+  0, 0,       0,        0,        0,        0,        0,        0,        0,        0,
+  0, 0,       0,        0,        0,        0,        0,        0,        0,        0,
+  0, 0,       0,        0,        0,        0,        0,        0,        0,        0,
+  0, 0,       0,        0,        0,        0,        0,        0,        0,        0
+), nrow = 10, byrow = TRUE)
+
+# Survival/transition matrix
+matU <- matrix(c(
+  0,       0,       0,       0,      0,      0,      0,      0,      0,      0,
+  0.545125,0,       0,       0,      0,      0,      0,      0,      0,      0,
+  0,       0.498625,0,       0,      0,      0,      0,      0,      0,      0,
+  0,       0,       0.592875,0,      0,      0,      0,      0,      0,      0,
+  0,       0,       0,       0.6435, 0,      0,      0,      0,      0,      0,
+  0,       0,       0,       0,      0.6435, 0,      0,      0,      0,      0,
+  0,       0,       0,       0,      0,      0.6435, 0,      0,      0,      0,
+  0,       0,       0,       0,      0,      0,      0.6435, 0,      0,      0,
+  0,       0,       0,       0,      0,      0,      0,      0.6435, 0,      0,
+  0,       0,       0,       0,      0,      0,      0,      0,      0.6435, 0
+), nrow = 10, byrow = TRUE)
 
 # Sanity check: A = U + F (after folding any C into F)
 stopifnot(all.equal(unname(matA), unname(matU + matF)))
+   
 ```
 
 ## Helper functions for demographic quantities
@@ -238,8 +263,8 @@ aggregated Leslie matrices (Hinrichsen et al., 2026).
 ## Compare \(\lambda\), \(R_0\), \(T_a\), and \(T_c\) in a table
 
 ```{r results-table alt}
-# adjust lambdas so that they are all per capita growth rate over a year
-# adjust generation times so they are all based on years
+# Adjust lambdas so that they are all per capita growth rate over a year
+# Adjust generation times so they are all based on years
 adj = c(1,2,2,2,2)
 
 lambda = sapply(models, function(m) spectral_radius(m$A))
@@ -332,9 +357,18 @@ computed directly from its aggregated projection matrix, and the results
 for all models are plotted together.
 
 ```{r elasticities-lambda^k}
+
+# Age groups used for aggregation in example
 groups <- list(c(1,2), c(3,4), c(5,6), c(7,8), c(9,10))
+
+# Partitioning matrix induced by the age groups.
+# This matrix is constructed internally by leslie_aggregate(),
+# but we construct it explicitly here so it can be used to
+# project quantities from the original age-class space to the
+# aggregated space.
 P <- mpm_partition(groups = groups, n = nrow(matA))
 
+# Dimensions of the original and aggregated matrices
 m <- ngroups
 n <- nrow(matA)
 k <- n / m
@@ -342,14 +376,14 @@ k <- n / m
 matAk <- matA %^% k
 
 # Elasticity of lambda^k with respect to entries of A^k (closest to what aggregated matrices yield)
-E_A <- elasticity(matA = matAk, framework = "lambda")$elasticity
+E_A <- mpm_elasticity(matA = matAk, framework = "lambda")$elasticity
 
 E_list <- list(
   "Original"            = P %*% E_A %*% t(P),
-  "Agg λ + standard"    = elasticity(matA = m1$A, framework = "lambda")$elasticity,
-  "Agg λ + elasticity"  = elasticity(matA = m2$A, framework = "lambda")$elasticity,
-  "Agg R0 + standard"   = elasticity(matA = m3$A, framework = "lambda")$elasticity,
-  "Agg R0 + elasticity" = elasticity(matA = m4$A, framework = "lambda")$elasticity
+  "Agg λ + standard"    = mpm_elasticity(matA = m1$A, framework = "lambda")$elasticity,
+  "Agg λ + elasticity"  = mpm_elasticity(matA = m2$A, framework = "lambda")$elasticity,
+  "Agg R0 + standard"   = mpm_elasticity(matA = m3$A, framework = "lambda")$elasticity,
+  "Agg R0 + elasticity" = mpm_elasticity(matA = m4$A, framework = "lambda")$elasticity
 )
 
 to_long <- function(M, model_name) {
@@ -392,8 +426,19 @@ the legend correspond to those described in Table 1.
 
 ```{r elasticity-plot, fig.width=12, fig.height=6}
 # Marmot 2012 Feb 2 by T. Michael Keesey, CC0 1.0, Marmota monax (Linnaeus 1758)
-uuid <- "eee50efb-40dc-47d0-b2cb-52a14a5e0e51"
-img <- get_phylopic(uuid = uuid, format = "raster", height = 869)
+# uuid <- "eee50efb-40dc-47d0-b2cb-52a14a5e0e51"
+# img <- get_phylopic(uuid = uuid, format = "raster", height = 869)
+# Write image 
+# png::writePNG(unclass(img), "inst/extdata/marmot.png")
+# Not run: requires internet access
+
+img_file <- system.file("extdata", "marmot.png", package = "mpmaggregate")
+
+if (!nzchar(img_file)) {
+  img_file <- "../inst/extdata/marmot.png"
+}
+
+img <- png::readPNG(img_file)
 
 rc <- do.call(rbind, strsplit(colnames(elast_mat), ","))
 r_vec <- as.integer(rc[, 1])
@@ -466,9 +511,17 @@ computed directly from its corresponding \( \mathbf{U}_{k} \) and
 \( \mathbf{F}_{k} \), and the results for all models are plotted together.
 
 ```{r elasticities-r0}
+# Age groupings used for aggregation (reintroduced here so this section
+# can be read independently)
 groups <- list(c(1,2), c(3,4), c(5,6), c(7,8), c(9,10))
+
+# Partitioning matrix induced by the stage groups.
+# Constructed internally by leslie_aggregate(), but reproduced here
+# because it is used to map quantities to aggregated space.
 P <- mpm_partition(groups = groups, n = nrow(matA))
 
+# Dimensions of the original and aggregated matrices
+# Reintroduced here for clarity
 m <- ngroups
 n <- nrow(matA)
 k <- n / m
@@ -484,14 +537,14 @@ Rk <- (expm::`%^%`(A_R0ref, k) - Uk) * R0
 Ak <- Uk + Rk
 
 # Elasticity of R0 with respect to entries of Ak (closest to what aggregated matrices yield)
-E_A <- elasticity(matF = Rk, matU = Uk, framework = "R0", normalize = TRUE)$elasticity
+E_A <- mpm_elasticity(matF = Rk, matU = Uk, framework = "R0", normalize = TRUE)$elasticity
 
 E_list2 <- list(
   "Original"            = P %*% E_A %*% t(P),
-  "Agg λ + standard"    = elasticity(matF = m1$F, matU = m1$U, framework = "R0", normalize = TRUE)$elasticity,
-  "Agg λ + elasticity"  = elasticity(matF = m2$F, matU = m2$U, framework = "R0", normalize = TRUE)$elasticity,
-  "Agg R0 + standard"   = elasticity(matF = m3$F, matU = m3$U, framework = "R0", normalize = TRUE)$elasticity,
-  "Agg R0 + elasticity" = elasticity(matF = m4$F, matU = m4$U, framework = "R0", normalize = TRUE)$elasticity
+  "Agg λ + standard"    = mpm_elasticity(matF = m1$F, matU = m1$U, framework = "R0", normalize = TRUE)$elasticity,
+  "Agg λ + elasticity"  = mpm_elasticity(matF = m2$F, matU = m2$U, framework = "R0", normalize = TRUE)$elasticity,
+  "Agg R0 + standard"   = mpm_elasticity(matF = m3$F, matU = m3$U, framework = "R0", normalize = TRUE)$elasticity,
+  "Agg R0 + elasticity" = mpm_elasticity(matF = m4$F, matU = m4$U, framework = "R0", normalize = TRUE)$elasticity
 )
 
 elast_df2 <- do.call(rbind, Map(to_long, E_list2, names(E_list2)))
@@ -521,8 +574,20 @@ the fraction of the total contribution to \(R_0\) attributable to that matrix en
 
 ```{r elasticity-r0-plot, fig.width=12, fig.height=6}
 # Marmot 2012 Feb 2 by T. Michael Keesey, CC0 1.0, Marmota monax (Linnaeus 1758)
-uuid <- "eee50efb-40dc-47d0-b2cb-52a14a5e0e51"
-img <- get_phylopic(uuid = uuid, format = "raster", height = 869)
+# uuid <- "eee50efb-40dc-47d0-b2cb-52a14a5e0e51"
+# img <- get_phylopic(uuid = uuid, format = "raster", height = 869)
+# Write image 
+# png::writePNG(unclass(img), "inst/extdata/marmot.png")
+# Not run: requires internet access
+
+img_file <- system.file("extdata", "marmot.png", package = "mpmaggregate")
+
+#For development
+if (!nzchar(img_file)) {
+  img_file <- "../inst/extdata/marmot.png"
+}
+
+img <- png::readPNG(img_file)
 
 rc <- do.call(rbind, strsplit(colnames(elast_mat2), ","))
 r_vec <- as.integer(rc[, 1])
@@ -587,35 +652,41 @@ sum(elast_mat2[, 1:5]) / 5
 sum(elast_mat[, 1:5]) / 5
 ```
 
-# References
+## References
 
-Bienvenu, F., Akçay, E., Legendre, S. and McCandlish, D.M. 2017. The genealogical
+Bienvenu, F., Akçay, E., Legendre, S., and McCandlish, D. M. (2017). The genealogical
 decomposition of a matrix population model with applications to the aggregation
-of stages. Theoretical Population Biology, 115, 69-80. https://doi.org/10.1016/j.tpb.2017.04.002
+of stages. *Theoretical Population Biology*, 115, 69–80.
+https://doi.org/10.1016/j.tpb.2017.04.002
 
-Gearty, W., & Jones, L. A. 2023. rphylopic: An R package for fetching, transforming, 
-and visualising PhyloPic silhouettes. Methods in Ecology and Evolution, 2700-2708.
+Gearty, W., and Jones, L. A. (2023). rphylopic: An R package for fetching,
+transforming, and visualising PhyloPic silhouettes. 
+*Methods in Ecology and Evolution*, 14, 2700–2708.
 https://doi.org/10.1111/2041-210X.14221
 
-Hooley, D. E. 2000. Collapsed matrices with (almost) the same eigenstuff. The
-College Mathematics Journal, 31(4), 297–299. https://doi.org/10.1080/07468342.2000.11974162
+Hooley, D. E. (2000). Collapsed matrices with (almost) the same eigenstuff.
+*The College Mathematics Journal*, 31(4), 297–299.
+https://doi.org/10.1080/07468342.2000.11974162
 
-Hinrichsen, R. A. 2023. Aggregation of Leslie matrix models with application to 
-ten diverse animal species. Population Ecology, 65(3), 146–166. 
+Hinrichsen, R. A. (2023). Aggregation of Leslie matrix models with application
+to ten diverse animal species. *Population Ecology*, 65(3), 146–166.
 https://doi.org/10.1002/1438-390X.12149
 
-Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From theory to
+Hinrichsen, R. A., Yokomizo, H., and Salguero-Gómez, R. (2026). From theory to
 application: Elasticity-consistent aggregation of Leslie matrix population
-models for comparative demography. bioRxiv, preprint.
+models for comparative demography. *bioRxiv*, preprint.
 https://doi.org/10.64898/2026.02.04.703802
 
-Jones, O. R., Barks, P., Stott, I., James, T. D., Levin, S., Petry, W. K., Capdevila, P.,
-Che-Castaldo, J., Jackson, J., Römer, G., Schuette, C., Thomas, C. C., & Salguero-Gómez, R. 2022.
-Rcompadre and Rage—Two R packages to facilitate the use of the COMPADRE and COMADRE
-databases and calculation of life-history traits from matrix population models.
-Methods in Ecology and Evolution, 13(4), 770–781. https://doi.org/10.1111/2041-210X.13792
+Jones, O. R., Barks, P., Stott, I., James, T. D., Levin, S., Petry, W. K.,
+Capdevila, P., Che-Castaldo, J., Jackson, J., Römer, G., Schuette, C.,
+Thomas, C. C., and Salguero-Gómez, R. (2022). Rcompadre and Rage—Two R
+packages to facilitate the use of the COMPADRE and COMADRE databases and
+calculation of life-history traits from matrix population models.
+*Methods in Ecology and Evolution*, 13(4), 770–781.
+https://doi.org/10.1111/2041-210X.13792
 
-Ozgul, A., Oli, M.K., Armitage, K.B., Blumstein, D.T. and Van Vuren, D.H., 2009.
-Influence of local demography on asymptotic and transient dynamics of a yellow-bellied
-marmot metapopulation. The American Naturalist, 173(4), 517-530.
+Ozgul, A., Oli, M. K., Armitage, K. B., Blumstein, D. T., and Van Vuren, D. H.
+(2009). Influence of local demography on asymptotic and transient dynamics
+of a yellow-bellied marmot metapopulation. *The American Naturalist*,
+173(4), 517–530.
 https://doi.org/10.1086/597225

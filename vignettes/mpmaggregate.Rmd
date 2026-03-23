@@ -8,9 +8,9 @@ output:
     number_sections: false
     mathjax: default
 vignette: >
+  %\VignetteEncoding{UTF-8}
   %\VignetteIndexEntry{mpmaggregate: An Introduction to Aggregating Matrix Population Models}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 **ORCID:** <https://orcid.org/0000-0003-0761-3005>
 
@@ -22,21 +22,81 @@ knitr::opts_chunk$set(
 ```
 
 ## Overview
+Matrix population models (MPMs) are widely used to describe population dynamics,
+and large demographic databases such as COMPADRE and COMADRE now make it possible
+to study life-history patterns across a wide range of taxa. However, these models
+often differ substantially in their structure: they may be constructed with
+different projection intervals, life-cycle stage definitions, and levels of
+complexity. Such differences can make models difficult to compare directly,
+even when they describe similar populations. Aggregation methods address this
+problem by combining stages while preserving key demographic properties of the
+original model. The `mpmaggregate` package provides tools for reducing the
+dimensionality of MPMs under different demographic frameworks, allowing
+finer-scale models to be compared with coarser models. For example, a 12-stage
+life-cycle model can be reduced to a simpler 3-stage model that still captures
+the essential demographic behavior of the population.
 
-Matrix population models (MPMs) are widely used to describe population dynamics, 
-but they are often constructed at different levels of age or stage resolution. In 
-practice, this can make models difficult to compares side by side, or unnecessarily 
-complex for a given analytical goal. The `mpmaggregate` package provides tools for 
-reducing the dimensionality of MPMs, allowing finer-scale models 
-to be compared with coarser models.
+### Demographic frameworks: \(\lambda\) and \(R_0\)
 
-The package supports aggregation of matrix population models under 
-two complementary demographic frameworks. The lambda framework focuses on stable 
-growth rate, while the R0 framework emphasizes net reproductive rate. 
-Within each framework, users may choose between standard aggregation, which maintains 
-consistency in the core demographic structure, and elasticity-consistent aggregation, 
-which additionally maintains consistency in reproductive values and elasticities.
+Aggregation methods can be defined with respect to different demographic
+quantities. In matrix population models, two commonly used measures of growth
+are the population growth rate \(\lambda\) and the net reproductive rate \(R_0\).
+These quantities describe different aspects of population dynamics and therefore
+lead to different perspectives on aggregation.
 
+The quantity \(\lambda\) is the dominant eigenvalue of the population projection matrix and 
+describes stable population growth per time step (Caswell, 2001). By contrast, 
+\(R_0\) measures expected lifetime reproductive output and is interpreted 
+from a cohort-based perspective rather than a population-based one (Caswell, 2011). 
+In matrix population models, \(R_0\) is calculated from the next-generation matrix 
+\(F(I-U)^{-1}\) (Diekmann et al., 1990; Caswell, 2001).
+
+Although \(\lambda\) and \(R_0\) share the same persistence threshold, with 
+\(\lambda > 1\) if and only if \(R_0 > 1\), they summarize different aspects 
+of demography: \(\lambda\) emphasizes population trajectories through time, 
+whereas \(R_0\) emphasizes lifetime reproductive pathways through the life cycle 
+(Cushing & Yicang, 1994; de-Camino-Beck & Lewis, 2007). The \(\lambda\) framework 
+describes population growth through repeated time-step projection of the entire 
+population, so reproduction is incorporated into future population states and 
+therefore compounds over time. By contrast, the \(R_0\) framework follows a 
+single cohort through the life cycle and counts the offspring produced by that 
+cohort, but those offspring are not themselves projected forward. In this sense, 
+the \(\lambda\) framework includes compounding reproduction, whereas the 
+\(R_0\) framework does not (see Figure 1).
+
+This distinction matters for aggregation, because a method that preserves 
+demographic properties in one framework will not generally preserve those same
+properties in the other. Aggregation in the \(\lambda\) framework is appropriate 
+when the goal is to preserve stable population growth and related population-based 
+demographic quantities, whereas aggregation in the \(R_0\) framework is appropriate 
+when the goal is to preserve lifetime reproductive output and related cohort-based 
+demographic quantities.
+<!--display of the actual population projection matrix (4x4) -->
+```{r projection matrix, echo=FALSE, out.width="50%", fig.cap="  "}
+knitr::include_graphics("figures/Slide2.PNG")
+```
+<!--figure showing life-cycle representation in different frameworks -->
+```{r lambda-r0-figure, echo=FALSE, out.width="90%", fig.cap="Figure 1. Interpretation of λ and R0 frameworks"}
+knitr::include_graphics("figures/Slide1.PNG")
+```
+
+### Aggregation criteria: standard and elasticity-consistent
+
+Within each framework, users may choose between **standard aggregation**, which maintains 
+consistency of the stable population growth rate and stable stage distribution, and 
+**elasticity-consistent aggregation** (Hooley, 2000; Salguero-Gómez & Plotkin, 2010),  
+which additionally maintains consistency in reproductive values and elasticities 
+(Bienvenu et al., 2017). These aggregators are applied in two forms: general-to-general
+MPM aggregation and Leslie-to-Leslie MPM aggregation (Hinrichsen, 2023; 
+Hinrichsen et al., 2026). 
+
+When applying general-to-general MPM aggregation, the projection interval of the aggregated
+matrix does not change. In contrast, when applying Leslie-to-Leslie aggregation, the
+projection interval changes because, in a Leslie MPM, the projection interval is equal
+to the age-class width, which increases with the level of aggregation
+(Hinrichsen et al., 2026).
+
+### Package functions
 Two primary functions are provided. The function `mpm_aggregate()` aggregates general 
 stage-structured MPMs (Caswell, 2001) to coarser stage classifications, whereas 
 leslie_aggregate() is designed specifically for age-structured Leslie matrices 
@@ -132,12 +192,11 @@ caption = paste0(
   )
 ```
 
-
-To illustrate aggregation of a general stage-structured MPM, we begin with a simple 
-example adapted from Bienvenu et al. (2017). The population projection matrix \( \mathbf{A} \) 
-represents a three-stage life cycle, with entries corresponding to survival, transition, 
-and reproduction. Although small, this example captures the essential features needed 
-to demonstrate aggregation.
+To illustrate general-to-general MPM aggregation, we begin with a simple 3x3 stage
+structured \( \mathbf{A} \) COMPADRE MatrixID = 247940 (Salguero‐Gómez et al., 2015), for a
+Marula (*Sclerocarya	birrea*) population, with a seedling, juvenile, and adult stage
+(Emanuel et al., 2005). Here, the projection interval is 1 year, and is unchanged by
+general-to-general MPM aggregation.
 
 We define a grouping of stages using the object `groups`, which specifies how the 
 original stages are combined into broader classes. In this example, the first stage 
@@ -145,13 +204,22 @@ is left unchanged, while the second and third stages are aggregated into a singl
 group. Internally, this grouping is converted to a partition matrix using `mpm_partition()`, 
 which is then used to construct the aggregated model.
 
-To illustrate general-to-general MPM aggregation, we begin with a simple 3x3 stage
-structured \( \mathbf{A} \) COMPADRE MatrixID = 247940 (Salguero‐Gómez et al., 2015), for a
-Marula (*Sclerocarya	birrea*) population, with a seedling, juvenile, and adult stage
-(Emanuel et al., 2005). Here, the projection interval is 1 year, and is unchanged by
-general-to-general MPM aggregation.
-
 ```{r}
+# Example matrices used in the general-to-general MPM aggregation examples below
+#population projection matrix for Sclerocarya	birrea
+#MatrixID = 247940
+
+# Not run: requires Rcompadre and internet access
+
+#these matrices can be retrieved with:
+#library(Rcompadre)
+#compadre <- cdb_fetch("compadre")
+#mpm <- compadre[compadre$MatrixID == 247940, ]
+#A <- matA(mpm)[[1]]
+#U <- matU(mpm)[[1]]
+#F <- matF(mpm)[[1]]
+
+
 A <- matrix(
   c(0.0, 0.0000, 12.46,
     0.4, 0.9160,  0.00,
@@ -159,6 +227,7 @@ A <- matrix(
   nrow = 3,
   byrow = TRUE
 )
+#survival/transitions matrix
 U <- matrix(
   c(0.0, 0.0000,  0.00,
     0.4, 0.9160,  0.00,
@@ -166,6 +235,7 @@ U <- matrix(
   nrow = 3,
   byrow = TRUE
 )
+#reproduction matrix
 F <- matrix(
   c(0.0, 0.0000, 12.46,
     0.0, 0.0000,  0.00,
@@ -174,8 +244,9 @@ F <- matrix(
   byrow = TRUE
 )
 
-#group the vegetative + reproductive stages
-#leave the seedling stage alone
+# Stage aggregation used in later examples:
+# group vegetative + reproductive stages together,
+# leaving the seedling stage separate
 groups <- list(
   c(1),
   c(2,3)
@@ -202,6 +273,9 @@ dynamics of the original model. Values of \(\rho^2\) close to 1 indicate near-pe
 agreement.
 
 ```{r}
+
+# General-to-general MPM aggregation
+# in the lambda framework, standard aggregation
 res_lambda_std <- mpm_aggregate(
   matA = A,
   groups = groups,
@@ -215,19 +289,35 @@ res_lambda_std$matA_agg
 # Effectiveness of aggregation
 res_lambda_std$effectiveness
 
-# lambda is preserved
+# ---- Check: lambda consistency ----
+
+# Expected
 spectral_radius(A)
+
+# Lambda of aggregated model
 spectral_radius(res_lambda_std$matA_agg)
 
-#stable stage distribution is consistent
+# ---- Check: stable stage distribution consistency ----
+
+# P is the partitioning matrix that groups stages
 P <- mpm_partition(groups=groups,n=3)
+
+# w is the stable stage distribution
 w <- stable_stage(A=A)
+
+# Expected
 c(P%*%w)
+
+# stable stage distribution of aggregated model
 w_agg <-stable_stage(res_lambda_std$matA_agg)
 w_agg
 
-#interstage flows are consistent
+# ---- Check: interstage flows consistency ----
+
+# Expected
 P%*%A%*%diag(w)%*%t(P)
+
+# Interstage flows of aggregated model
 res_lambda_std$matA_agg%*%diag(w_agg)
 ```
 
@@ -240,6 +330,9 @@ Here, consistency of interstage flows is sacrificed in order to maintain consist
 of the elasticities of (\(\lambda\)) with respect to matrix entries.
 
 ```{r}
+
+# General-to-general MPM aggregation
+# in the lambda framework, elasticity-consistent aggregation
 res_lambda_el <- mpm_aggregate(
   matA = A,
   matF = F,
@@ -249,31 +342,62 @@ res_lambda_el <- mpm_aggregate(
   criterion = "elasticity"
 )
 
+# Aggregated matrix
 res_lambda_el$matA_agg
+
+# Effectiveness of aggregation
 res_lambda_el$effectiveness
 
-#lambda is preserved
+# ---- Check: lambda consistency ----
+
+# Expected
 spectral_radius(A)
+
+# Lambda of aggregated model
 spectral_radius(res_lambda_el$matA_agg)
 
-#stable stage distribution are consistent
+# ---- Check: stable stage distribution consistency ----
+
+# P is the partitioning matrix
 P <- mpm_partition(groups=groups,n=3)
+
+# w us the stable stage distribution 
 w <- stable_stage(A=A)
+
+# Expected
 c(P%*%w)
+
+# Stable stage distribution of aggregated model
 stable_stage(res_lambda_el$matA_agg)
 
-#reproductive values are consistent
+# ---- Check: reproductive values consistency ----
+
+# v is reproductive values (dominant left eigenvector)
 v = reproductive_values(A)
-c(solve(P%*%diag(w)%*%t(P))%*%P%*%(w*v))  
+
+# Expected
+c(solve(P%*%diag(w)%*%t(P))%*%P%*%(w*v))
+
+# Reproductive values of aggregated model
 reproductive_values(res_lambda_el$matA_agg)
 
-#elasticities are consistent
-EA <- elasticity(matA=A,framework="lambda")$elasticity
-P%*%EA%*%t(P)
-elasticity(matA=res_lambda_el$matA_agg,framework="lambda")$elasticity
+# ---- Check: elasticities consistency ----
 
-#generation time is preserved
+# Elasticity matrix
+EA <- mpm_elasticity(matA=A,framework="lambda")$elasticity
+
+# Expected
+P%*%EA%*%t(P)
+
+# Elasticities of aggregated model
+mpm_elasticity(matA=res_lambda_el$matA_agg,framework="lambda")$elasticity
+
+# ---- Check: generation time consistency ----
+
+# Expected
 generation_time(matF=F,matU=U,framework="lambda")$generation_time
+
+# Generation time from aggregated model
 generation_time(matF=res_lambda_el$matF_agg,
                 matU=res_lambda_el$matU_agg,
                 framework="lambda")$generation_time
@@ -311,6 +435,9 @@ value that summarizes how closely the aggregated model reproduces the demographi
 behavior of the original model.
 
 ```{r}
+
+# General-to-general MPM aggregation
+# in the R0 framework, standard aggregation
 res_R0_std <- mpm_aggregate(
   matU = U,
   matF = F,
@@ -325,18 +452,32 @@ res_R0_std$matA_agg
 # Effectiveness of aggregation
 res_R0_std$effectiveness
 
-# R0 is preserved
+# ---- Check: R0 consistency ----
+
+# Expected
 spectral_radius(F%*%solve(diag(3)-U))
+
+# R0 from aggregated matrix
 spectral_radius(res_R0_std$matF_agg%*%solve(diag(2)-res_R0_std$matU_agg))
 
-#stable stage distribution is consistent
+# ---- Check: cohort stable stage distribution consistency ----
+
+# w is the cohort stable stage distribution from a next generation matrix
 w <- stable_stage(solve(diag(3)-U)%*%F)
+
+# Expected for consistency
 c(P%*%stable_stage(solve(diag(3)-U)%*%F))
+
+# Aggregated cohort stable stage distribution
 w_agg <- stable_stage(solve(diag(2)-res_R0_std$matU_agg)%*%res_R0_std$matF_agg)
 w_agg
 
-#cohort interstage flows are consistent
+# ---- Check: cohort interstage flows  consistency ----
+
+# Expected
 P%*%A%*%diag(w)%*%t(P)
+
+# Aggregated interstage flows
 res_R0_std$matA_agg%*%diag(w_agg)
 ```
 
@@ -351,6 +492,9 @@ constraints imposed by elasticity preservation and does not occur under standard
 aggregation or in Leslie-to-Leslie aggregation.
 
 ```{r}
+
+# General-to-general MPM aggregation
+# in the R0 framework, elasticity-consistent aggregation
 res_R0_el <- mpm_aggregate(
   matU = U,
   matF = F,
@@ -365,32 +509,62 @@ res_R0_el$matA_agg
 # Effectiveness of aggregation
 res_R0_el$effectiveness
 
-# R0 is preserved
+# ---- Check: R0 consistency ----
+
+# Expected R0
 R0 <- spectral_radius(F%*%solve(diag(3)-U))
 R0
+
+# R0 from the aggregated model
 spectral_radius(res_R0_el$matF_agg%*%solve(diag(2)-res_R0_el$matU_agg))
 
-#cohort stable stage distribution is consistent
+# ---- Check: cohort stable stage distribution consistency ----
+
+# Get partitioning matrix
 P <- mpm_partition(groups=groups,n=3)
+
+# Construct cohort projection matrix
 Aref = F + U*R0
+
+# Cohort stable stage distribution
 w <- stable_stage(A=Aref)
+
+# Expected for consistency
 c(P%*%w)
+
+# Aggregated cohort projection matrix
 Aref_agg = res_R0_el$matF_agg+ R0*res_R0_el$matU_agg
+
+# Aggregated cohort stable stage distribution
 stable_stage(Aref_agg)
 
-#reproductive values are consistent
+# ---- Check: cohort reproductive values consistency ----
 v = reproductive_values(Aref)
-c(solve(P%*%diag(w)%*%t(P))%*%P%*%(w*v))  
+
+# Expected
+c(solve(P%*%diag(w)%*%t(P))%*%P%*%(w*v))
+
+# Cohort reproductive values for aggregated matrix
 reproductive_values(Aref_agg)
 
-#elasticities of R0 are consistent
-#Here elasticities are normalized to sum to 1
-EA <- elasticity(matF=F,matU=U,framework="R0")$elasticity
-P%*%EA%*%t(P)
-elasticity(matF=res_R0_el$matF_agg,matU=res_R0_el$matU_agg,framework="R0")$elasticity
+# ---- Check: elasticities of R0 consistency ----
+# Here elasticities are normalized to sum to 1
 
-#cohort generation time is preserved
+# Original elasticities
+EA <- mpm_elasticity(matF=F,matU=U,framework="R0")$elasticity
+
+# Expected for consistency
+P%*%EA%*%t(P)
+
+# Elasticities of R0 from aggregated matrix
+mpm_elasticity(matF=res_R0_el$matF_agg,matU=res_R0_el$matU_agg,framework="R0")$elasticity
+
+# ---- Check: cohort generation time consistency ----
+
+# Expected (from original model)
 generation_time(matF=F,matU=U,framework="R0")$generation_time
+
+# Cohort generation time from aggregated model
 generation_time(matF = res_R0_el$matF_agg, 
                 matU = res_R0_el$matU_agg,
                 framework="R0")$generation_time
@@ -478,6 +652,23 @@ To illustrate Leslie-to-Leslie MPM aggregation, we begin with a simple 4x4 Lesli
 fathead minnow (*Pimephales	promelas*) population (Spromberg & Birge, 2005).
 
 ```{r}
+# New example used for Leslie-to-Leslie aggregation
+# These matrices replace the earlier example matrices (A, U, F)
+# Leslie population projection matrix for Pimephales promelas (MatrixID = 248187)
+
+# Not run: requires Rcompadre and internet access
+
+# Matrices can be retrieved with:
+# library(Rcompadre)
+# comadre <- cdb_fetch("comadre",version = "4.23.3.1")
+# mpm <- comadre[comadre$MatrixID == 248187, ]
+# A <- matA(mpm)[[1]]
+# U <- matU(mpm)[[1]]
+# F <- matF(mpm)[[1]]
+
+
+
+# Leslie population projection matrix
 A <- rbind(
   c(0.00, 0.00,  6.00, 62.50),
   c(0.50, 0.00,  0.00,  0.00),
@@ -485,21 +676,37 @@ A <- rbind(
   c(0.00, 0.00,  0.12,  0.00)
 )
 
-FA <- rbind(
+# Reproduction matrix
+F <- rbind(
   c(0.00, 0.00,  6.00, 62.50),
   c(0.00, 0.00,  0.00,  0.00),
   c(0.00, 0.00,  0.00,  0.00),
   c(0.00, 0.00,  0.00,  0.00)
 )
 
-UA <- rbind(
+# Survival/transition matrix
+U <- rbind(
   c(0.00, 0.00,  0.00,  0.00),
   c(0.50, 0.00,  0.00,  0.00),
   c(0.00, 0.18,  0.00,  0.00),
   c(0.00, 0.00,  0.12,  0.00)
 )
-   
+
+# Partitioning matrix used for the aggregation examples below
+# (first two age classes combined, last two combined)
+# In practice this matrix is constructed automatically inside leslie_aggregate()
+# It is reproduced here only to verify the aggregation results.
+P <- rbind(
+  c(1,1,0,0),
+  c(0,0,1,1)
+)
+
+# Dimensions used in the aggregation examples
+n <- 4     # dimensionality of the original matrix A
+m <- 2     # dimensionality of the aggregated matrix
+k <- n / m #(also constructed automatically)
 ```
+  
 
 
 ### Lambda framework: standard aggregation
@@ -512,6 +719,9 @@ The interstage flow of the aggregated matrix is consistent with that of
 \( \mathbf{A}^{k} \).
 
 ```{r}
+
+# Leslie-to-Leslie MPM aggregation
+# in the lambda framework, standard aggregation
 res_leslie_lambda_std <- leslie_aggregate(
   matA = A,
   ngroups = 2,
@@ -519,12 +729,6 @@ res_leslie_lambda_std <- leslie_aggregate(
   criterion = "standard"
 )
 
-P <- rbind(c(1,1,0,0),
-           c(0,0,1,1))
-
-n <- 4 #dimensionality of A
-m <- 2 #dimensionality of aggregated form of A
-k <- n/m
 
 # Aggregated Leslie matrix
 res_leslie_lambda_std$matAk_agg
@@ -532,18 +736,32 @@ res_leslie_lambda_std$matAk_agg
 # Effectiveness of aggregation
 res_leslie_lambda_std$effectiveness
 
-# lambda is preserved
+# ---- Check: lambda consistency ----
+
+# Expected lambda
 spectral_radius(A)^k
+
+# Lambda of aggregated model
 spectral_radius(res_leslie_lambda_std$matAk_agg)
 
-#stable stage distribution is consistent
+# ---- Check: stable age distribution consistency ----
+
+# Stable age distribution
 w <- leslie_stable_age(A=A)
+
+# Expected 
 c(P%*%w)
+
+# Aggregated stable age distribution
 w_agg <-leslie_stable_age(res_leslie_lambda_std$matAk_agg)
 w_agg
 
-#interstage flows of L^k are consistent
+# ---- Check: interstage flow consistency ----
+
+# Expected
 P%*%(A%^%k)%*%diag(w)%*%t(P)
+
+# Interstage flows from aggregated model
 res_leslie_lambda_std$matAk_agg%*%diag(w_agg)
 ```
 
@@ -564,6 +782,9 @@ elasticity-consistent aggregation does not produce survival probabilities greate
 than 1.
 
 ```{r}
+
+# Leslie-to-Leslie MPM aggregation
+# in the lambda framework, elasticity-consistent aggregation
 res_leslie_lambda_el <- leslie_aggregate(
   matA = A,
   ngroups = 2,
@@ -577,36 +798,66 @@ res_leslie_lambda_el$matAk_agg
 # Effectiveness of aggregation
 res_leslie_lambda_el$effectiveness
 
-#get aggregated F and U
+# get aggregated F and U
 F_agg <-matrix(0,2,2)
 F_agg[1,] <- res_leslie_lambda_el$matAk_agg[1,]
 U_agg <- res_leslie_lambda_el$matAk_agg
 U_agg[1,] <-0
 
-# lambda is preserved
+# ---- Check: lambda consistency ----
+
+# Expected
 spectral_radius(A)^k
+
+# Lambda for aggregated model
 spectral_radius(res_leslie_lambda_el$matAk_agg)
 
-#stable stage distribution is consistent
+# ---- Check: stable age distribution consistency ----
+
+# Stable age distribution
 w <- leslie_stable_age(A=A)
+
+# Expected
 c(P%*%w)
+
+# Stable age distribution of aggregated odel
 w_agg <-leslie_stable_age(res_leslie_lambda_el$matAk_agg)
 w_agg
 
-#reproductive values are preserved
+# ---- Check: reproductive values consistency ----
+
+# Get reproductive values
 v <- leslie_reproductive_values(A=A)
+
+# Expected
 c(solve(P%*%diag(w)%*%t(P))%*%P%*%(v*w))
+
+# Reproductive values of aggregated model
 leslie_reproductive_values(A=res_leslie_lambda_el$matAk_agg)
 
-#elasticities of lambda^k  are consistent
-EA <- elasticity(A%^%k,framework="lambda")$elasticity
-P%*%EA%*%t(P)
-elasticity(res_leslie_lambda_el$matAk_agg,framework="lambda")$elasticity
+# ---- Check: elasticities consistency ----
 
-#generation times are consistent between L^k and aggregated matrix
-U_k <- UA%^%k
+# Get elasticities of lambda^k
+EA <- mpm_elasticity(A%^%k,framework="lambda")$elasticity
+
+# Expected
+P%*%EA%*%t(P)
+
+# Elasticities of lambda^k for aggregated model
+mpm_elasticity(res_leslie_lambda_el$matAk_agg,framework="lambda")$elasticity
+
+# ---- Check: generation time consistency ----
+
+# Survival/transition matrix
+U_k <- U%^%k
+
+# Reproduction matrix
 F_k <- A%^%k - U_k
+
+# Expected generation time
 generation_time(matF=F_k,matU=U_k,framework="lambda")$generation_time
+
+# Generation time of aggregated model
 generation_time(matF=F_agg,matU=U_agg,framework="lambda")$generation_time
 ```
 ---
@@ -625,6 +876,9 @@ consistent net reproductive rate (\(R_0\)) and the cohort stable age distributio
 producing a coarser Leslie matrix compatible with the specified number of age groups.
 
 ```{r}
+
+# Leslie-to-Leslie MPM aggregation
+# in the R0 framework, standard aggregation
 res_leslie_R0_std <- leslie_aggregate(
   matA = A,
   ngroups = 2,
@@ -638,32 +892,56 @@ res_leslie_R0_std$matAk_agg
 # Effectiveness of aggregation
 res_leslie_R0_std$effectiveness
 
-#get F and U for aggregated matrix
-FA_agg <- matrix(0,2,2)
-FA_agg[1,] <- res_leslie_R0_std$matAk_agg[1,]
-UA_agg <- res_leslie_R0_std$matAk_agg
-UA_agg[1,] <- 0
+# get F and U for aggregated matrix
+F_agg <- matrix(0,2,2)
+F_agg[1,] <- res_leslie_R0_std$matAk_agg[1,]
+U_agg <- res_leslie_R0_std$matAk_agg
+U_agg[1,] <- 0
 
-# R0 is preserved
-R0 <- spectral_radius(FA%*%solve(diag(4)-UA))
+# ---- Check: generation time consistency ----
+
+# Expected
+R0 <- spectral_radius(F%*%solve(diag(4)-U))
 R0 
-spectral_radius(FA_agg%*%solve(diag(2)-UA_agg))
+
+# R0 for aggregated model
+spectral_radius(F_agg%*%solve(diag(2)-U_agg))
 
 
-#cohort stable stage distribution is consistent
-A_ref <- (FA + UA*R0)/R0
-A_ref_agg <- (FA_agg + UA_agg*R0)/R0
+# ---- Check: cohort stable age distribution consistency ----
+
+# Standardized cohort projection matrix
+A_ref <- (F + U*R0)/R0
+
+# Standardized cohort projection matrix for aggregated model
+A_ref_agg <- (F_agg + U_agg*R0)/R0
+
+# w is the stable age distribution
 w <- leslie_stable_age(A=A_ref)
+
+# Expected
 c(P%*%w)
+
+# Stable age distribution for aggregated model
 w_agg <-leslie_stable_age(A_ref_agg)
 w_agg
 
-#cohort interstage flows of A_k (K-step ahead version of A in R0 framework) are consistent
-U_k <- UA%^%k
-F_k <- R0*(A_ref)%^%k-R0*U_k
+# ---- Check: cohort interstage flows consistency ----
+
+# Survival/transition matrix (k steps ahead)
+U_k <- U%^%k
+
+# Reproduction matrix (k steps ahead)
+F_k <- A%^%k - U_k
+
+# A projection matrix (k steps ahead)
 A_k <- F_k + U_k
+
+# Expected
 P%*%A_k%*%diag(w)%*%t(P)
-(FA_agg + UA_agg)%*%diag(w_agg)
+
+# Interstage flows for aggregated model
+(F_agg + U_agg)%*%diag(w_agg)
 ```
 
 ### \(R_0\) framework: elasticity-consistent aggregation
@@ -677,6 +955,9 @@ dimensionality of the aggregated model. As in the \(\lambda\) framework, the Les
 structure is maintained and survival probabilities cannot exceed 1.
 
 ```{r}
+
+# Leslie-to-Leslie MPM aggregation
+# in the R0 framework, elasticity-consistent aggregation
 res_leslie_R0_el <- leslie_aggregate(
   matA = A,
   ngroups = 2,
@@ -690,43 +971,79 @@ res_leslie_R0_el$matAk_agg
 # Effectiveness of aggregation
 res_leslie_R0_el$effectiveness
 
-#get F and U for aggregated matrix
-FA_agg <- matrix(0,2,2)
-FA_agg[1,] <- res_leslie_R0_el$matAk_agg[1,]
-UA_agg <- res_leslie_R0_el$matAk_agg
-UA_agg[1,] <- 0
+# Get F and U for aggregated matrix
+F_agg <- matrix(0,2,2)
+F_agg[1,] <- res_leslie_R0_el$matAk_agg[1,]
+U_agg <- res_leslie_R0_el$matAk_agg
+U_agg[1,] <- 0
 
-# R0 is preserved
-R0 <- spectral_radius(FA%*%solve(diag(4)-UA))
+# ---- Check: R0 consistency ----
+
+# Expected
+R0 <- spectral_radius(F%*%solve(diag(4)-U))
 R0 
-spectral_radius(FA_agg%*%solve(diag(2)-UA_agg))
+
+# R0 of aggregated model
+spectral_radius(F_agg%*%solve(diag(2)-U_agg))
 
 
-#cohort stable stage distribution is consistent
-A_ref <- (FA + UA*R0)/R0
-A_ref_agg <- (FA_agg + UA_agg*R0)/R0
+# ---- Check: cohort stage age distribution consistency ----
+
+# Standardized cohort projection matrix
+A_ref <- (F + U*R0)/R0
+
+# Standardized cohort projection matrix for aggregated model
+A_ref_agg <- (F_agg + U_agg*R0)/R0
+
+# Cohort stable age distribution
 w <- leslie_stable_age(A=A_ref)
+
+# Expected
 c(P%*%w)
+
+# Cohort stage age distribution for aggregated model
 w_agg <-leslie_stable_age(A_ref_agg)
 w_agg
 
-#cohort reproductive values are consistent
+# ---- Check: cohort reproductive values consistency ----
+
+# Cohort reproductive values
 v <- leslie_reproductive_values(A_ref)
+
+# Expected
 c(solve(P%*%diag(w)%*%t(P))%*%P%*%(v*w))
+
+# Cohort reproductive values of aggregated model
 leslie_reproductive_values(A_ref_agg)
 
-#elasticities of R0 are consistent
-#these elasticities are normalized to sum to 1
-U_k <- UA%^%k
-F_k <- R0*(A_ref)%^%k-R0*U_k
-A_k <- F_k + U_k
-EA <- elasticity(matF=F_k,matU=U_k,framework="R0")$elasticity
-P%*%EA%*%t(P)
-elasticity(matF=FA_agg,matU=UA_agg,framework="R0")$elasticity
+# ---- Check: elasticities of R0 consistency ----
+# These elasticities are normalized to sum to 1
 
-#cohort generation times are consistent between A_k an aggregated matrix
+# Survival/transition matrix (k steps ahead)
+U_k <- U%^%k
+
+# Reproduction matrix (k steps ahead)
+F_k <- A%^%k - U_k
+
+# Cohort projection matrix (k steps ahead)
+A_k <- F_k + U_k
+
+# Elasticity of R0 (normalized to sum to 1)
+EA <- mpm_elasticity(matF=F_k,matU=U_k,framework="R0")$elasticity
+
+# Expected
+P%*%EA%*%t(P)
+
+# Elasticity of R0 for the aggregated model
+mpm_elasticity(matF=F_agg,matU=U_agg,framework="R0")$elasticity
+
+# ---- Check: cohort generation time consistency ----
+
+# Expected
 generation_time(matF=F_k, matU = U_k, framework="R0")$generation_time
-generation_time(matF=FA_agg,matU=UA_agg, framework="R0")$generation_time
+
+# Generation time of aggregated model
+generation_time(matF=F_agg,matU=U_agg, framework="R0")$generation_time
 ```
 
 
@@ -744,60 +1061,82 @@ generation_time(matF=FA_agg,matU=UA_agg, framework="R0")$generation_time
 
 ## References
 
-Bienvenu, F., Akçay, E., Legendre, S. and McCandlish, D.M. 2017. The genealogical
+Bienvenu, F., Akçay, E., Legendre, S., & McCandlish, D. M. (2017). The genealogical
 decomposition of a matrix population model with applications to the aggregation
-of stages. Theoretical Population Biology, 115, 69-80. 
+of stages. *Theoretical Population Biology*, 115, 69–80.
 https://doi.org/10.1016/j.tpb.2017.04.002
 
-Caswell, H. 2001. Matrix Population Models: Construction, Analysis, and Interpretation. 
-2nd edition. Sinauer Associates, Sunderland, MA. 
+Caswell, H. (2001). *Matrix Population Models: Construction, Analysis, and Interpretation* 
+(2nd ed.). Sinauer Associates, Sunderland, MA.
 
-Emanuel, P.L., Shackleton, C.M. and Baxter, J.S., 2005. Modelling the sustainable 
-harvest of Sclerocarya birrea subsp. caffra fruits in the South African lowveld. 
-Forest Ecology and Management, 214(1-3), 91-103. 
+Caswell, H. (2011). Beyond R0: demographic models for variability of lifetime 
+reproductive output. *PloS ONE*, 6(6), p.e20809. 
+https://doi.org/10.1371/journal.pone.0020809
+
+Cushing, J.M., & Yicang, Z.(1994). The net reproductive value and stability in 
+matrix population models. *Natural Resource Modeling*, 8(4), 297-333. 
+https://doi.org/10.1111/j.1939-7445.1994.tb00188.x
+
+de-Camino-Beck, T., & Lewis, M.A. (2007). A new method for calculating net 
+reproductive rate from graph reduction with applications to the control of 
+invasive species. *Bulletin of Mathematical Biology*, 69(4), 1341-1354.
+https://doi.org/10.1007/s11538-006-9162-0
+
+Diekmann, O., Heesterbeek, J.A.P., & Metz, J.A.J. (1990). On the definition and 
+the computation of the basic reproduction ratio R0 in models for infectious 
+diseases in heterogeneous populations. *Journal of mathematical biology*, 28(4), 
+365-382. https://doi.org/10.1007/BF00178324
+
+Emanuel, P. L., Shackleton, C. M., & Baxter, J. S. (2005). Modelling the sustainable
+harvest of *Sclerocarya birrea* subsp. *caffra* fruits in the South African lowveld.
+*Forest Ecology and Management*, 214(1–3), 91–103.
 https://doi.org/10.1016/j.foreco.2005.03.066
 
-Hinrichsen, R. A. 2023. Aggregation of Leslie matrix models with application to 
-ten diverse animal species. Population Ecology, 65(3), 146–166. 
+Hinrichsen, R. A. (2023). Aggregation of Leslie matrix models with application to
+ten diverse animal species. *Population Ecology*, 65(3), 146–166.
 https://doi.org/10.1002/1438-390X.12149
 
-Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From theory to
-application: Elasticity-consistent aggregation of Leslie matrix population
-models for comparative demography. bioRxiv, preprint.
+Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. (2026). From theory to
+application: Elasticity-consistent aggregation of Leslie matrix population models
+for comparative demography. *bioRxiv*, preprint.
 https://doi.org/10.64898/2026.02.04.703802
 
-Hooley, D. E. 2000. Collapsed matrices with (almost) the same eigenstuff. The 
-College Mathematics Journal, 31(4), 297–299. https://doi.org/10.1080/07468342.2000.11974162
+Hooley, D. E. (2000). Collapsed matrices with (almost) the same eigenstuff.
+*The College Mathematics Journal*, 31(4), 297–299.
+https://doi.org/10.1080/07468342.2000.11974162
 
-Leslie, P. H. 1945. On the use of matrices in certain population mathematics. Biometrika, 
-33(3), 183–212. https://doi.org/10.2307/2332297
+Leslie, P. H. (1945). On the use of matrices in certain population mathematics.
+*Biometrika*, 33(3), 183–212.
+https://doi.org/10.2307/2332297
 
-
-Salguero-Gómez, R., Jones, O. R., Archer, C. R., Buckley, Y. M., Che-Castaldo, J., 
-Caswell, H., Hodgson, D., Scheuerlein, A., Conde, D. A., Brinks, E., de Buhr, H., 
-Farack, C., Gottschalk, F., Hartmann, A., Henning, A., Hoppe, G., Römer, G., 
-Runge, J., Ruoff, T., Wille, J., Zeh, S., Davison, R., Vieregg, D., Baudisch, A., 
-Altwegg, R., Colchero, F., Dong, M., de Kroon, H., Lebreton, J. -D., Metcalf, C. J. E., 
-Neel, M. M., Parker, I. M., Takada, T., Valverde, T., Vélez-Espino, L. A., Wardle, G. M., 
-Franco, M., & Vaupel, J. W. (2015). The COMPADRE Plant Matrix Database: an open 
-online repository for plant demography. Journal of Ecology, 103, 202–218. 
+Salguero-Gómez, R., Jones, O. R., Archer, C. R., Buckley, Y. M., Che-Castaldo, J.,
+Caswell, H., Hodgson, D., Scheuerlein, A., Conde, D. A., Brinks, E., de Buhr, H.,
+Farack, C., Gottschalk, F., Hartmann, A., Henning, A., Hoppe, G., Römer, G.,
+Runge, J., Ruoff, T., Wille, J., Zeh, S., Davison, R., Vieregg, D., Baudisch, A.,
+Altwegg, R., Colchero, F., Dong, M., de Kroon, H., Lebreton, J.-D., Metcalf, C. J. E.,
+Neel, M. M., Parker, I. M., Takada, T., Valverde, T., Vélez-Espino, L. A., Wardle,
+G. M., Franco, M., & Vaupel, J. W. (2015). The COMPADRE Plant Matrix Database:
+an open online repository for plant demography. *Journal of Ecology*, 103, 202–218.
 https://doi.org/10.1111/1365-2745.12334
 
-Salguero‐Gómez, R., Jones, O. R., Archer, C. R., Bein, C., de Buhr, H., Farack, C., 
-Gottschalk, F., Hartmann, A., Henning, A., Hoppe, G., Römer, G., Ruoff, T., Sommer, V., 
-Wille, J., Voigt, J., Zeh, S., Vieregg, D., Buckley, Y. M., Che‐Castaldo, J., Hodgson, D., 
-Scheuerlein, A., Caswell, H., & Vaupel, J. W. 2016. COMADRE: a global database of animal 
-demography. Journal of Animal Ecology, 85, 371–384. https://doi.org/10.1111/1365-2656.12482
+Salguero-Gómez, R., Jones, O. R., Archer, C. R., Bein, C., de Buhr, H., Farack, C.,
+Gottschalk, F., Hartmann, A., Henning, A., Hoppe, G., Römer, G., Ruoff, T., Sommer,
+V., Wille, J., Voigt, J., Zeh, S., Vieregg, D., Buckley, Y. M., Che-Castaldo, J.,
+Hodgson, D., Scheuerlein, A., Caswell, H., & Vaupel, J. W. (2016). COMADRE:
+a global database of animal demography. *Journal of Animal Ecology*, 85, 371–384.
+https://doi.org/10.1111/1365-2656.12482
 
-Salguero-Gomez, R. & Plotkin, J. B. 2010. Matrix dimensions bias
-demographic inferences: implications for comparative plant demography. The
-American Naturalist 176, 710-722. https://doi.org/10.1086/657044
+Salguero-Gómez, R., & Plotkin, J. B. (2010). Matrix dimensions bias demographic
+inferences: implications for comparative plant demography. *The American Naturalist*,
+176, 710–722.
+https://doi.org/10.1086/657044
 
-Spromberg, J.A. and Birge, W.J., 2005. Modeling the effects of chronic toxicity 
-on fish populations: The influence of life‐history strategies. Environmental 
-Toxicology and Chemistry, 24(6), 1532-1540. https://doi.org/10.1897/04-160.1
+Spromberg, J. A., & Birge, W. J. (2005). Modeling the effects of chronic toxicity
+on fish populations: The influence of life-history strategies. 
+*Environmental Toxicology and Chemistry*, 24(6), 1532–1540.
+https://doi.org/10.1897/04-160.1
 
-Yokomizo, H., Fukaya, K., Lambrinos, J.G., Kawai, Y. and Takada, T., 2024. 
-Interstage flow matrices: Population statistic derived from matrix population models. 
-Journal of Ecology, 112(6), 1326-1338.https://doi.org/10.1111/1365-2745.14303
-
+Yokomizo, H., Fukaya, K., Lambrinos, J. G., Kawai, Y., & Takada, T. (2024).
+Interstage flow matrices: Population statistics derived from matrix population
+models. *Journal of Ecology*, 112(6), 1326–1338.
+https://doi.org/10.1111/1365-2745.14303

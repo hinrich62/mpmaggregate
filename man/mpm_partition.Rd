@@ -10,7 +10,9 @@ mpm_partition(groups, n = NULL)
 \item{groups}{A list of integer vectors giving stage indices for each aggregated group.}
 
 \item{n}{Optional integer. Number of original stages. If \code{NULL}, inferred as
-\code{max(unlist(groups))}.}
+\code{max(unlist(groups))}. Supplying \code{n} can help detect errors when
+some stage indices are missing from \code{groups}, since all indices
+\code{1:n} must appear exactly once.}
 }
 \value{
 A numeric matrix \eqn{P} of dimensionality \code{m x n} with entries 0 or 1.
@@ -24,7 +26,7 @@ The grouping is provided as a list of integer vectors. For example,
 \code{groups = list(c(1), c(2:3))} defines \eqn{m = 2} aggregated stages:
 the first contains original stage 1, and the second contains original stages 2 and 3.
 
-Each original stage index \code{1:n} must appear **once and only once** across \code{groups}.
+Each original stage index \code{1:n} must appear exactly once across \code{groups}.
 }
 \examples{
 g <- list(c(1), c(2:3))

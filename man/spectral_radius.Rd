@@ -19,10 +19,10 @@ modulus of its eigenvalues:
 }
 \details{
 This function is primarily intended for use with matrix population models,
-where the spectral radius corresponds to the asymptotic growth rate
+where the spectral radius corresponds to the stable growth rate
 (i.e., \eqn{\lambda}) when the governing matrix is square and nonnegative.
 It is also used to calculate net reproductive rate \eqn{R_0} from a
-generation-to-generation matrix.
+next generation matrix.
 }
 \examples{
 A <- matrix(c(
@@ -34,5 +34,5 @@ spectral_radius(A)
 
 }
 \references{
-Horn, R.A. and Johnson, C.R. 2013. Matrix analysis. Cambridge university press.
+Horn, R. A. and Johnson, C. R. (2013). \emph{Matrix analysis}. Cambridge University Press.
 }

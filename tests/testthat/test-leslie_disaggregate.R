@@ -55,4 +55,8 @@ test_that("leslie_disaggregate: errors on invalid m", {
   expect_error(leslie_disaggregate(A, 0))
   expect_error(leslie_disaggregate(A, -1))
   expect_error(leslie_disaggregate(A, NA_integer_))
+  expect_error(
+    leslie_disaggregate(A, m = 2.9),
+    "m must be an integer."
+  )
 })

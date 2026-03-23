@@ -271,7 +271,7 @@ test_that("leslie_aggregate: errors when A is not Leslie or ngroups invalid",
                 framework = "lambda",
                 criterion = "standard"
               ),
-              regexp = "not a Leslie",
+              regexp = "must be a Leslie",
               ignore.case = TRUE
             )
 
@@ -287,6 +287,13 @@ test_that("leslie_aggregate: errors when A is not Leslie or ngroups invalid",
             expect_error(leslie_aggregate(matA = A, ngroups = 99),
                          regexp = "ngroups.*less than or equal",
                          ignore.case = TRUE)
+
+            # ngroups not an integer
+            expect_error(
+              leslie_aggregate(matA = A, ngroups = 2.9),
+              regexp = "ngroups.*integer",
+              ignore.case = TRUE
+            )
           })
 
 #add edge tests to see how Leslie_aggregate deals with 1x1 output

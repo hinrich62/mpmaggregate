@@ -1,13 +1,14 @@
-
 # mpmaggregate
 
-`mpmaggregate` provides tools for aggregating matrix population models (MPMs) 
-to coarser stage or age structures while preserving key demographic properties.
+Tools for aggregating matrix population models while preserving key demographic properties.
 
-The package supports aggregation under different analytical frameworks, 
-including those based on the dominant eigenvalue (λ) and net reproductive rate
-(R₀). It also provides tools to evaluate how closely an aggregated 
-model reproduces the demographic behavior of the original model.
+Matrix population models (MPMs) are widely used to describe population dynamics,
+but models often differ in their projection intervals, stage definitions, and
+levels of complexity. These differences can make demographic models difficult
+to compare directly across studies. The **mpmaggregate** package provides tools
+for aggregating MPMs while preserving key demographic quantities under different
+demographic frameworks. This allows finer-scale models to be reduced to simpler
+representations that remain comparable across studies.
 
 ## Installation
 
@@ -25,14 +26,26 @@ Alternatively:
 remotes::install_github("hinrich62/mpmaggregate")
 ```
 
+After installation, load the package:
+
+```r
+library(mpmaggregate)
+```
 ## Overview
 
-The package includes:
+The package provides tools for aggregating matrix population models (MPMs)
+under different demographic frameworks and criteria.
 
-- `mpm_aggregate()` — aggregation for general stage-structured MPMs  
-- `leslie_aggregate()` — aggregation for age-structured Leslie matrices  
-- `elasticity()` — computation of λ- or R₀-based elasticities  
-- Effectiveness metrics to quantify agreement between original and aggregated models  
+The main functions are:
+
+- `mpm_aggregate()` — aggregate general stage-structured MPMs using user-defined groupings  
+- `leslie_aggregate()` — aggregate age-structured Leslie matrices into coarser age classes  
+- `mpm_elasticity()` — compute λ- or R₀-based elasticities of matrix elements  
+
+In addition, aggregation functions return effectiveness metrics that quantify
+the agreement between the original and aggregated models.
+
+See the package vignette for a detailed introduction and worked examples.
 
 ## Minimal Example
 
@@ -48,11 +61,67 @@ A <- matrix(
 )
 
 # Compute elasticities under the lambda framework
-out <- elasticity(matA = A, framework = "lambda")
+out <- mpm_elasticity(matA = A, framework = "lambda")
 
 out$elasticity
 ```
 
+## Documentation
+
+After installation, the package vignettes can be viewed with:
+
+```r
+browseVignettes("mpmaggregate")
+```
+
+## Testing
+
+The package includes automated tests written with **testthat** and namespace
+collision checks using **collidr**. These tests help ensure that functions
+behave as expected and that exported names do not conflict with other packages.
+
+To run the unit tests from the package root:
+
+```r
+devtools::test()
+```
+
+To perform a full diagnostic build and check of the package:
+
+```r
+devtools::check()
+```
+
+These commands run the test suite and verify that the package builds and
+passes standard R package checks.
+
+## References
+
+Bienvenu, F., Akçay, E., Legendre, S., and McCandlish, D. M. (2017). The genealogical
+decomposition of a matrix population model with applications to the aggregation
+of stages. *Theoretical Population Biology*, 115, 69–80. 
+https://doi.org/10.1016/j.tpb.2017.04.002
+
+Hinrichsen, R. A., Yokomizo, H., and Salguero-Gómez, R. (2026). From theory to
+application: Elasticity-consistent aggregation of Leslie matrix population
+models for comparative demography. *bioRxiv*, preprint.
+https://doi.org/10.64898/2026.02.04.703802
+
+
 ## Status
 
-This package is under active development. Feedback and testing are welcome.
+This package is under active development. Feedback, testing, and bug reports are welcome.
+
+## Bug Reports and Feedback
+
+If you encounter a bug or have suggestions for improvement, please open an issue on GitHub:
+
+https://github.com/hinrich62/mpmaggregate/issues
+
+When reporting a bug, please include a minimal reproducible example if possible.
+
+## Dedication
+
+R. A. Hinrichsen dedicates this package to Robert Y. Dean, who introduced him to the 
+Leslie matrix population model at Central Washington University and sparked a lifelong 
+fascination with population dynamics.

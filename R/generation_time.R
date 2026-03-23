@@ -1,17 +1,6 @@
 #' Generation time from a matrix population model
 #'
-#' Returns a generation time for either the \eqn{\lambda} or \eqn{R_0} framework
-#'
-#' The full projection matrix \code{matA} is constructed internally as
-#' \code{matA = matU + matF (+ matC)} and is not accepted as an input because
-#' \code{matA} alone is not sufficient to define the required decomposition.
-#'
-#' Eigen-elements (e.g., \eqn{\lambda}, \eqn{R_0}, stable stage distribution,
-#' and reproductive values) are intended to be obtained via the workhorse function
-#' \code{\link{dominant_eigen}}.
-#'
-#' If \code{matC} is supplied, the reproductive matrix is defined as
-#' \code{matR = matF + matC}. Otherwise, \code{matR = matF}.
+#' Returns a generation time for either the \eqn{\lambda} or \eqn{R_0} framework.
 #'
 #' @param matF A square fecundity/sexual reproduction matrix (numeric matrix).
 #'   Must not be \code{NULL}.
@@ -21,7 +10,6 @@
 #'   same dimensions as \code{matF} and \code{matU}. Default \code{NULL}.
 #' @param framework Character scalar. Must be either \code{"lambda"} or \code{"R0"}.
 #' @param tol Numeric tolerance used for nonnegativity checks and near-zero screening.
-#'   Default \code{1e-8}.
 #'
 #' @return A list with elements:
 #' \itemize{
@@ -30,20 +18,28 @@
 #' }
 #'
 #' @details
+#' The full projection matrix \code{matA} is constructed internally as
+#' \code{matA = matU + matF (+ matC)} and is not accepted as an input because
+#' \code{matA} alone is not sufficient to define the required decomposition.
+#'
+#' Eigen-elements (e.g., \eqn{\lambda}, \eqn{R_0}, stable stage distribution,
+#' and reproductive values) are obtained via the function \code{\link{dominant_eigen}}.
+#'
+#' If \code{matC} is supplied, the reproductive matrix is defined as
+#' \code{matR = matF + matC}. Otherwise, \code{matR = matF}.
+#'
 #' This function performs input validation, constructs \code{matA} and \code{matR},
 #' and sets up the framework-specific branch for computing generation time.
 #'
-#' Eigen-related quantities (including \eqn{\lambda}, \eqn{R_0}, stable stage distribution,
-#' and reproductive values) should be computed using \code{\link{dominant_eigen}},
-#' which is intended to be the workhorse for those outputs.
 #'
 #' @references
-#' Bienvenu, F. & Legendre, S. 2015. A new approach to the generation time in matrix
-#' population models. The American Naturalist, 185(6), 834-843.
-#' https://doi.org/10.1086/681104
+#' Bienvenu, F. & Legendre, S. (2015). A new approach to the generation time in
+#' matrix population models. \emph{The American Naturalist}, 185(6), 834-843.
+#' \doi{10.1086/681104}
 #'
-#' Ellner, S. P. 2018. Generation time in structured populations. The American
-#' Naturalist, 192(1), 105-110. https://doi.org/10.1086/697539
+#' Ellner, S. P. (2018). Generation time in structured populations.
+#' \emph{The American Naturalist}, 192(1), 105-110.
+#' \doi{10.1086/697539}
 #'
 #' @examples
 

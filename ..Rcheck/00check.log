@@ -1,0 +1,442 @@
+* using log directory 'C:/Users/Rich/projects/mpmaggregate/..Rcheck'
+* using R version 4.5.2 (2025-10-31 ucrt)
+* using platform: x86_64-w64-mingw32
+* R was compiled by
+    gcc.exe (GCC) 14.3.0
+    GNU Fortran (GCC) 14.3.0
+* running under: Windows 11 x64 (build 26200)
+* using session charset: UTF-8
+* using option '--as-cran'
+* checking for file './DESCRIPTION' ... OK
+* checking extension type ... Package
+* this is package 'mpmaggregate' version '0.2.0'
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... [12s] NOTE
+Maintainer: 'Richard A. Hinrichsen <r.hinrichsen.ecology@gmail.com>'
+
+New submission
+
+Package has a VignetteBuilder field but no prebuilt vignette index.
+
+The build time stamp is missing.
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .Rhistory
+  .Rprofile
+  .gitignore
+  renv/.gitignore
+  ..Rcheck
+  .Rproj.user
+  .git
+These were most likely included in error. See section 'Package
+structure' in the 'Writing R Extensions' manual.
+
+CRAN-pack does not know about
+  ..Rcheck
+  .git
+* checking for portable file names ... NOTE
+Found the following non-portable file paths:
+  mpmaggregate/.Rproj.user/shared/notebooks/19905917-asian_elephant_aggregation/1/373E9D4A2a006b46/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4A1898c19f/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4A1e533623/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4A22f1da7f/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4A2343537f/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4A58ffdb66/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4A67080c75/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4Aa91afca/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4Ac3239d90/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4Ac7b4b219/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4Aca9f5d83/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4Ad2e9bc30/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4Afb778724/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/c1la3397xqyps/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/c1la3397xqyps/000011.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/c1la3397xqyps/000013.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/c1la3397xqyps/000014.metadata
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/c1la3397xqyps/000014.png
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/c56oww0hp1gd5/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/cd1oa3gq647cr/000013.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch0f0qbasi2vo/000017.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch0f0qbasi2vo/000019.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch0f0qbasi2vo/00001b.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch0f0qbasi2vo/00001d.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch0f0qbasi2vo/00001e.metadata
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch0f0qbasi2vo/00001e.png
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch27lb1ys2cld/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch7iestiymv2z/000057.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch7iestiymv2z/000059.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch7iestiymv2z/00005b.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch7iestiymv2z/00005d.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch7iestiymv2z/00005e.metadata
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ch7iestiymv2z/00005e.png
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ckav03qvedehb/000013.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/csetup_chunk/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/ctc2xaa40i0d2/000011.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/cy9unvbg1n9m6/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/cyaf4cg1dfyho/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/czfp0gu8x9of1/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/czfp0gu8x9of1/000010.html
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/czfp0gu8x9of1/000010.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/czfp0gu8x9of1/000010.metadata
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.css.map
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/bootstrap.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/bootstrap.css.map
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/bootstrap.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/cerulean.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/cosmo.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/darkly.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/flatly.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/Lato.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/LatoBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/LatoItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/NewsCycle.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/NewsCycleBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSans.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansBoldItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansLight.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansLightItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/Raleway.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/RalewayBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/Roboto.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/RobotoBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/RobotoLight.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/RobotoMedium.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansPro.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansProBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansProItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansProLight.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts/Ubuntu.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/journal.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/lumen.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/paper.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/readable.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/sandstone.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/simplex.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/spacelab.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/united.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/yeti.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.eot
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.svg
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.woff
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.woff2
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/js/bootstrap.js
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/js/bootstrap.min.js
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/js/npm.js
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/shim/html5shiv.min.js
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/shim/respond.min.js
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/jquery-3.6.0/jquery-3.6.0.js
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/kePrint-0.0.1/kePrint.js
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/lightable-0.0.1/lightable.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4A1898c19f/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4A2343537f/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4A2a006b46/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4A3fda8682/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4A58ffdb66/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4A67080c75/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4A723b3c8e/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4A7fc0a40/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4Aa91afca/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4Ac051d8a8/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4Ac3239d90/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4Ac7b4b219/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4Aca9f5d83/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4Ad2e9bc30/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/373E9D4Afb778724/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/c1f1ya0euvqel/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/c58ylclv3lg4x/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/c7bualc0w1miv/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/c7bualc0w1miv/000010.html
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/c7bualc0w1miv/000010.json
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/c7bualc0w1miv/000010.metadata
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/c8ii4v8qfqtt7/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/c9q0hhxv7a1eo/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/c9q0hhxv7a1eo/000010.error
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/caotrkoi3adlm/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/000011.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/000013.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/000015.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/000017.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/000019.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/00001b.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/00001d.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/00001f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/000021.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/000023.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/000025.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/000027.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/000028.metadata
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/chd4ta9rmh0f3/000028.png
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/000043.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/000045.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/000047.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/000049.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/00004b.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/00004d.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/00004f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/000051.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/000053.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/000055.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/000057.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/000059.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/00005b.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/00005c.metadata
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cisv0oare3g84/00005c.png
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/ciyqpoyt06stf/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cpz5j6jssh3ce/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/00005d.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/00005f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/000061.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/000063.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/000065.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/000067.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/000069.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/00006b.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/00006d.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/00006f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/000071.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/000073.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/000075.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/000076.metadata
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cro2zzs2dem63/000076.png
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/csetup_chunk/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/00005d.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/00005f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/000061.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/000063.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/000065.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/000067.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/000069.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/00006b.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/00006d.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/00006f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/000071.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/000073.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/000075.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/000076.metadata
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cwqv124g8yypd/000076.png
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/cznpdkau3f92f/00000f.csv
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.css.map
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/bootstrap.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/bootstrap.css.map
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/bootstrap.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/cerulean.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/cosmo.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/darkly.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/flatly.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/Lato.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/LatoBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/LatoItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/NewsCycle.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/NewsCycleBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSans.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansBoldItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansLight.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansLightItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/Raleway.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/RalewayBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/Roboto.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/RobotoBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/RobotoLight.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/RobotoMedium.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansPro.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansProBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansProItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansProLight.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts/Ubuntu.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/journal.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/lumen.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/paper.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/readable.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/sandstone.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/simplex.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/spacelab.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/united.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/yeti.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.eot
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.svg
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.woff
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.woff2
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/js/bootstrap.js
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/js/bootstrap.min.js
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/js/npm.js
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/shim/html5shiv.min.js
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/shim/respond.min.js
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/jquery-3.6.0/jquery-3.6.0.js
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/kePrint-0.0.1/kePrint.js
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/lightable-0.0.1/lightable.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.css.map
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/bootstrap.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/bootstrap.css.map
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/bootstrap.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/cerulean.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/cosmo.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/darkly.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/flatly.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/Lato.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/LatoBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/LatoItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/NewsCycle.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/NewsCycleBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSans.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansBoldItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansLight.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansLightItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/Raleway.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/RalewayBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/Roboto.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/RobotoBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/RobotoLight.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/RobotoMedium.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansPro.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansProBold.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansProItalic.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansProLight.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/fonts/Ubuntu.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/journal.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/lumen.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/paper.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/readable.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/sandstone.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/simplex.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/spacelab.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/united.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/css/yeti.min.css
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.eot
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.svg
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.ttf
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.woff
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.woff2
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/js/bootstrap.js
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/js/bootstrap.min.js
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/shim/html5shiv.min.js
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/bootstrap-3.3.5/shim/respond.min.js
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  mpmaggregate/.Rproj.user/shared/notebooks/416D18B6-mpmaggregate/1/s/lib/lightable-0.0.1/lightable.css
+  mpmaggregate/.Rproj.user/shared/notebooks/4AEEAB47-mpmaggregate-leslie-to-leslie/1/373E9D4A1e533623/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/4B0DA204-mpmaggregate-leslie-to-leslie/1/373E9D4A58ffdb66/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/4B0DA204-mpmaggregate-leslie-to-leslie/1/373E9D4A67080c75/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/4B0DA204-mpmaggregate-leslie-to-leslie/1/373E9D4Ac3239d90/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/8F1F018C-mpmaggregate_general-to-general/1/373E9D4A7a078e5e/chunks.json
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4A1898c19f
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4A1e533623
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4A22f1da7f
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4A2343537f
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4A58ffdb66
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4A67080c75
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4Ac3239d90
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4Ac7b4b219
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4Aca9f5d83
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4Ad2e9bc30
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/373E9D4Afb778724
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/css/fonts
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/fonts
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/js
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/bootstrap-3.3.5/shim
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/jquery-3.6.0
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/kePrint-0.0.1
+  mpmaggregate/.Rproj.user/shared/notebooks/1FA4BDA4-mpmaggregate_general-to-general/1/s/lib/lightable-0.0.1
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/css/fonts
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/fonts
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/js
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/bootstrap-3.3.5/shim
+  mpmaggregate/.Rproj.user/shared/notebooks/3AE78B48-asian_elephant_aggregation/1/s/lib/lightable-0.0.1
+  mpmaggregate/.Rproj.user/shared/notebooks/8F1F018C-mpmaggregate_general-to-general/1/373E9D4A7a078e5e
+
+Tarballs are only required to store paths of up to 100 bytes and cannot
+store those of more than 256 bytes, with restrictions including to 100
+bytes for the final component.
+See section 'Package structure' in the 'Writing R Extensions' manual.
+* checking serialization versions ... OK
+* checking whether package 'mpmaggregate' can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Checking should be performed on sources prepared by 'R CMD build'.
+* checking top-level files ... NOTE
+Files 'README.md' or 'NEWS.md' cannot be checked without 'pandoc' being installed.
+Non-standard files/directories found at top level:
+  'LICENSE.md' 'Meta' 'doc' 'mpmaggregate.Rproj' 'renv' 'renv.lock'
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... WARNING
+Found the following directory with the name of a check directory:
+  ./..Rcheck
+Most likely, these were included erroneously.
+Found the following directory with the name of a version control directory:
+  ./.git
+These should not be in a package tarball.
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking files in 'vignettes' ... WARNING
+Files in the 'vignettes' directory but no files in 'inst/doc':
+  'asian_elephant_aggregation.Rmd' 'mpmaggregate-leslie-to-leslie.Rmd'
+  'mpmaggregate.Rmd' 'mpmaggregate_general-to-general.Rmd'
+* checking examples ... OK
+* checking for unstated dependencies in 'tests' ... OK
+* checking tests ... OK
+  Running 'testthat.R'
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes ... WARNING
+Directory 'inst/doc' does not exist.
+Package vignettes without corresponding single PDF/HTML:
+  'asian_elephant_aggregation.Rmd'
+  'mpmaggregate-leslie-to-leslie.Rmd'
+  'mpmaggregate.Rmd'
+  'mpmaggregate_general-to-general.Rmd'
+* checking re-building of vignette outputs ... OK
+* checking PDF version of manual ... OK
+* checking HTML version of manual ... NOTE
+Skipping checking math rendering: package 'V8' unavailable
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+Status: 3 WARNINGs, 6 NOTEs

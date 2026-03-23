@@ -19,20 +19,17 @@ A named list with elements:
 }
 }
 \description{
-Returns the dominant eigenvalue (lambda) and the stable age distribution \code{w} and
-reproductive values \code{v} for a Leslie matrix \code{A}.
+Returns the dominant eigenvalue (\eqn{\lambda}) and the stable age distribution
+\code{w} and reproductive values \code{v} for a Leslie matrix \code{A}.
 }
 \details{
 Normalization:
-#' The output is normalized using the conventions in \code{\link{leslie_stable_age}} and
+The output is normalized using the conventions in \code{\link{leslie_stable_age}} and
 \code{\link{leslie_reproductive_values}}
 \itemize{
   \item \code{w} is scaled so that \code{sum(w) = 1}
   \item \code{v} is scaled so that \code{sum(v * w) = 1}
 }
-
-A length-1 positive numeric is treated as a 1x1 Leslie matrix and returns
-\code{lambda = A}, \code{w = 1}, \code{v = 1}.
 }
 \examples{
 leslie_dominant_eigen(1)
@@ -49,12 +46,12 @@ sum(dom$v * dom$w)
 
 }
 \references{
-Caswell, H. 2001. Matrix population models: construction, analysis and
- interpretation (2nd ed.). Sinauer.
+Caswell, H. (2001). \emph{Matrix population models: construction, analysis and
+interpretation} (2nd ed.). Sinauer.
 
- Demetrius, L. 1974. Demographic parameters and natural selection. Proceedings
- of the National Academy of Sciences, 71(12), 4645-4647.
- https://doi.org/10.1073/pnas.71.12.4645
+Demetrius, L. (1974). Demographic parameters and natural selection.
+\emph{Proceedings of the National Academy of Sciences}, 71(12), 4645-4647.
+\doi{10.1073/pnas.71.12.4645}
 }
 \seealso{
 \code{\link{spectral_radius}}, \code{\link{leslie_stable_age}},

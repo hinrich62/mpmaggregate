@@ -29,6 +29,7 @@ For matrix population models with nonegative irreducible matrix, reproductive va
 positive (up to scaling).
 }
 \examples{
+#irreducible example
 A <- matrix(c(
   0, 1,
   0.5, 0
@@ -39,21 +40,8 @@ v <- reproductive_values(A)
 v
 sum(v * w)  # should be 1
 
-A<-rbind(c(1,1,0),
-         c(1,0,0),
-         c(0,1,0))
-
-w <- stable_stage(A)
-w
-sum(w)
-
-w <- stable_stage(A)
-v <- reproductive_values(A)
-v
-sum(v * w)  # should be 1
-
 }
 \references{
-Caswell, H. 2001. Matrix population models: construction, analysis and
- interpretation (2nd ed.). Sinauer.
+Caswell, H. (2001). \emph{Matrix population models: construction, analysis and
+interpretation} (2nd ed.). Sinauer.
 }

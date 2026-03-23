@@ -20,14 +20,13 @@ the structural constraints of a Leslie matrix (checked internally).}
 \item{ngroups}{Positive integer giving the number of aggregated age groups
 (the dimension \eqn{m} of the aggregated model). Must satisfy \code{ngroups <= n}.}
 
-\item{framework}{Character string; either \code{"lambda"} or \code{"R0"}.
+\item{framework}{Character scalar; either \code{"lambda"} or \code{"R0"}.
 Determines whether aggregation is based on the projection matrix \eqn{A}
 or an \eqn{R_0}-based reference matrix built from the implied \eqn{U} and
-\eqn{R} components of the Leslie matrix.}
+reproductive component of the Leslie matrix.}
 
-\item{criterion}{Character string; either \code{"standard"} or \code{"elasticity"}.
-For \code{"elasticity"}, the \eqn{P_eff} operator depends on reproductive values
-and the stable age distribution.}
+\item{criterion}{Character scalar; either \code{"standard"} for standard aggregation
+or \code{"elasticity"} for elasticity-consistent aggregation.}
 
 \item{tol}{Numeric tolerance used in positivity/zero-mass checks and balancing
 calculations for the elasticity-consistent case.}
@@ -39,44 +38,46 @@ A named list with elements:
 \describe{
   \item{\code{framework}}{The matched framework used (\code{"lambda"} or \code{"R0"}).}
   \item{\code{criterion}}{The matched criterion used (\code{"standard"} or \code{"elasticity"}).}
-  \item{\code{matAk_agg}}{Aggregated \eqn{k}-step matrix after grouping (\eqn{m \times m}).}
+  \item{\code{matAk_agg}}{Aggregated \eqn{k}-step Leslie matrix (\eqn{m \times m}).}
   \item{\code{effectiveness}}{A numeric effectiveness measure for the aggregation (definition depends on \code{criterion}).}
 }
 }
 \description{
-Aggregates a Leslie model using left and right aggregation operators
-\eqn{P_eff} and \eqn{Q_eff}:  \deqn{M_{\mathrm{agg}} = P_eff \, M \, Q_eff.}
+Aggregates a Leslie matrix into a smaller Leslie matrix with \code{ngroups}
+contiguous age classes.
 }
 \details{
-This function assumes the input is a valid Leslie matrix and implements
-aggregation with \code{ngroups = m} age groups. If the original dimensionality
-\eqn{n} is not an integer multiple of \eqn{m}, a disaggregation step is applied
-internally so that the expanded dimensionality is divisible by \eqn{m} before
-aggregation proceeds.
+This function assumes the input is a valid Leslie matrix and checks the Leslie
+structure internally. If the original dimensionality \eqn{n} is not an integer
+multiple of \eqn{m}, a disaggregation step is applied internally so that the
+expanded dimensionality is divisible by \eqn{m} before aggregation proceeds.
 
-The operators \eqn{P_eff} and \eqn{Q_eff} depend on the chosen \code{framework} and
-\code{criterion}:
-\itemize{
-  \item \code{framework = "lambda"}, \code{criterion = "standard"}
-  \item \code{framework = "lambda"}, \code{criterion = "elasticity"}
-  \item \code{framework = "R0"},     \code{criterion = "standard"}
-  \item \code{framework = "R0"},     \code{criterion = "elasticity"}
-}
+Aggregation can be performed under two frameworks (\code{"lambda"} or \code{"R0"})
+and two criteria (\code{"standard"} or \code{"elasticity"}), which determine how
+age classes are weighted during aggregation.
 
-\strong{Irreducibility requirement.} The (effective) Leslie matrix used by the
-selected framework must be nonnegative, square, and irreducible. This function
-enforces irreducibility of \code{matA} and will error if reducible.
+Irreducibility requirement: The input Leslie matrix \code{matA} must be
+irreducible. This function checks irreducibility of \code{matA} and will fail
+if it is reducible. (Any internal disaggregation preserves irreducibility.)
 
 
 The Leslie matrix is internally decomposed into a reproductive component \eqn{R}
-(the first row) and a survival probability component \eqn{U} (the subdiagonal and any
-survival terms implied by the Leslie structure). For \code{framework = "R0"},
-the next-generation matrix \eqn{K = R (I - U)^{-1}} is formed and its Perron
+(the first row) and a survival component \eqn{U} (the subdiagonal and any survival
+terms implied by the Leslie structure). For \code{framework = "R0"}, the
+next-generation matrix \eqn{K = R (I - U)^{-1}} is formed and its dominant
 eigenvalue is used as \eqn{R_0}.
 
-Aggregation proceeds on a \eqn{k}-step matrix where \eqn{k = n/m} after any
-required disaggregation. The function returns the aggregated \eqn{k}-step
-matrix (denoted \code{matAk_agg} in the output).
+Aggregation proceeds on a \eqn{k}-step matrix where \eqn{k = n/m},
+with \eqn{n} the dimension of the input Leslie matrix and
+\eqn{m =} \code{ngroups}. The function returns an
+\eqn{m \times m} \eqn{k}-step Leslie matrix (stored as
+\code{matAk_agg}) describing transitions among the aggregated age classes.
+
+Effectiveness measures how closely the aggregated model reproduces the behavior
+of the original model under the chosen \code{framework} and \code{criterion}. When
+\code{effectiveness} is high (close to 1), applying the original model and then
+aggregating gives nearly the same result as aggregating first and then applying the
+aggregated model.
 
 The returned element \code{effectiveness} is computed for both criteria:
 \itemize{
@@ -115,12 +116,12 @@ res_el$effectiveness
 
 }
 \references{
-Hinrichsen, R. A. 2023. Aggregation of Leslie matrix models with application to
-ten diverse animal species. Population Ecology, 65(3), 146-166.
-https://doi.org/10.1002/1438-390X.12149
+Hinrichsen, R. A. (2023). Aggregation of Leslie matrix models with application to
+ten diverse animal species. \emph{Population Ecology}, 65(3), 146-166.
+\doi{10.1002/1438-390X.12149}
 
-Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From theory to
+Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. (2026). From theory to
 application: Elasticity-consistent aggregation of Leslie matrix population
-models for comparative demography. bioRxiv, preprint.
-https://doi.org/10.64898/2026.02.04.703802
+models for comparative demography. \emph{bioRxiv}, preprint.
+\doi{10.64898/2026.02.04.703802}
 }

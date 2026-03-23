@@ -1,7 +1,7 @@
-# tests/testthat/test-elasticity.R
+# tests/testthat/test-mpm_elasticity.R
 
 
-test_that("elasticity: lambda framework input checks", {
+test_that("mpm_elasticity: lambda framework input checks", {
   matA <- matrix(
     c(
       0.2, 0.0,
@@ -11,7 +11,7 @@ test_that("elasticity: lambda framework input checks", {
   )
 
   # matA required
-  expect_error(elasticity(matA = NULL, framework = "lambda"),
+  expect_error(mpm_elasticity(matA = NULL, framework = "lambda"),
                "`matA` must be provided")
 
   # components must be NULL in lambda framework
@@ -31,19 +31,19 @@ test_that("elasticity: lambda framework input checks", {
     nrow = 2, byrow = TRUE
   )
 
-  expect_error(elasticity(
+  expect_error(mpm_elasticity(
     matA = matA,
     matF = matF,
     framework = "lambda"
   ),
   "only `matA` may be supplied")
-  expect_error(elasticity(
+  expect_error(mpm_elasticity(
     matA = matA,
     matU = matU,
     framework = "lambda"
   ),
   "only `matA` may be supplied")
-  expect_error(elasticity(
+  expect_error(mpm_elasticity(
     matA = matA,
     matC = matF,
     framework = "lambda"
@@ -51,28 +51,28 @@ test_that("elasticity: lambda framework input checks", {
   "only `matA` may be supplied")
 
   # matA must be a numeric matrix
-  expect_error(elasticity(matA = list(1, 2), framework = "lambda"),
+  expect_error(mpm_elasticity(matA = list(1, 2), framework = "lambda"),
                "must be a numeric matrix")
 
   # matA must be square
   matA_ns <- matrix(1, nrow = 2, ncol = 3)
-  expect_error(elasticity(matA = matA_ns, framework = "lambda"),
+  expect_error(mpm_elasticity(matA = matA_ns, framework = "lambda"),
                "must be square")
 
   # matA must be nonnegative
   matA_neg <- matA
   matA_neg[1, 1] <- -0.01
-  expect_error(elasticity(matA = matA_neg, framework = "lambda"),
+  expect_error(mpm_elasticity(matA = matA_neg, framework = "lambda"),
                "must be nonnegative")
 
   # matA must not contain NA
   matA_na <- matA
   matA_na[1, 2] <- NA_real_
-  expect_error(elasticity(matA = matA_na, framework = "lambda"), "contains NA")
+  expect_error(mpm_elasticity(matA = matA_na, framework = "lambda"), "contains NA")
 })
 
 
-test_that("elasticity: R0 framework input checks", {
+test_that("mpm_elasticity: R0 framework input checks", {
   matF <- matrix(
     c(
       0.0, 1.2,
@@ -91,7 +91,7 @@ test_that("elasticity: R0 framework input checks", {
 
   # matA must be NULL
   matA <- matF + matU
-  expect_error(elasticity(
+  expect_error(mpm_elasticity(
     matA = matA,
     matF = matF,
     matU = matU,
@@ -101,7 +101,7 @@ test_that("elasticity: R0 framework input checks", {
 
   # matF and matU required
   expect_error(
-    elasticity(
+    mpm_elasticity(
       matF = NULL,
       matU = matU,
       framework = "R0"
@@ -109,7 +109,7 @@ test_that("elasticity: R0 framework input checks", {
     "`matF` and `matU` must be provided"
   )
   expect_error(
-    elasticity(
+    mpm_elasticity(
       matF = matF,
       matU = NULL,
       framework = "R0"
@@ -118,7 +118,7 @@ test_that("elasticity: R0 framework input checks", {
   )
 
   # must be numeric matrices
-  expect_error(elasticity(
+  expect_error(mpm_elasticity(
     matF = list(1, 2),
     matU = matU,
     framework = "R0"
@@ -127,7 +127,7 @@ test_that("elasticity: R0 framework input checks", {
 
   # must be square
   matF_ns <- matrix(1, nrow = 2, ncol = 3)
-  expect_error(elasticity(
+  expect_error(mpm_elasticity(
     matF = matF_ns,
     matU = matU,
     framework = "R0"
@@ -136,7 +136,7 @@ test_that("elasticity: R0 framework input checks", {
 
   # dims must match
   matU3 <- diag(3)
-  expect_error(elasticity(
+  expect_error(mpm_elasticity(
     matF = matF,
     matU = matU3,
     framework = "R0"
@@ -146,7 +146,7 @@ test_that("elasticity: R0 framework input checks", {
   # matC dims must match if provided
   matC_bad <- diag(3)
   expect_error(
-    elasticity(
+    mpm_elasticity(
       matF = matF,
       matU = matU,
       matC = matC_bad,
@@ -158,7 +158,7 @@ test_that("elasticity: R0 framework input checks", {
   # nonnegativity
   matU_neg <- matU
   matU_neg[2, 2] <- -0.01
-  expect_error(elasticity(
+  expect_error(mpm_elasticity(
     matF = matF,
     matU = matU_neg,
     framework = "R0"
@@ -167,7 +167,7 @@ test_that("elasticity: R0 framework input checks", {
 })
 
 
-test_that("elasticity: lambda framework returns expected structure and numeric matrix (mocked)",
+test_that("mpm_elasticity: lambda framework returns expected structure and numeric matrix (mocked)",
           {
             matA <- matrix(
               c(
@@ -193,7 +193,7 @@ test_that("elasticity: lambda framework returns expected structure and numeric m
                 list(w = w, v = v, lambda = lambda)
             )
 
-            out <- elasticity(matA = matA, framework = "lambda")
+            out <- mpm_elasticity(matA = matA, framework = "lambda")
 
             expect_type(out, "list")
             expect_named(out, c("framework", "elasticity"))
@@ -208,7 +208,7 @@ test_that("elasticity: lambda framework returns expected structure and numeric m
           })
 
 
-test_that("elasticity: R0 framework returns expected structure and numeric matrix (mocked)",
+test_that("mpm_elasticity: R0 framework returns expected structure and numeric matrix (mocked)",
           {
             matF <- matrix(
               c(
@@ -247,7 +247,7 @@ test_that("elasticity: R0 framework returns expected structure and numeric matri
                 list(w = w, v = v, lambda = 999) # lambda unused in R0 branch
             )
 
-            out <- elasticity(matF = matF,
+            out <- mpm_elasticity(matF = matF,
                               matU = matU,
                               framework = "R0",
                               normalize=FALSE)
@@ -267,7 +267,7 @@ test_that("elasticity: R0 framework returns expected structure and numeric matri
           })
 
 
-test_that("elasticity: R0 framework errors when (I - U) is singular", {
+test_that("mpm_elasticity: R0 framework errors when (I - U) is singular", {
   # Make I - U singular: U = I
   matU <- diag(2)
   matF <- matrix(
@@ -292,7 +292,7 @@ test_that("elasticity: R0 framework errors when (I - U) is singular", {
       )
   )
 
-  expect_error(elasticity(
+  expect_error(mpm_elasticity(
     matF = matF,
     matU = matU,
     framework = "R0"
@@ -312,7 +312,7 @@ test_that("elasticity (lambda framework) matches numerical derivative", {
   )
 
   ## compute analytic elasticity
-  out <- elasticity(matA = matA, framework = "lambda")
+  out <- mpm_elasticity(matA = matA, framework = "lambda")
   E_analytic <- out$elasticity
 
   ## baseline lambda
@@ -374,7 +374,7 @@ test_that("elasticity (R0 framework) matches numerical derivative of R0 w.r.t. e
             matC <- NULL
 
             # Analytic elasticity from your function
-            out <- elasticity(matF = matF,
+            out <- mpm_elasticity(matF = matF,
                               matU = matU,
                               framework = "R0",
                               normalize = FALSE)

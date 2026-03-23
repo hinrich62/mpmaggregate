@@ -5,17 +5,17 @@
 #' \deqn{\rho(A) = \max |\lambda_i|}
 #'
 #' This function is primarily intended for use with matrix population models,
-#' where the spectral radius corresponds to the asymptotic growth rate
+#' where the spectral radius corresponds to the stable growth rate
 #' (i.e., \eqn{\lambda}) when the governing matrix is square and nonnegative.
 #' It is also used to calculate net reproductive rate \eqn{R_0} from a
-#' generation-to-generation matrix.
+#' next generation matrix.
 #'
 #' @param A A square numeric matrix.
 #'
 #' @return A single numeric value giving the spectral radius of \code{A}.
 #'
 #' @references
-#' Horn, R.A. and Johnson, C.R. 2013. Matrix analysis. Cambridge university press.
+#' Horn, R. A. and Johnson, C. R. (2013). \emph{Matrix analysis}. Cambridge University Press.
 #'
 #' @examples
 #' A <- matrix(c(
@@ -48,7 +48,7 @@ spectral_radius <- function(A) {
 #' is normalized so that \code{sum(w) = 1}.
 #'
 #' For matrix population models with nonegative irreducible matrix, stable stage densities are strictly
-#' positive (up to scaling).
+#' positive.
 #'
 #' @param A A square numeric matrix.
 #' @param tol Numeric tolerance used for positivity/normalization checks.
@@ -59,8 +59,8 @@ spectral_radius <- function(A) {
 #'   normalized to sum to 1.
 #'
 #' @references
-#'  Caswell, H. 2001. Matrix population models: construction, analysis and
-#'  interpretation (2nd ed.). Sinauer.
+#' Caswell, H. (2001). \emph{Matrix population models: construction, analysis and
+#' interpretation} (2nd ed.). Sinauer.
 #'
 #' @examples
 #' #irreducible example
@@ -68,14 +68,6 @@ spectral_radius <- function(A) {
 #'   0, 1,
 #'   0.5, 0
 #' ), nrow = 2, byrow = TRUE)
-#'
-#' w <- stable_stage(A)
-#' w
-#' sum(w)
-#' #reducible example
-#' A<-rbind(c(1,1,0),
-#'          c(1,0,0),
-#'          c(0,1,0))
 #'
 #' w <- stable_stage(A)
 #' w
@@ -151,28 +143,15 @@ stable_stage <- function(A,
 #'   that \code{sum(v * w) = 1}.
 #'
 #' @references
-#'  Caswell, H. 2001. Matrix population models: construction, analysis and
-#'  interpretation (2nd ed.). Sinauer.
+#' Caswell, H. (2001). \emph{Matrix population models: construction, analysis and
+#' interpretation} (2nd ed.). Sinauer.
 #'
 #' @examples
+#' #irreducible example
 #' A <- matrix(c(
 #'   0, 1,
 #'   0.5, 0
 #' ), nrow = 2, byrow = TRUE)
-#'
-#' w <- stable_stage(A)
-#' v <- reproductive_values(A)
-#' v
-#' sum(v * w)  # should be 1
-#'
-#reducible example
-#' A<-rbind(c(1,1,0),
-#'          c(1,0,0),
-#'          c(0,1,0))
-#'
-#' w <- stable_stage(A)
-#' w
-#' sum(w)
 #'
 #' w <- stable_stage(A)
 #' v <- reproductive_values(A)
@@ -234,7 +213,7 @@ reproductive_values <- function(A,
 
 #' Dominant eigen-elements of a population projection matrix
 #'
-#' Returns the dominant eigenvalue (lambda) and associated right/left eigenvectors
+#' Returns the dominant eigenvalue and its associated right/left eigenvectors
 #' (stable stage distribution \code{w} and reproductive values \code{v}) for a square
 #' population projection matrix \code{A}.
 #'
@@ -260,8 +239,8 @@ reproductive_values <- function(A,
 #' }
 #'
 #' @references
-#'  Caswell, H. 2001. Matrix population models: construction, analysis and
-#'  interpretation (2nd ed.). Sinauer.
+#' Caswell, H. (2001). \emph{Matrix population models: construction, analysis and
+#' interpretation} (2nd ed.). Sinauer.
 #'
 #' @examples
 #' A <- matrix(c(
@@ -269,16 +248,6 @@ reproductive_values <- function(A,
 #'   0.5, 0,   0,
 #'   0,   0.8, 0.9
 #' ), nrow = 3, byrow = TRUE)
-#'
-#' dom <- dominant_eigen(A)
-#' dom$lambda
-#' sum(dom$w)
-#' sum(dom$v * dom$w)
-#'
-#' #reducible example
-#' A<-rbind(c(1,1,0),
-#'          c(1,0,0),
-#'          c(0,1,0))
 #'
 #' dom <- dominant_eigen(A)
 #' dom$lambda
@@ -310,8 +279,8 @@ dominant_eigen <- function(A,
 #' Stable age distribution for a Leslie matrix
 #'
 #' Computes the stable age distribution for a Leslie matrix \code{A} using the standard
-#' recursion based on subdiagonal survival probabilities and the dominant eigenvalue
-#' (spectral radius). The output is scaled so that \code{sum(w) = 1}.
+#' recursion based on subdiagonal survival probabilities and the dominant eigenvalue.
+#' The output is scaled so that \code{sum(w) = 1}.
 #'
 #' A length-1 positive numeric is treated as a 1x1 Leslie matrix and returns \code{1}.
 #'
@@ -332,12 +301,12 @@ dominant_eigen <- function(A,
 #' leslie_stable_age(L)
 #'
 #' @references
-#'  Caswell, H. 2001. Matrix population models: construction, analysis and
-#'  interpretation (2nd ed.). Sinauer.
+#' Caswell, H. (2001). \emph{Matrix population models: construction, analysis and
+#' interpretation} (2nd ed.). Sinauer.
 #'
-#'  Demetrius, L. 1974. Demographic parameters and natural selection. Proceedings
-#'  of the National Academy of Sciences, 71(12), 4645-4647.
-#'  https://doi.org/10.1073/pnas.71.12.4645
+#' Demetrius, L. (1974). Demographic parameters and natural selection.
+#' \emph{Proceedings of the National Academy of Sciences}, 71(12), 4645-4647.
+#' \doi{10.1073/pnas.71.12.4645}
 #'
 #' @export
 leslie_stable_age <- function(A) {
@@ -349,7 +318,7 @@ leslie_stable_age <- function(A) {
   }
 
   if (!is_leslie(A))
-    stop("A is not a Leslie matrix.", call. = FALSE)
+    stop("Input matrix must be a Leslie matrix.", call. = FALSE)
 
   n <- nrow(A)
   if (n == 1L)
@@ -382,7 +351,7 @@ leslie_stable_age <- function(A) {
 #' \code{sum(v * w) = 1}, where \code{w} is the stable age distribution returned by
 #' \code{\link{leslie_stable_age}}.
 #'
-#' This implementation follows the Demetrius (1974) shortcut expressed in terms of
+#' This implementation follows Demetrius (1974) equation expressed in terms of
 #' the stable age distribution and fertility rates.
 #'
 #' A length-1 positive numeric is treated as a 1x1 Leslie matrix and returns \code{1}.
@@ -394,12 +363,12 @@ leslie_stable_age <- function(A) {
 #'   \code{sum(v * w) = 1}.
 #'
 #' @references
-#'  Caswell, H. 2001. Matrix population models: construction, analysis and
-#'  interpretation (2nd ed.). Sinauer.
+#' Caswell, H. (2001). \emph{Matrix population models: construction, analysis and
+#' interpretation} (2nd ed.). Sinauer.
 #'
-#'  Demetrius, L. 1974. Demographic parameters and natural selection. Proceedings
-#'  of the National Academy of Sciences, 71(12), 4645-4647.
-#'  https://doi.org/10.1073/pnas.71.12.4645
+#' Demetrius, L. (1974). Demographic parameters and natural selection.
+#' \emph{Proceedings of the National Academy of Sciences}, 71(12), 4645-4647.
+#' \doi{10.1073/pnas.71.12.4645}
 #'
 #' @examples
 #' leslie_reproductive_values(1)
@@ -423,7 +392,7 @@ leslie_reproductive_values <- function(A) {
   }
 
   if (!is_leslie(A))
-    stop("A is not a Leslie matrix.", call. = FALSE)
+    stop("Input matrix must be a Leslie matrix.", call. = FALSE)
 
   n <- nrow(A)
   if (n == 1L)
@@ -476,19 +445,17 @@ leslie_reproductive_values <- function(A) {
 
 #' Dominant eigen-elements of a Leslie matrix
 #'
-#' Returns the dominant eigenvalue (lambda) and the stable age distribution \code{w} and
-#' reproductive values \code{v} for a Leslie matrix \code{A}.
+#' Returns the dominant eigenvalue (\eqn{\lambda}) and the stable age distribution
+#' \code{w} and reproductive values \code{v} for a Leslie matrix \code{A}.
 #'
 #' Normalization:
-#' #' The output is normalized using the conventions in \code{\link{leslie_stable_age}} and
+#' The output is normalized using the conventions in \code{\link{leslie_stable_age}} and
 #' \code{\link{leslie_reproductive_values}}
 #' \itemize{
 #'   \item \code{w} is scaled so that \code{sum(w) = 1}
 #'   \item \code{v} is scaled so that \code{sum(v * w) = 1}
 #' }
 #'
-#' A length-1 positive numeric is treated as a 1x1 Leslie matrix and returns
-#' \code{lambda = A}, \code{w = 1}, \code{v = 1}.
 #'
 #' @param A A Leslie matrix (checked with \code{\link{is_leslie}}). A length-1 positive numeric
 #'   will be coerced to a 1x1 matrix.
@@ -501,12 +468,12 @@ leslie_reproductive_values <- function(A) {
 #' }
 #'
 #' @references
-#'  Caswell, H. 2001. Matrix population models: construction, analysis and
-#'  interpretation (2nd ed.). Sinauer.
+#' Caswell, H. (2001). \emph{Matrix population models: construction, analysis and
+#' interpretation} (2nd ed.). Sinauer.
 #'
-#'  Demetrius, L. 1974. Demographic parameters and natural selection. Proceedings
-#'  of the National Academy of Sciences, 71(12), 4645-4647.
-#'  https://doi.org/10.1073/pnas.71.12.4645
+#' Demetrius, L. (1974). Demographic parameters and natural selection.
+#' \emph{Proceedings of the National Academy of Sciences}, 71(12), 4645-4647.
+#' \doi{10.1073/pnas.71.12.4645}
 #'
 #' @examples
 #' leslie_dominant_eigen(1)
@@ -533,7 +500,7 @@ leslie_dominant_eigen <- function(A) {
   }
 
   if (!is_leslie(A))
-    stop("A is not a Leslie matrix.", call. = FALSE)
+    stop("Input matrix must be a Leslie matrix.", call. = FALSE)
 
   n <- nrow(A)
   if (n == 1L) {

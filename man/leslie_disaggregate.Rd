@@ -23,11 +23,11 @@ Expands an \eqn{n \times n} Leslie matrix \code{A} to an
 }
 \details{
 Disaggregation is required when aggregating a Leslie model to dimensionality \code{m}
-and \code{m} does not divide \code{n} evenly. The expanded matrix introduces a finer
+whenever \code{m} does not divide \code{n} evenly. The expanded matrix introduces a finer
 age structure that is compatible with both dimensionalities.
 
 Each original age class is subdivided into
-\eqn{m_1 = n_{new} / n} sub-classes. Fertility rates from original age class \eqn{i}
+\eqn{n_{new} / n} sub-classes. Fertility rates from original age class \eqn{i}
 are placed at the end of the corresponding block, deterministic aging within blocks
 is represented by ones on the subdiagonal, and original survival probabilities are
 inserted at block boundaries.
@@ -42,12 +42,12 @@ leslie_disaggregate(L, m = 2)
 
 }
 \references{
-Hinrichsen, R. A. 2023. Aggregation of Leslie matrix models with application to
-ten diverse animal species. Population Ecology, 65(3), 146-166.
-https://doi.org/10.1002/1438-390X.12149
+Hinrichsen, R. A. (2023). Aggregation of Leslie matrix models with application to
+ten diverse animal species. \emph{Population Ecology}, 65(3), 146-166.
+\doi{10.1002/1438-390X.12149}
 
-Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From theory to
+Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. (2026). From theory to
 application: Elasticity-consistent aggregation of Leslie matrix population
-models for comparative demography. bioRxiv, preprint.
-https://doi.org/10.64898/2026.02.04.703802
+models for comparative demography. \emph{bioRxiv}, preprint.
+\doi{10.64898/2026.02.04.703802}
 }

@@ -71,53 +71,36 @@ We begin by loading the packages used to access matrix population models, perfor
 matrix aggregation, and format output for display.
 ```{r packages}
 library(mpmaggregate)
-library(Rcompadre)
 library(kableExtra)
 library(rphylopic)
 ```
 ## Data acquisition (COMADRE via Rcompadre)
 
-We download a stable COMADRE release using `cdb_fetch()`, then subset to 
-the two matrices of interest.
+The Asian Elephant data is stored in the data directory.  Retrieve data using data() command. 
 
 ```{r fetch-comadre}
-comadre <- cdb_fetch("comadre", version = "4.23.3.1")
-iii <- (comadre$Genus == "Elephas") & (comadre$Species == "maximus")
-comadre.asian.elephant <- comadre[iii, ]
 
-# Development note: save metadata for future use
-#write.table(cdb_metadata(comadre.asian.elephant),file="C:/Users/Rich/projects/mpmaggregate/inst/extdata/elephas-maximus.csv",sep=",", col.names=NA)
+# Matrices for Asian elephant populations included in this package were
+# originally retrieved from COMADRE using the Rcompadre package.
+
+# Not run: requires Rcompadre and internet access
+
+# library(Rcompadre)
+# comadre <- cdb_fetch("comadre",version = "4.23.3.1")
+# mpm_elephant1 <- comadre[comadre$MatrixID == 249273, ]
+# matA_elephant1 <- matA(mpm_elephant1)[[1]]             # Projection interval is 5 years
+# matA_elephant1 <- matA_elephant1[1:12,1:12]            # Confine to females 
+# mpm_elephant2 <- comadre[comadre$MatrixID == 249274, ]
+# matA_elephant2 <- matA(mpm_elephant2)[[1]]             # Projection interval is 1 year
+# matA_elephant2[60, 60] <- 0                            # Make a true Leslie Matrix
+# usethis::use_data(matA_elephant1, matA_elephant2,      # Write data (development)
+# overwrite = TRUE)    
+
+
+data(matA_elephant1, matA_elephant2, package="mpmaggregate")
+matA_coarse <- matA_elephant1 # 12x12 5-year projection interval
+matA_fine <- matA_elephant2   # 60x60 1-year projection interval
 ```
-
-### Subset to the two Asian elephant matrices
-
-**Important:** COMADRE/COMPADRE use a matrix identifier column that is named  `MatrixID`.
-
-```{r subset-elephant}
-#return the matrix A from comadre.asian.elephant
-#associated with MatrixID matid
-get_matrix <- function(matid) {
-  comadre2 <- comadre.asian.elephant[comadre.asian.elephant$MatrixID == matid, ]
-  A <- matA(comadre2)[[1]]
-  return(A)
-}
-
-matA.coarse <- get_matrix(249273) # Asian elephant Leslie matrix with projection interval of 5 years
-matA.fine <- get_matrix(249274) #Asian elephant Leslie matrix with projection interval of 1 year
-
-#confine to females
-matA.coarse <- matA.coarse[1:12, 1:12]
-
-#make matA.fine a true Leslie matrix
-matA.fine[60, 60] <- 0
-
-#verify projection intervals and matrix dimensionality
-comadre.asian.elephant$MatrixID
-comadre.asian.elephant$ProjectionInterval
-c(nrow(matA.coarse), nrow(matA.fine))
-
-```
-
 ## Define the aggregation target
 
 We aggregate Periyar Reserve Asian elephant MPM from an annual time step to a 5-year time step, allowing
@@ -141,40 +124,40 @@ We now run `leslie_aggregate()` under the four combinations.
 ```{r leslie-aggregation}
 
 res <- leslie_aggregate(
-  matA.fine,
+  matA_fine,
   ngroups = 12,
   framework = "lambda",
   criterion = "standard"
 )
-matB.lambda.stand <- res$matAk_agg
-matB.lambda.stand.eff <- res$effectiveness
+matB_lambda_stand <- res$matAk_agg
+matB_lambda_stand_eff <- res$effectiveness
 
 res <- leslie_aggregate(
-  matA.fine,
+  matA_fine,
   ngroups = 12,
   framework = "lambda",
   criterion = "elasticity"
 )
-matB.lambda.elast <- res$matAk_agg
-matB.lambda.elast.eff <- res$effectiveness
+matB_lambda_elast <- res$matAk_agg
+matB_lambda_elast_eff <- res$effectiveness
 
 res <- leslie_aggregate(
-  matA.fine,
+  matA_fine,
   ngroups = 12,
   framework = "R0",
   criterion = "standard"
 )
-matB.R0.stand <- res$matAk_agg
-matB.R0.stand.eff<- res$effectiveness
+matB_R0_stand <- res$matAk_agg
+matB_R0_stand_eff<- res$effectiveness
 
 res <- leslie_aggregate(
-  matA.fine,
+  matA_fine,
   ngroups = 12,
   framework = "R0",
   criterion = "elasticity"
 )
-matB.R0.elast <- res$matAk_agg
-matB.R0.elast.eff <- res$effectiveness
+matB_R0_elast <- res$matAk_agg
+matB_R0_elast_eff <- res$effectiveness
 ```
 ## Comparison to an existing coarse (5-year) matrix
 
@@ -236,11 +219,11 @@ get_generation_time_R0 <- function(A) {
 
 ```{r define-models}
 models <- list(
-  "Orig. coarse"             = matA.coarse,
-  "Agg λ + standard"         = matB.lambda.stand,
-  "Agg λ + elasticity"       = matB.lambda.elast,
-  "Agg R0 + standard"        = matB.R0.stand,
-  "Agg R0 + elasticity"      = matB.R0.elast
+  "Orig. coarse"             = matA_coarse,
+  "Agg λ + standard"         = matB_lambda_stand,
+  "Agg λ + elasticity"       = matB_lambda_elast,
+  "Agg R0 + standard"        = matB_R0_stand,
+  "Agg R0 + elasticity"      = matB_R0_elast
 )
 ```
 
@@ -254,8 +237,8 @@ results <- data.frame(
   R0     = sapply(models, get_R0_leslie),
   Ta     = sapply(models, get_generation_time_lambda)*5,  #measure in years
   Tc     = sapply(models, get_generation_time_R0)*5,      #measure in years
-  Eff    = c(NA,matB.lambda.stand.eff,matB.lambda.elast.eff,
-             matB.R0.stand.eff,matB.R0.elast.eff),
+  Eff    = c(NA,matB_lambda_stand_eff,matB_lambda_elast_eff,
+             matB_R0_stand_eff,matB_R0_elast_eff),
   row.names = NULL,
   stringsAsFactors = FALSE
 )
@@ -331,12 +314,25 @@ the Figure Legend are as described in the caption of Table 1.
 
 
 ```{r vital-rates-barplot, fig.height=8, fig.width=10}
-#Asian elephant
-uuid <- "7c9ab182-175d-4f02-96d0-09c1e5212bff"
-img <- get_phylopic(uuid = uuid,
-                    format = "raster",
-                    height = 691)
 
+#Asian elephant
+#"Elephas maximus" by  T. Michael Keesey (2011; CC BY 3.0).
+
+# Not run: requires internet access
+
+# uuid <- "7c9ab182-175d-4f02-96d0-09c1e5212bff"
+# img <- get_phylopic(uuid = uuid, format = "raster", height = 691)
+# Write image 
+# png::writePNG(unclass(img), "inst/extdata/elephant.png")
+
+
+img_file <- system.file("extdata", "elephant.png", package = "mpmaggregate")
+
+if (!nzchar(img_file)) {
+  img_file <- "../inst/extdata/elephant.png"
+}
+
+img <- png::readPNG(img_file)
 # ---- Helpers to extract Leslie vital rates from A ----
 extract_fertility <- function(A) {
   as.numeric(A[1, ])
@@ -490,16 +486,28 @@ figure legend are as described in the caption of Table 1.
 
 
 ```{r lambda-elasticities-barplot, fig.height=8, fig.width=10}
-
 #Asian elephant
-uuid <- "7c9ab182-175d-4f02-96d0-09c1e5212bff"
-img <- get_phylopic(uuid = uuid,
-                    format = "raster",
-                    height = 691)
+#"Elephas maximus" by  T. Michael Keesey (2011; CC BY 3.0).
+
+# Not run: requires internet access
+
+# uuid <- "7c9ab182-175d-4f02-96d0-09c1e5212bff"
+# img <- get_phylopic(uuid = uuid, format = "raster", height = 691)
+# Write image 
+# png::writePNG(unclass(img), "inst/extdata/elephant.png")
+
+
+img_file <- system.file("extdata", "elephant.png", package = "mpmaggregate")
+
+if (!nzchar(img_file)) {
+  img_file <- "../inst/extdata/elephant.png"
+}
+
+img <- png::readPNG(img_file)
 
 # Compute elasticity matrices for each model (same dimensions as A)
 E_models <- lapply(models, function(A) {
-  E <- mpmaggregate::elasticity(A, framework = "lambda")$elasticity
+  E <- mpm_elasticity(A, framework = "lambda")$elasticity
   as.matrix(E)
 })
 
@@ -647,10 +655,23 @@ The models in the figure legend are as described in caption of Table 1.
 ```{r R0-elasticities-barplot, fig.height=8, fig.width=10}
 
 #Asian elephant
-uuid <- "7c9ab182-175d-4f02-96d0-09c1e5212bff"
-img <- get_phylopic(uuid = uuid,
-                    format = "raster",
-                    height = 691)
+#"Elephas maximus" by  T. Michael Keesey (2011; CC BY 3.0).
+
+# Not run: requires internet access
+
+# uuid <- "7c9ab182-175d-4f02-96d0-09c1e5212bff"
+# img <- get_phylopic(uuid = uuid, format = "raster", height = 691)
+# Write image 
+# png::writePNG(unclass(img), "inst/extdata/elephant.png")
+
+
+img_file <- system.file("extdata", "elephant.png", package = "mpmaggregate")
+
+if (!nzchar(img_file)) {
+  img_file <- "../inst/extdata/elephant.png"
+}
+
+img <- png::readPNG(img_file)
 
 # Compute elasticity matrices for each model (same dimensions as A)
 # These are elasticities of R0 wrt to matrix entries
@@ -661,7 +682,7 @@ E_models <- lapply(models, function(A) {
   matU[1,] <- 0
   matF <- matrix(0,n,n)
   matF[1,] <- A[1,]
-  E <- mpmaggregate::elasticity(matA=NULL, matF = matF, matU = matU, 
+  E <- mpm_elasticity(matA=NULL, matF = matF, matU = matU, 
                   framework = "R0", normalize = TRUE)$elasticity
   as.matrix(E)
 })
@@ -839,36 +860,37 @@ as the most influential group of vital rates controlling \(\lambda\) and \(R_0\)
 
 ## References
 
-Chelliah, K., Bukka, H. and Sukumar, R., 2013. Modeling harvest rates and numbers 
-from age and sex ratios: a demonstration for elephant populations. Biological 
-Conservation, 165, 54-61. https://doi.org/10.1016/j.biocon.2013.05.008
+Chelliah, K., Bukka, H., and Sukumar, R. (2013). Modeling harvest rates and numbers 
+from age and sex ratios: a demonstration for elephant populations. *Biological Conservation*, 
+165, 54–61. https://doi.org/10.1016/j.biocon.2013.05.008
 
-Gearty, W., & Jones, L. A. 2023. rphylopic: An R package for fetching, transforming, 
-and visualising PhyloPic silhouettes. Methods in Ecology and Evolution, 2700-2708.
+Gearty, W., and Jones, L. A. (2023). rphylopic: An R package for fetching, transforming, 
+and visualising PhyloPic silhouettes. *Methods in Ecology and Evolution*, 14, 2700–2708. 
 https://doi.org/10.1111/2041-210X.14221
 
-Goswami, V.R., Vasudev, D. and Oli, M.K., 2014. The importance of conflict-induced 
-mortality for conservation planning in areas of human–elephant co-occurrence. Biological 
-Conservation, 176, 191-198. https://doi.org/10.1016/j.biocon.2014.05.026
+Goswami, V. R., Vasudev, D., and Oli, M. K. (2014). The importance of conflict-induced 
+mortality for conservation planning in areas of human–elephant co-occurrence. 
+*Biological Conservation*, 176, 191–198. https://doi.org/10.1016/j.biocon.2014.05.026
 
-Hinrichsen, R. A. 2023. Aggregation of Leslie matrix models with application to 
-ten diverse animal species. Population Ecology, 65(3), 146-166.
+Hinrichsen, R. A. (2023). Aggregation of Leslie matrix models with application to 
+ten diverse animal species. *Population Ecology*, 65(3), 146–166. 
 https://doi.org/10.1002/1438-390X.12149
 
-Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From theory to
-application: Elasticity-consistent aggregation of Leslie matrix population
-models for comparative demography. bioRxiv, preprint.
+Hinrichsen, R. A., Yokomizo, H., and Salguero-Gómez, R. (2026). From theory to 
+application: Elasticity-consistent aggregation of Leslie matrix population models 
+for comparative demography. *bioRxiv*, preprint. 
 https://doi.org/10.64898/2026.02.04.703802
 
 Jones, O. R., Barks, P., Stott, I., James, T. D., Levin, S., Petry, W. K., Capdevila, P., 
-Che-Castaldo, J., Jackson, J., Römer, G., Schuette, C., Thomas, C. C., & Salguero-Gómez, R. 2022. 
-Rcompadre and Rage—Two R packages to facilitate the use of the COMPADRE and COMADRE
+Che-Castaldo, J., Jackson, J., Römer, G., Schuette, C., Thomas, C. C., and Salguero-Gómez, R. 
+(2022). Rcompadre and Rage—Two R packages to facilitate the use of the COMPADRE and COMADRE 
 databases and calculation of life-history traits from matrix population models. 
-Methods in Ecology and Evolution, 3(4), 770–781. https://doi.org/10.1111/2041-210X.13792
+*Methods in Ecology and Evolution*, 13(12), 2700–2708. 
+https://doi.org/10.1111/2041-210X.13792
 
-Salguero‐Gómez, R., Jones, O. R., Archer, C. R., Bein, C., de Buhr, H., Farack, C., 
+Salguero-Gómez, R., Jones, O. R., Archer, C. R., Bein, C., de Buhr, H., Farack, C., 
 Gottschalk, F., Hartmann, A., Henning, A., Hoppe, G., Römer, G., Ruoff, T., Sommer, V., 
-Wille, J., Voigt, J., Zeh, S., Vieregg, D., Buckley, Y. M., Che‐Castaldo, J., Hodgson, D., 
-Scheuerlein, A., Caswell, H., & Vaupel, J. W. 2016. COMADRE: a global database of animal 
-demography. Journal of Animal Ecology, 85, 371–384. https://doi.org/10.1111/1365-2656.12482
-
+Wille, J., Voigt, J., Zeh, S., Vieregg, D., Buckley, Y. M., Che-Castaldo, J., Hodgson, D., 
+Scheuerlein, A., Caswell, H., and Vaupel, J. W. (2016). COMADRE: a global database of animal 
+demography. *Journal of Animal Ecology*, 85, 371–384. 
+https://doi.org/10.1111/1365-2656.12482

@@ -1,0 +1,27 @@
+#' Coarse-scale Asian elephant projection matrix
+#'
+#' A female-only projection matrix for an Asian elephant population,
+#' included with the package for examples and vignettes. The matrix
+#' has dimension 12 × 12 and a projection interval of 5 years.
+#'
+#' @details
+#' Population/model ID: 249273 — a coarser model with a 5-year projection
+#' interval for the Nagarhole National Park elephant population in India
+#' (Chelliah et al., 2013).
+#'
+#' The matrix was originally retrieved from the COMADRE Animal Matrix
+#' Database using the `Rcompadre` package and bundled with this package
+#' so examples and vignettes can run without requiring internet access.
+#'
+#' @format A numeric matrix with 12 rows and 12 columns.
+#'
+#' @source
+#' COMADRE Animal Matrix Database, MatrixID 249273.
+#'
+#' @references
+#' Chelliah, K., Bukka, H., & Sukumar, R. (2013).
+#' Modeling harvest rates and numbers from age and sex ratios:
+#' a demonstration for elephant populations.
+#' \emph{Biological Conservation}, 165, 54–61.
+#' \doi{10.1016/j.biocon.2013.05.008}
+"matA_elephant1"

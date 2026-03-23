@@ -16,8 +16,8 @@ A numeric vector of length \code{nrow(A)} giving the stable age distribution,
 }
 \description{
 Computes the stable age distribution for a Leslie matrix \code{A} using the standard
-recursion based on subdiagonal survival probabilities and the dominant eigenvalue
-(spectral radius). The output is scaled so that \code{sum(w) = 1}.
+recursion based on subdiagonal survival probabilities and the dominant eigenvalue.
+The output is scaled so that \code{sum(w) = 1}.
 }
 \details{
 A length-1 positive numeric is treated as a 1x1 Leslie matrix and returns \code{1}.
@@ -34,10 +34,10 @@ leslie_stable_age(L)
 
 }
 \references{
-Caswell, H. 2001. Matrix population models: construction, analysis and
- interpretation (2nd ed.). Sinauer.
+Caswell, H. (2001). \emph{Matrix population models: construction, analysis and
+interpretation} (2nd ed.). Sinauer.
 
- Demetrius, L. 1974. Demographic parameters and natural selection. Proceedings
- of the National Academy of Sciences, 71(12), 4645-4647.
- https://doi.org/10.1073/pnas.71.12.4645
+Demetrius, L. (1974). Demographic parameters and natural selection.
+\emph{Proceedings of the National Academy of Sciences}, 71(12), 4645-4647.
+\doi{10.1073/pnas.71.12.4645}
 }

@@ -25,7 +25,7 @@ A named list with elements:
 }
 }
 \description{
-Returns the dominant eigenvalue (lambda) and associated right/left eigenvectors
+Returns the dominant eigenvalue and its associated right/left eigenvectors
 (stable stage distribution \code{w} and reproductive values \code{v}) for a square
 population projection matrix \code{A}.
 }
@@ -49,20 +49,10 @@ dom$lambda
 sum(dom$w)
 sum(dom$v * dom$w)
 
-#reducible example
-A<-rbind(c(1,1,0),
-         c(1,0,0),
-         c(0,1,0))
-
-dom <- dominant_eigen(A)
-dom$lambda
-sum(dom$w)
-sum(dom$v * dom$w)
-
 }
 \references{
-Caswell, H. 2001. Matrix population models: construction, analysis and
- interpretation (2nd ed.). Sinauer.
+Caswell, H. (2001). \emph{Matrix population models: construction, analysis and
+interpretation} (2nd ed.). Sinauer.
 }
 \seealso{
 \code{\link{spectral_radius}}, \code{\link{stable_stage}},

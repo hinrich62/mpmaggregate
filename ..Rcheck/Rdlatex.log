@@ -1,0 +1,254 @@
+Hmm ... looks like a package
+Converting parsed Rd's to LaTeX .
+Creating pdf output from LaTeX ...
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./Rd2.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2025/01/22 v1.4n Standard LaTeX document class
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/bk10.clo)) (c:/Program Files/R/R-4.5.2/share/texmf/tex/latex/Rd.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/longtable.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/bm.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/alltt.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/verbatim.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/url/url.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/textcomp.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amstext.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsgen.sty)) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsbsy.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsopn.sty)) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/amsfonts.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/amssymb.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/eucal.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/fontenc.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/psnfss/times.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/inconsolata/zi4.sty `inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xkeyval/xkeyval.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/xkeyval.tex (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/xkvutils.tex (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/keyval.tex))))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/color.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx)) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/stringenc/stringenc.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty)))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/psnfss/t1ptm.fd) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
+No file Rd2.aux.
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/inconsolata/t1zi4.fd) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd)
+No file Rd2.toc.
+
+Overfull \hbox (0.54747pt too wide) in paragraph at lines 51--54
+[]\T1/ptm/b/n/10 mpmaggregate \T1/ptm/m/n/10 ag-gre-gates ma-trix pop-u-la-tion mod-els (MPMs) un-der both the lambda (sta-ble growth
+[1{c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc}{c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}] (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/psnfss/ts1ptm.fd)
+Overfull \hbox (6.78683pt too wide) in paragraph at lines 70--73
+[]\T1/ptm/b/n/10 framework = "R0"\T1/ptm/m/n/10 : ag-gre-ga-tion tar-gets the Per-ron eigen-value $\OML/cmm/m/it/10 R[]$ \T1/ptm/m/n/10 of a generation-to-generation
+[2]
+Overfull \hbox (8.52728pt too wide) in paragraph at lines 177--181
+[]\T1/ptm/m/n/10 Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From the-ory to ap-pli-ca-tion: Elasticity-
+
+Overfull \hbox (58.73738pt too wide) in paragraph at lines 185--188
+\T1/ptm/m/n/10 ca-tions for com-par-a-tive plant de-mog-ra-phy. The Amer-i-can Nat-u-ral-ist 176, 710-722. https://doi.org/10.1086/657044 
+[3] [4] [5] [6] [7]
+Overfull \hbox (12.91718pt too wide) in paragraph at lines 440--442
+[]\T1/ptm/m/n/10 Computes the least com-mon mul-ti-ple (LCM) of two pos-i-tive in-te-gers. Used by [][][]\T1/zi4/m/n/10 leslie_disaggregate[][][][]\T1/ptm/m/n/10 . 
+[8]
+Overfull \hbox (15.29875pt too wide) in paragraph at lines 511--514
+[]\T1/ptm/m/n/10 Aggregation can be per-formed un-der two frame-works ([]\T1/zi4/m/n/10 "lambda" []\T1/ptm/m/n/10 or []\T1/zi4/m/n/10 "R0"[]\T1/ptm/m/n/10 ) and two cri-te-ria ([]\T1/zi4/m/n/10 "standard"
+
+Overfull \hbox (24.79768pt too wide) in paragraph at lines 552--553
+[]\T1/ptm/m/n/10 A nu-meric ef-fec-tive-ness mea-sure for the ag-gre-ga-tion (def-i-ni-tion de-pends on []\T1/zi4/m/n/10 criterion[]\T1/ptm/m/n/10 ). 
+[9]
+Overfull \hbox (8.52728pt too wide) in paragraph at lines 563--567
+[]\T1/ptm/m/n/10 Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From the-ory to ap-pli-ca-tion: Elasticity-
+
+Overfull \hbox (24.73795pt too wide) in paragraph at lines 571--571
+ []\T1/zi4/m/n/9 # A simple 3x3 Leslie matrix (fertility rates in first row; survival probabilities on subdiagonal) 
+[10]
+Overfull \hbox (8.52728pt too wide) in paragraph at lines 644--648
+[]\T1/ptm/m/n/10 Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From the-ory to ap-pli-ca-tion: Elasticity-
+[11] [12] [13] [14]
+Overfull \hbox (15.29875pt too wide) in paragraph at lines 909--912
+[]\T1/ptm/m/n/10 Aggregation can be per-formed un-der two frame-works ([]\T1/zi4/m/n/10 "lambda" []\T1/ptm/m/n/10 or []\T1/zi4/m/n/10 "R0"[]\T1/ptm/m/n/10 ) and two cri-te-ria ([]\T1/zi4/m/n/10 "standard"
+
+Overfull \hbox (11.10696pt too wide) in paragraph at lines 933--935
+[]\T1/ptm/m/n/10 All re-turned ma-tri-ces are ag-gre-gated us-ing the same weight-ing rules im-plied by the se-lected []\T1/zi4/m/n/10 framework
+[15]
+Overfull \hbox (17.89825pt too wide) in paragraph at lines 958--959
+[]\T1/ptm/m/n/10 Numeric ef-fec-tive-ness mea-sure for the ag-gre-ga-tion (def-i-ni-tion de-pends on []\T1/zi4/m/n/10 criterion[]\T1/ptm/m/n/10 ). 
+
+Overfull \hbox (58.73738pt too wide) in paragraph at lines 974--977
+\T1/ptm/m/n/10 ca-tions for com-par-a-tive plant de-mog-ra-phy. The Amer-i-can Nat-u-ral-ist 176, 710-722. https://doi.org/10.1086/657044 
+[16]
+Overfull \hbox (1.08725pt too wide) in paragraph at lines 1036--1039
+[]\T1/ptm/m/n/10 A square fe-cun-dity/sexual re-pro-duc-tion ma-trix (nu-meric ma-trix). Re-quired when
+[17] [18]
+Overfull \hbox (33.40868pt too wide) in paragraph at lines 1151--1153
+[]\T1/ptm/m/n/10 Optional in-te-ger. Num-ber of orig-i-nal stages. If []\T1/zi4/m/n/10 NULL[]\T1/ptm/m/n/10 , in-ferred as []\T1/zi4/m/n/10 max(unlist(groups))[]\T1/ptm/m/n/10 . 
+[19] [20] [21]
+No file Rd2.ind.
+[22] (./Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)<c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (22 pages, 183587 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.17 [TeX Live 2025] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (70 entries accepted, 0 rejected).
+Sorting entries....done (441 comparisons).
+Generating output file Rd2.ind....done (67 lines written, 1 warning).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./Rd2.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2025/01/22 v1.4n Standard LaTeX document class
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/bk10.clo)) (c:/Program Files/R/R-4.5.2/share/texmf/tex/latex/Rd.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/longtable.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/bm.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/alltt.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/verbatim.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/url/url.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/textcomp.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amstext.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsgen.sty)) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsbsy.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsopn.sty)) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/amsfonts.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/amssymb.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/eucal.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/fontenc.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/psnfss/times.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/inconsolata/zi4.sty `inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xkeyval/xkeyval.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/xkeyval.tex (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/xkvutils.tex (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/keyval.tex))))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/color.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx)) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/stringenc/stringenc.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty)))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/psnfss/t1ptm.fd) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def) (./Rd2.aux) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (./Rd2.out) (./Rd2.out) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/inconsolata/t1zi4.fd) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd) (./Rd2.toc [1{c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc}{c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}])
+Overfull \hbox (0.54747pt too wide) in paragraph at lines 51--54
+[]\T1/ptm/b/n/10 mpmaggregate \T1/ptm/m/n/10 ag-gre-gates ma-trix pop-u-la-tion mod-els (MPMs) un-der both the lambda (sta-ble growth
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/psnfss/ts1ptm.fd)
+Overfull \hbox (6.78683pt too wide) in paragraph at lines 70--73
+[]\T1/ptm/b/n/10 framework = "R0"\T1/ptm/m/n/10 : ag-gre-ga-tion tar-gets the Per-ron eigen-value $\OML/cmm/m/it/10 R[]$ \T1/ptm/m/n/10 of a generation-to-generation
+[2]
+Overfull \hbox (8.52728pt too wide) in paragraph at lines 177--181
+[]\T1/ptm/m/n/10 Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From the-ory to ap-pli-ca-tion: Elasticity-
+[3]
+Overfull \hbox (58.73738pt too wide) in paragraph at lines 185--188
+\T1/ptm/m/n/10 ca-tions for com-par-a-tive plant de-mog-ra-phy. The Amer-i-can Nat-u-ral-ist 176, 710-722. https://doi.org/10.1086/657044 
+[4] [5] [6] [7]
+Overfull \hbox (12.91718pt too wide) in paragraph at lines 440--442
+[]\T1/ptm/m/n/10 Computes the least com-mon mul-ti-ple (LCM) of two pos-i-tive in-te-gers. Used by [][][]\T1/zi4/m/n/10 leslie_disaggregate[][][][]\T1/ptm/m/n/10 . 
+[8]
+Overfull \hbox (15.29875pt too wide) in paragraph at lines 511--514
+[]\T1/ptm/m/n/10 Aggregation can be per-formed un-der two frame-works ([]\T1/zi4/m/n/10 "lambda" []\T1/ptm/m/n/10 or []\T1/zi4/m/n/10 "R0"[]\T1/ptm/m/n/10 ) and two cri-te-ria ([]\T1/zi4/m/n/10 "standard"
+
+Overfull \hbox (24.79768pt too wide) in paragraph at lines 552--553
+[]\T1/ptm/m/n/10 A nu-meric ef-fec-tive-ness mea-sure for the ag-gre-ga-tion (def-i-ni-tion de-pends on []\T1/zi4/m/n/10 criterion[]\T1/ptm/m/n/10 ). 
+[9]
+Overfull \hbox (8.52728pt too wide) in paragraph at lines 563--567
+[]\T1/ptm/m/n/10 Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From the-ory to ap-pli-ca-tion: Elasticity-
+
+Overfull \hbox (24.73795pt too wide) in paragraph at lines 571--571
+ []\T1/zi4/m/n/9 # A simple 3x3 Leslie matrix (fertility rates in first row; survival probabilities on subdiagonal) 
+[10]
+Overfull \hbox (8.52728pt too wide) in paragraph at lines 644--648
+[]\T1/ptm/m/n/10 Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From the-ory to ap-pli-ca-tion: Elasticity-
+[11] [12] [13] [14]
+Overfull \hbox (15.29875pt too wide) in paragraph at lines 909--912
+[]\T1/ptm/m/n/10 Aggregation can be per-formed un-der two frame-works ([]\T1/zi4/m/n/10 "lambda" []\T1/ptm/m/n/10 or []\T1/zi4/m/n/10 "R0"[]\T1/ptm/m/n/10 ) and two cri-te-ria ([]\T1/zi4/m/n/10 "standard"
+
+Overfull \hbox (11.10696pt too wide) in paragraph at lines 933--935
+[]\T1/ptm/m/n/10 All re-turned ma-tri-ces are ag-gre-gated us-ing the same weight-ing rules im-plied by the se-lected []\T1/zi4/m/n/10 framework
+[15]
+Overfull \hbox (17.89825pt too wide) in paragraph at lines 958--959
+[]\T1/ptm/m/n/10 Numeric ef-fec-tive-ness mea-sure for the ag-gre-ga-tion (def-i-ni-tion de-pends on []\T1/zi4/m/n/10 criterion[]\T1/ptm/m/n/10 ). 
+
+Overfull \hbox (58.73738pt too wide) in paragraph at lines 974--977
+\T1/ptm/m/n/10 ca-tions for com-par-a-tive plant de-mog-ra-phy. The Amer-i-can Nat-u-ral-ist 176, 710-722. https://doi.org/10.1086/657044 
+[16]
+Overfull \hbox (1.08725pt too wide) in paragraph at lines 1036--1039
+[]\T1/ptm/m/n/10 A square fe-cun-dity/sexual re-pro-duc-tion ma-trix (nu-meric ma-trix). Re-quired when
+[17] [18]
+Overfull \hbox (33.40868pt too wide) in paragraph at lines 1151--1153
+[]\T1/ptm/m/n/10 Optional in-te-ger. Num-ber of orig-i-nal stages. If []\T1/zi4/m/n/10 NULL[]\T1/ptm/m/n/10 , in-ferred as []\T1/zi4/m/n/10 max(unlist(groups))[]\T1/ptm/m/n/10 . 
+[19] [20] [21] (./Rd2.ind [22]
+
+LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
+(Font)              using `T1/zi4/m/n' instead on input line 49.
+
+[23]) (./Rd2.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)<c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (23 pages, 190243 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.17 [TeX Live 2025] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (70 entries accepted, 0 rejected).
+Sorting entries....done (436 comparisons).
+Generating output file Rd2.ind....done (68 lines written, 1 warning).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./Rd2.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2025/01/22 v1.4n Standard LaTeX document class
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/bk10.clo)) (c:/Program Files/R/R-4.5.2/share/texmf/tex/latex/Rd.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/longtable.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/bm.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/alltt.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/verbatim.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/url/url.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/textcomp.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amstext.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsgen.sty)) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsbsy.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsopn.sty)) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/amsfonts.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/amssymb.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/eucal.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/fontenc.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/psnfss/times.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/inconsolata/zi4.sty `inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xkeyval/xkeyval.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/xkeyval.tex (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/xkvutils.tex (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/keyval.tex))))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/color.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx)) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/stringenc/stringenc.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty)))) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/psnfss/t1ptm.fd) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def) (./Rd2.aux) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (./Rd2.out) (./Rd2.out) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/inconsolata/t1zi4.fd) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd) (c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd) (./Rd2.toc [1{c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc}{c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}])
+Overfull \hbox (0.54747pt too wide) in paragraph at lines 51--54
+[]\T1/ptm/b/n/10 mpmaggregate \T1/ptm/m/n/10 ag-gre-gates ma-trix pop-u-la-tion mod-els (MPMs) un-der both the lambda (sta-ble growth
+(c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/psnfss/ts1ptm.fd)
+Overfull \hbox (6.78683pt too wide) in paragraph at lines 70--73
+[]\T1/ptm/b/n/10 framework = "R0"\T1/ptm/m/n/10 : ag-gre-ga-tion tar-gets the Per-ron eigen-value $\OML/cmm/m/it/10 R[]$ \T1/ptm/m/n/10 of a generation-to-generation
+[2]
+Overfull \hbox (8.52728pt too wide) in paragraph at lines 177--181
+[]\T1/ptm/m/n/10 Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From the-ory to ap-pli-ca-tion: Elasticity-
+[3]
+Overfull \hbox (58.73738pt too wide) in paragraph at lines 185--188
+\T1/ptm/m/n/10 ca-tions for com-par-a-tive plant de-mog-ra-phy. The Amer-i-can Nat-u-ral-ist 176, 710-722. https://doi.org/10.1086/657044 
+[4] [5] [6] [7]
+Overfull \hbox (12.91718pt too wide) in paragraph at lines 440--442
+[]\T1/ptm/m/n/10 Computes the least com-mon mul-ti-ple (LCM) of two pos-i-tive in-te-gers. Used by [][][]\T1/zi4/m/n/10 leslie_disaggregate[][][][]\T1/ptm/m/n/10 . 
+[8]
+Overfull \hbox (15.29875pt too wide) in paragraph at lines 511--514
+[]\T1/ptm/m/n/10 Aggregation can be per-formed un-der two frame-works ([]\T1/zi4/m/n/10 "lambda" []\T1/ptm/m/n/10 or []\T1/zi4/m/n/10 "R0"[]\T1/ptm/m/n/10 ) and two cri-te-ria ([]\T1/zi4/m/n/10 "standard"
+
+Overfull \hbox (24.79768pt too wide) in paragraph at lines 552--553
+[]\T1/ptm/m/n/10 A nu-meric ef-fec-tive-ness mea-sure for the ag-gre-ga-tion (def-i-ni-tion de-pends on []\T1/zi4/m/n/10 criterion[]\T1/ptm/m/n/10 ). 
+[9]
+Overfull \hbox (8.52728pt too wide) in paragraph at lines 563--567
+[]\T1/ptm/m/n/10 Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From the-ory to ap-pli-ca-tion: Elasticity-
+
+Overfull \hbox (24.73795pt too wide) in paragraph at lines 571--571
+ []\T1/zi4/m/n/9 # A simple 3x3 Leslie matrix (fertility rates in first row; survival probabilities on subdiagonal) 
+[10]
+Overfull \hbox (8.52728pt too wide) in paragraph at lines 644--648
+[]\T1/ptm/m/n/10 Hinrichsen, R. A., Yokomizo, H., & Salguero-Gómez, R. 2026. From the-ory to ap-pli-ca-tion: Elasticity-
+[11] [12] [13] [14]
+Overfull \hbox (15.29875pt too wide) in paragraph at lines 909--912
+[]\T1/ptm/m/n/10 Aggregation can be per-formed un-der two frame-works ([]\T1/zi4/m/n/10 "lambda" []\T1/ptm/m/n/10 or []\T1/zi4/m/n/10 "R0"[]\T1/ptm/m/n/10 ) and two cri-te-ria ([]\T1/zi4/m/n/10 "standard"
+
+Overfull \hbox (11.10696pt too wide) in paragraph at lines 933--935
+[]\T1/ptm/m/n/10 All re-turned ma-tri-ces are ag-gre-gated us-ing the same weight-ing rules im-plied by the se-lected []\T1/zi4/m/n/10 framework
+[15]
+Overfull \hbox (17.89825pt too wide) in paragraph at lines 958--959
+[]\T1/ptm/m/n/10 Numeric ef-fec-tive-ness mea-sure for the ag-gre-ga-tion (def-i-ni-tion de-pends on []\T1/zi4/m/n/10 criterion[]\T1/ptm/m/n/10 ). 
+
+Overfull \hbox (58.73738pt too wide) in paragraph at lines 974--977
+\T1/ptm/m/n/10 ca-tions for com-par-a-tive plant de-mog-ra-phy. The Amer-i-can Nat-u-ral-ist 176, 710-722. https://doi.org/10.1086/657044 
+[16]
+Overfull \hbox (1.08725pt too wide) in paragraph at lines 1036--1039
+[]\T1/ptm/m/n/10 A square fe-cun-dity/sexual re-pro-duc-tion ma-trix (nu-meric ma-trix). Re-quired when
+[17] [18]
+Overfull \hbox (33.40868pt too wide) in paragraph at lines 1151--1153
+[]\T1/ptm/m/n/10 Optional in-te-ger. Num-ber of orig-i-nal stages. If []\T1/zi4/m/n/10 NULL[]\T1/ptm/m/n/10 , in-ferred as []\T1/zi4/m/n/10 max(unlist(groups))[]\T1/ptm/m/n/10 . 
+[19] [20] [21] (./Rd2.ind [22]
+
+LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
+(Font)              using `T1/zi4/m/n' instead on input line 49.
+
+[23]) (./Rd2.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+ )
+(see the transcript file for additional information)<c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/Users/Rich/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (23 pages, 190668 bytes).
+Transcript written on Rd2.log.
+Saving output to 'mpmaggregate-manual.pdf' ...
+Done
+You may want to clean up by 'rm -Rf C:/Users/Rich/AppData/Local/Temp/RtmpCinONK/Rd2pdf1df013dc5cc9'

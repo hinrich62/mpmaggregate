@@ -65,7 +65,6 @@ We begin by loading the packages used to access matrix population models, perfor
 matrix aggregation, and format output for display.
 ```{r packages}
 library(mpmaggregate)
-library(Rcompadre)
 library(kableExtra)
 ```
 
@@ -75,28 +74,93 @@ model for *Rourea induta* (MatrixID 246781) from the COMPADRE database (Hoffmann
 which has a projection interval of 1 year.
 
 ```{r fetch-comadre}
-compadre <- cdb_fetch("compadre")
-iii <- (compadre$Genus == "Rourea") & (compadre$Species == "induta")
-compadre.rourea.induta<- compadre[iii, ]
+# Example matrices used in the general-to-general MPM aggregation examples below
+# Population projection matrix for Rourea induta
+# MatrixID = 246781
+# Matrices can be retrieved with:
+# library(Rcompadre)
+# compadre <- cdb_fetch("compadre")
+# mpm <- compadre[compadre$MatrixID == 246781, ]
+# matA <- matA(mpm)[[1]]
+# matU <- matU(mpm)[[1]]
+# matF <- matF(mpm)[[1]]
+# matC <- matC(mpm)[[1]]
 
-# Development note: save metadata for future use
-#write.table(cdb_metadata(compadre.rourea.induta),file="C:/Users/Rich/projects/mpmaggregate/inst/extdata/rourea-induta.csv",sep=",", col.names=NA)
+# Not run: requires Rcompadre and internet access
 
-#return the matrix A from compadre.rourea.induta
-#associated with MatrixID matid
-get_matrix <- function(matid) {
-  compadre2 <- compadre.rourea.induta[compadre.rourea.induta$MatrixID == matid, ]
-   matA <- matA(compadre2)[[1]];
-   matU <- matU(compadre2)[[1]];
-   matF <- matF(compadre2)[[1]]
-   matC <- matC(compadre2)[[1]];
-   return(list(matA=matA,matU=matU,matF=matF,matC=matC))}
+# Population projection matrix
+matA <- matrix(c(
+  0.000,0.000,0.000,0.000,0.002,0.007,0.021,0.055,0.102,0.139,0.176,0.191,0.203,0.214,
+  0.000,0.000,0.000,0.001,0.002,0.004,0.007,0.011,0.016,0.021,0.036,0.052,0.072,0.096,
+  0.833,0.043,0.883,0.151,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.391,0.043,0.791,0.079,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.348,0.000,0.047,0.810,0.139,0.024,0.024,0.056,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.087,0.733,0.082,0.071,0.000,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.087,0.000,0.000,0.000,0.129,0.765,0.024,0.000,0.013,0.000,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.106,0.762,0.028,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.012,0.119,0.778,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.083,0.861,0.000,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.127,0.891,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.091,0.909,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.091,0.918,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.082,0.967
+), nrow = 14, byrow = TRUE)
 
-mats <- get_matrix(246781)
-matA <- mats$matA
-matU <- mats$matU
-matF <- mats$matF
-matC <- mats$matC
+# Survival/transition matrix
+matU <- matrix(c(
+  0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0.833,0.043,0.883,0.151,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.391,0.043,0.791,0.079,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.348,0.000,0.047,0.810,0.139,0.024,0.024,0.056,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.087,0.733,0.082,0.071,0.000,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.087,0.000,0.000,0.000,0.129,0.765,0.024,0.000,0.013,0.000,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.106,0.762,0.028,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.012,0.119,0.778,0.000,0.000,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.083,0.861,0.000,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.127,0.891,0.000,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.091,0.909,0.000,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.091,0.918,0.000,
+  0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.082,0.967
+), nrow = 14, byrow = TRUE)
+
+# Sexual reproduction matrix
+matF <- matrix(c(
+  0,0,0,0,0.002,0.007,0.021,0.055,0.102,0.139,0.176,0.191,0.203,0.214,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+),nrow=14,byrow=TRUE)
+
+#Clonal reproduction matrix
+matC <- matrix(c(
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0.001,0.002,0.004,0.007,0.011,0.016,0.021,0.036,0.052,0.072,0.096,
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,
+  0,0,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+), nrow = 14, byrow = TRUE)
+
+#redefined matF so it includes sexual + clonal reproduction
 matF <- matF + matC
 
 #sanity check
@@ -117,7 +181,8 @@ stopifnot(all.equal(unname(matA), unname(matU + matF)))
 #13               active          50-69 mm
 #14               active            70+ mm
 
-#form the aggregated groups, leaving Seedling and Sucker stages alone
+# Stage aggregation used in later examples:
+# Form the aggregated groups, leaving Seedling and Sucker stages alone
 groups <- list(
   c(1),                #Seedling
   c(2),                #Sucker
@@ -372,15 +437,21 @@ computed directly from its aggregated projection matrix, and the results
 for all models are plotted together.
 
 ```{r elasticities}
+
+# Partitioning matrix induced by the stage groups
+# This matrix is constructed internally by mpm_aggregate(),
+# but we reproduce it here because it can be used to map quantities
+# from the original stage space to the aggregated space.
 P <- mpm_partition(groups=groups, n=nrow(matA))
+
 # Elasticity matrices in aggregated space (k x k) for each model
-E_A <- elasticity(matA=matA,framework="lambda")$elasticity
+E_A <- mpm_elasticity(matA=matA,framework="lambda")$elasticity
 E_list <- list(
   "Original" = P %*% E_A %*% t(P),
-  "Agg lambda + standard" = elasticity(matA=m1$A,framework="lambda")$elasticity,
-  "Agg lambda + elasticity" = elasticity(matA=m2$A,framework="lambda")$elasticity,
-  "Agg R0 + standard" = elasticity(matA=m3$A,framework="lambda")$elasticity,
-  "Agg R0 + elasticity" = elasticity(matA=m4$A,framework="lambda")$elasticity
+  "Agg lambda + standard" = mpm_elasticity(matA=m1$A,framework="lambda")$elasticity,
+  "Agg lambda + elasticity" = mpm_elasticity(matA=m2$A,framework="lambda")$elasticity,
+  "Agg R0 + standard" = mpm_elasticity(matA=m3$A,framework="lambda")$elasticity,
+  "Agg R0 + elasticity" = mpm_elasticity(matA=m4$A,framework="lambda")$elasticity
 )
 
 # Build a long data.frame for all nonzero entries (row-major order)
@@ -522,15 +593,20 @@ computed directly from its aggregated projection matrix, and the results
 for all models are plotted together.
 
 ```{r elasticities of R0}
+# Partitioning matrix induced by the stage group
+# Reintroduced here so this section can be read independently
 P <- mpm_partition(groups=groups, n=nrow(matA))
+
 # Elasticity matrices in aggregated space (k x k) for each model
-E_A <- elasticity(matF=matF,matU=matU,framework="R0", normalize=TRUE)$elasticity
+# The elasticity matrix of the original model is projected into the
+# aggregated space using the partitioning matrix P.
+E_A <- mpm_elasticity(matF=matF,matU=matU,framework="R0", normalize=TRUE)$elasticity
 E_list <- list(
   "Original" = P %*% E_A %*% t(P),
-  "Agg lambda + standard" = elasticity(matF=m1$F, matU=m1$U,framework="R0", normalize=TRUE)$elasticity,
-  "Agg lambda + elasticity" = elasticity(matF=m2$F, matU=m2$U,framework="R0", normalize=TRUE)$elasticity,
-  "Agg R0 + standard" = elasticity(matF=m3$F, matU=m3$U,framework="R0", normalize=TRUE)$elasticity,
-  "Agg R0 + elasticity" = elasticity(matF=m4$F, matU=m4$U,framework="R0", normalize=TRUE)$elasticity
+  "Agg lambda + standard" = mpm_elasticity(matF=m1$F, matU=m1$U,framework="R0", normalize=TRUE)$elasticity,
+  "Agg lambda + elasticity" = mpm_elasticity(matF=m2$F, matU=m2$U,framework="R0", normalize=TRUE)$elasticity,
+  "Agg R0 + standard" = mpm_elasticity(matF=m3$F, matU=m3$U,framework="R0", normalize=TRUE)$elasticity,
+  "Agg R0 + elasticity" = mpm_elasticity(matF=m4$F, matU=m4$U,framework="R0", normalize=TRUE)$elasticity
 )
 
 # Build a long data.frame for all nonzero entries (row-major order)
@@ -701,34 +777,37 @@ the same, even when different aggregation objectives are used.
 
 ## References
 
-Bienvenu, F., Akçay, E., Legendre, S. and McCandlish, D.M. 2017. The genealogical
+Bienvenu, F., Akçay, E., Legendre, S., and McCandlish, D. M. (2017). The genealogical
 decomposition of a matrix population model with applications to the aggregation
-of stages. Theoretical Population Biology, 115, 69-80. 
+of stages. *Theoretical Population Biology*, 115, 69–80. 
 https://doi.org/10.1016/j.tpb.2017.04.002
 
-Hoffmann, W.A., 1999. Fire and population dynamics of woody plants in a neotropical 
-savanna: matrix model projections. Ecology, 80(4), 1354-1369.
+Hoffmann, W. A. (1999). Fire and population dynamics of woody plants in a neotropical
+savanna: matrix model projections. *Ecology*, 80(4), 1354–1369.
 https://doi.org/10.1890/0012-9658(1999)080[1354:FAPDOW]2.0.CO;2
 
-Hooley, D. E. 2000. Collapsed matrices with (almost) the same eigenstuff. The 
-College Mathematics Journal, 31(4), 297–299. https://doi.org/10.1080/07468342.2000.11974162
+Hooley, D. E. (2000). Collapsed matrices with (almost) the same eigenstuff.
+*The College Mathematics Journal*, 31(4), 297–299.
+https://doi.org/10.1080/07468342.2000.11974162
 
-Jones, O. R., Barks, P., Stott, I., James, T. D., Levin, S., Petry, W. K., Capdevila, P., 
-Che-Castaldo, J., Jackson, J., Römer, G., Schuette, C., Thomas, C. C., & Salguero-Gómez, R. 2022. 
-Rcompadre and Rage—Two R packages to facilitate the use of the COMPADRE and COMADRE
-databases and calculation of life-history traits from matrix population models. 
-Methods in Ecology and Evolution, 13(4), 770–781. https://doi.org/10.1111/2041-210X.13792
+Jones, O. R., Barks, P., Stott, I., James, T. D., Levin, S., Petry, W. K., Capdevila, P.,
+Che-Castaldo, J., Jackson, J., Römer, G., Schuette, C., Thomas, C. C., and
+Salguero-Gómez, R. (2022). Rcompadre and Rage—Two R packages to facilitate the
+use of the COMPADRE and COMADRE databases and calculation of life-history traits
+from matrix population models. *Methods in Ecology and Evolution*, 13(4), 770–781.
+https://doi.org/10.1111/2041-210X.13792
 
-Salguero-Gómez R., & Plotkin, J. B. (2010). Matrix dimensions bias demographic 
-inferences: implications for comparative plant demography. The American Naturalist, 
-176(6), 710–722. https://doi.org/10.1086/657044
+Salguero-Gómez, R., and Plotkin, J. B. (2010). Matrix dimensions bias demographic
+inferences: implications for comparative plant demography. *The American Naturalist*,
+176(6), 710–722.
+https://doi.org/10.1086/657044
 
-Salguero-Gómez, R., Jones, O. R., Archer, C. R., Buckley, Y. M., Che-Castaldo, J., 
-Caswell, H., Hodgson, D., Scheuerlein, A., Conde, D. A., Brinks, E., de Buhr, H., 
-Farack, C., Gottschalk, F., Hartmann, A., Henning, A., Hoppe, G., Römer, G., 
-Runge, J., Ruoff, T., Wille, J., Zeh, S., Davison, R., Vieregg, D., Baudisch, A., 
-Altwegg, R., Colchero, F., Dong, M., de Kroon, H., Lebreton, J. -D., Metcalf, C. J. E., 
-Neel, M. M., Parker, I. M., Takada, T., Valverde, T., Vélez-Espino, L. A., Wardle, G. M., 
-Franco, M., & Vaupel, J. W. (2015). The COMPADRE Plant Matrix Database: an open 
-online repository for plant demography. Journal of Ecology, 103, 202–218. 
+Salguero-Gómez, R., Jones, O. R., Archer, C. R., Buckley, Y. M., Che-Castaldo, J.,
+Caswell, H., Hodgson, D., Scheuerlein, A., Conde, D. A., Brinks, E., de Buhr, H.,
+Farack, C., Gottschalk, F., Hartmann, A., Henning, A., Hoppe, G., Römer, G.,
+Runge, J., Ruoff, T., Wille, J., Zeh, S., Davison, R., Vieregg, D., Baudisch, A.,
+Altwegg, R., Colchero, F., Dong, M., de Kroon, H., Lebreton, J.-D., Metcalf, C. J. E.,
+Neel, M. M., Parker, I. M., Takada, T., Valverde, T., Vélez-Espino, L. A., Wardle,
+G. M., Franco, M., and Vaupel, J. W. (2015). The COMPADRE Plant Matrix Database:
+an open online repository for plant demography. *Journal of Ecology*, 103, 202–218.
 https://doi.org/10.1111/1365-2745.12334

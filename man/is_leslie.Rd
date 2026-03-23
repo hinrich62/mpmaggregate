@@ -12,10 +12,10 @@ is_leslie(A, tol = sqrt(.Machine$double.eps))
 \item{tol}{Numeric tolerance used for structural comparisons and bounds checks.}
 }
 \value{
-Logical; \code{TRUE} if \code{A} appears to be a Leslie matrix, otherwise \code{FALSE}.
+Logical; \code{TRUE} if \code{A} is a Leslie matrix, otherwise \code{FALSE}.
 }
 \description{
-Checks whether \code{A} has Leslie form: nonzero entries are allowed only in the first row
+Checks whether a matrix \code{A} has Leslie form: nonzero entries are allowed only in the first row
 (fertility rates) and on the subdiagonal (survival probabilities). Survival probabilities
 must be in \eqn{(0, 1]} (within tolerance), fertility rates must be nonnegative, and
 at least one fertility rate must be positive.

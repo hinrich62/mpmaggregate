@@ -19,7 +19,7 @@
 #'   throws an error.
 #'
 #' @references
-#' Horn, R. A., and Johnson, C. R. 2013. \emph{Matrix Analysis}. Cambridge University Press.
+#' Horn, R. A., and Johnson, C. R. (2013). \emph{Matrix Analysis} (2nd ed.). Cambridge University Press.
 #' (See the characterization of irreducibility via positivity of \eqn{(I + A)^{n-1}}
 #' for nonnegative matrices.)
 #'
@@ -37,9 +37,9 @@
 
   n <- nrow(A)
   if (n == 1L) {
-    # 1x1 irreducible iff it has a self-loop (positive entry)
+    # For our purposes: 1x1 is irreducible only if it has a positive self-loop
     if (A[1, 1] <= tol) {
-      stop(sprintf("%s is reducible (1x1 with no positive entry).", name),
+      stop(sprintf("%s must be irreducible (1x1 with A[1,1] <= tol).", name),
            call. = FALSE)
     }
     return(invisible(TRUE))
@@ -79,11 +79,13 @@
 #' \code{groups = list(c(1), c(2:3))} defines \eqn{m = 2} aggregated stages:
 #' the first contains original stage 1, and the second contains original stages 2 and 3.
 #'
-#' Each original stage index \code{1:n} must appear **once and only once** across \code{groups}.
+#' Each original stage index \code{1:n} must appear exactly once across \code{groups}.
 #'
 #' @param groups A list of integer vectors giving stage indices for each aggregated group.
 #' @param n Optional integer. Number of original stages. If \code{NULL}, inferred as
-#'   \code{max(unlist(groups))}.
+#'   \code{max(unlist(groups))}. Supplying \code{n} can help detect errors when
+#'   some stage indices are missing from \code{groups}, since all indices
+#'   \code{1:n} must appear exactly once.
 #'
 #' @return A numeric matrix \eqn{P} of dimensionality \code{m x n} with entries 0 or 1.
 #'
@@ -170,31 +172,27 @@ mpm_partition <- function(groups, n = NULL) {
 #' Aggregate a general-to-general matrix population model
 #'
 #' Aggregates one or more matrix population model (MPM) components from an
-#' \eqn{n \times n} model to an \eqn{m \times m} model using left and right
-#' aggregation operators \eqn{P_eff} and \eqn{Q_eff}:
-#' \deqn{M_{\mathrm{agg}} = P_eff \, M \, Q_eff.}
+#' \eqn{n \times n} model to an \eqn{m \times m} model by combining stages into
+#' user-defined groups.
 #'
-#' The operators \eqn{P_eff} and \eqn{Q_eff} depend on the chosen \code{framework} and
-#' \code{criterion}:
-#' \itemize{
-#'   \item \code{framework = "lambda"}, \code{criterion = "standard"}
-#'   \item \code{framework = "lambda"}, \code{criterion = "elasticity"}
-#'   \item \code{framework = "R0"},     \code{criterion = "standard"}
-#'   \item \code{framework = "R0"},     \code{criterion = "elasticity"}
-#' }
+#' Groupings are supplied by \code{groups}, a list of integer vectors specifying
+#' how original stages (1,\dots,n) are combined; see \code{\link{mpm_partition}}.
+#' Each original stage must appear exactly once.
 #'
-#' Aggregation groupings are supplied by \code{groups}, a list of integer vectors
-#' specifying how original stages (1,\dots,n) are combined; see
-#' \code{\link{mpm_partition}}. Each original stage must appear exactly once.
+#' Aggregation can be performed under two frameworks (\code{"lambda"} or \code{"R0"})
+#' and two criteria (\code{"standard"} or \code{"elasticity"}), which determine how
+#' stages are weighted during aggregation.
 #'
-#' The effective reproductive matrix is defined as \eqn{R = F + C}; clonal
-#' reproduction \code{matC} is therefore treated as reproductive output and is
-#' included in the aggregated fecundity component returned by this function.
+#' Clonal reproduction \code{matC} is treated as reproductive output. When both
+#' \code{matF} and \code{matC} are supplied, the effective reproductive matrix
+#' \eqn{R = F + C} is used internally (e.g., in the \code{"R0"} framework) but is
+#' not returned. The aggregated effective reproduction can be recovered as
+#' \code{matF_agg + matC_agg}.
 #'
-#' \strong{Irreducibility requirement.} The effective projection matrix used by
-#' the chosen framework must be nonnegative, square, and irreducible. This
-#' function enforces irreducibility of the effective \eqn{A} (either \code{matA}
-#' if supplied, or \eqn{A = U + (F + C)} otherwise) and will error if reducible.
+#' Irreducibility requirement: The effective projection matrix \eqn{A}
+#' must be nonnegative, square, and irreducible. This function enforces
+#' irreducibility of \eqn{A} as either \code{matA} (if supplied) or
+#' \eqn{A = U + (F + C)} otherwise, and will fail if reducible.
 #'
 #' @param matA Optional projection matrix \eqn{A} (square, finite, nonnegative).
 #'   If \code{NULL}, \eqn{A} is constructed as \eqn{U + (F + C)}.
@@ -206,22 +204,32 @@ mpm_partition <- function(groups, n = NULL) {
 #'   Treated as reproduction and combined with \code{matF} as \eqn{R = F + C}.
 #' @param groups A non-empty list of integer vectors specifying aggregation
 #'   groups. Each stage in \code{1:n} must appear exactly once across the list.
-#' @param framework Character string; either \code{"lambda"} or \code{"R0"}.
+#' @param framework Character scalar; either \code{"lambda"} or \code{"R0"}.
 #'   Determines whether aggregation is based on the projection matrix \eqn{A}
 #'   or an \eqn{R_0}-based reference matrix.
-#' @param criterion Character string; either \code{"standard"} or \code{"elasticity"}.
-#'   For \code{"elasticity"}, the \eqn{P_eff} operator depends on reproductive values
-#'   and the stable stage distribution.
+#' @param criterion Character scalar; either \code{"standard"} for standard aggregation
+#'  or \code{"elasticity"} for elasticity-consistent aggregation.
 #' @param tol Numeric tolerance used in positivity/zero-mass checks and balancing
 #'   calculations for the elasticity-consistent case.
 #' @param ... Reserved for future use.
 #'
 #' @details
 #' When \code{framework = "R0"}, this function requires \code{matU} and at least one
-#' of \code{matF} or \code{matC} in order to form \eqn{R} and the generation-to-generation
-#' matrix \eqn{K = R (I - U)^{-1}}. The returned aggregated matrices are always
-#' derived using the same \eqn{P_eff}/\eqn{Q_eff} operators used internally for the
-#' selected case.
+#' of \code{matF} or \code{matC} in order to form the effective reproductive matrix
+#' \eqn{R = F + C} and the next generation matrix
+#' \eqn{K = R (I - U)^{-1}}. The matrix \eqn{R} is used internally for computing
+#' reference quantities in the \code{"R0"} framework but is not returned.
+#' The aggregated effective reproduction can be obtained as
+#' \code{matF_agg + matC_agg} when both components are supplied.
+#'
+#' All returned matrices are aggregated using the same weighting rules implied by
+#' the selected \code{framework} and \code{criterion}.
+#'
+#' Effectiveness measures how closely the aggregated model reproduces the behavior
+#' of the original model under the chosen \code{framework} and \code{criterion}. When
+#' \code{effectiveness} is high (close to 1), applying the original model and then
+#' aggregating gives nearly the same result as aggregating first and then applying the
+#' aggregated model.
 #'
 #' The returned element \code{effectiveness} is computed for both criteria:
 #' \itemize{
@@ -237,24 +245,25 @@ mpm_partition <- function(groups, n = NULL) {
 #'   \item{\code{criterion}}{The matched criterion used (\code{"standard"} or \code{"elasticity"}).}
 #'   \item{\code{matA_agg}}{Aggregated projection matrix \eqn{A_{\mathrm{agg}}}.}
 #'   \item{\code{matU_agg}}{Aggregated survival-transition matrix \eqn{U_{\mathrm{agg}}}, or \code{NULL} if \code{matU} was not supplied.}
-#'   \item{\code{matF_agg}}{Aggregated reproductive matrix \eqn{R_{\mathrm{agg}}} corresponding to \eqn{R = F + C}; \code{NULL} if neither \code{matF} nor \code{matC} was supplied.}
-#'   \item{\code{matC_agg}}{Aggregated clonal matrix \eqn{C_{\mathrm{agg}}}, or \code{NULL} if \code{matC} was not supplied.}
-#'   \item{\code{effectiveness}}{A numeric effectiveness measure for the aggregation (definition depends on \code{criterion}).}
+#'   \item{\code{matF_agg}}{Aggregated fecundity matrix \eqn{F_{\mathrm{agg}}}, or \code{NULL} if \code{matF} was not supplied.}
+#'   \item{\code{matC_agg}}{Aggregated clonal reproduction matrix \eqn{C_{\mathrm{agg}}}, or \code{NULL} if \code{matC} was not supplied.}
+#'   \item{\code{effectiveness}}{Numeric effectiveness measure for the aggregation (definition depends on \code{criterion}).}
 #' }
+
 #'
 #' @references
-#'  Bienvenu, F., Akcay, E., Legendre, S. and McCandlish, D.M. 2017. The genealogical
-#'  decomposition of a matrix population model with applications to the aggregation
-#'  of stages. Theoretical Population Biology, 115, 69-80.
-#'  https://doi.org/10.1016/j.tpb.2017.04.002
+#' Bienvenu, F., Akcay, E., Legendre, S. and McCandlish, D.M. (2017). The genealogical
+#' decomposition of a matrix population model with applications to the aggregation
+#' of stages. \emph{Theoretical Population Biology}, 115, 69-80.
+#' \doi{10.1016/j.tpb.2017.04.002}
 #'
-#'  Hooley, D. E. 2000. Collapsed matrices with (almost) the same eigenstuff. The
-#'  College Mathematics Journal, 31(4), 297-299.
-#'  https://doi.org/10.1080/07468342.2000.11974162
+#' Hooley, D. E. (2000). Collapsed matrices with (almost) the same eigenstuff.
+#' \emph{The College Mathematics Journal}, 31(4), 297-299.
+#' \doi{10.1080/07468342.2000.11974162}
 #'
-#'  Salguero-Gomez, R. & Plotkin, J. B. 2010. Matrix dimensions bias
-#'  demographic inferences: implications for comparative plant demography. The
-#'  American Naturalist 176, 710-722. https://doi.org/10.1086/657044
+#' Salguero-Gomez, R. & Plotkin, J. B. (2010). Matrix dimensions bias
+#' demographic inferences: implications for comparative plant demography.
+#' \emph{The American Naturalist}, 176, 710-722. \doi{10.1086/657044}
 #'
 #' @examples
 #' # Example aggregation of a 3x3 projection matrix to 2x2 using groups:
@@ -537,7 +546,7 @@ mpm_aggregate <- function(matA = NULL,
            call. = FALSE)
     }
 
-    # Generation-to-generation matrix and its Perron eigenvalue
+    # Next generation matrix and its Perron eigenvalue
     K <- matR %*% N
     R0 <- spectral_radius(K)
 
@@ -588,8 +597,8 @@ mpm_aggregate <- function(matA = NULL,
   # Also return aggregated components where available
   out$matU_agg <- .aggregate(matU, P_eff, Q_eff)
 
-  # Reproduction returned as F + C (your rule)
-  out$matF_agg <- .aggregate(matR, P_eff, Q_eff)
+  # The aggregated F when available
+  out$matF_agg <- .aggregate(matF, P_eff, Q_eff)
 
   # Optional bookkeeping: C alone
   out$matC_agg <- .aggregate(matC, P_eff, Q_eff)
