@@ -8,5 +8,7 @@
 doc/
 Meta/
 check/
-/doc/
-/Meta/
+
+.Rcheck/
+*.Rcheck/
+..Rcheck/
