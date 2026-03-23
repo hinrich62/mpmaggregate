@@ -12,25 +12,24 @@ representations that remain comparable across studies.
 
 ## Installation
 
-You can install the development version from GitHub:
+Install the latest release of **mpmaggregate**:
 
 ```r
-# install.packages("pak")
-pak::pak("hinrich62/mpmaggregate")
-```
+install.packages(
+  "https://github.com/hinrich62/mpmaggregate/releases/download/v0.2.3/mpmaggregate_0.2.3.tar.gz",
+  repos = NULL,
+  type = "source"
+)
 
-Alternatively:
-
-```r
-# install.packages("remotes")
-remotes::install_github("hinrich62/mpmaggregate")
-```
-
-After installation, load the package:
-
-```r
 library(mpmaggregate)
+
+# Open package vignettes
+browseVignettes("mpmaggregate")
 ```
+
+This installs a pre-built version of the package that includes the vignettes.
+
+
 ## Overview
 
 The package provides tools for aggregating matrix population models (MPMs)
@@ -45,7 +44,7 @@ The main functions are:
 In addition, aggregation functions return effectiveness metrics that quantify
 the agreement between the original and aggregated models.
 
-See the package vignette for a detailed introduction and worked examples.
+See the package vignettes for a detailed introduction and worked examples.
 
 ## Minimal Example
 
@@ -68,7 +67,7 @@ out$elasticity
 
 ## Documentation
 
-After installation, the package vignettes can be viewed with:
+After installing the release version of the package, the vignettes can be viewed with:
 
 ```r
 browseVignettes("mpmaggregate")
