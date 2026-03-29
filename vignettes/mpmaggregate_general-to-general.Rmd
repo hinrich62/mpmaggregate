@@ -17,39 +17,37 @@ vignette: >
 ## Overview
 
 Matrix population models (MPMs) often differ in the number and definition of life-cycle 
-stages used to represent population structure, making comparisons difficult. This is 
-particularly common for size- or stage-structured models, where fine-grained stage 
-definitions may be aggregated to facilitate analysis, interpretation, 
-or comparison of MPMs.
+stages used to represent population structure, making comparisons difficult. This 
+heterogeneity is prevalent in models structured by age, stage, or size, referred 
+to here generically as stage-structured models. To facilitate comparison of MPMs 
+with differing stage resolutions, we use aggregation, whereby a complex model is 
+reduced to a simpler form by grouping stages. The idea is to choose these groupings 
+in such a way that the aggregated model is directly comparable with another model 
+that used those same groupings in its construction.
 
 In this vignette, we demonstrate how to aggregate a general MPM 
-to another general MPM using the `mpmaggregate` package. Unlike 
-aggregation approaches that modify the projection interval, general-to-general MPM
-aggregation reconciles differences in stage resolution while leaving the projection
-interval unchanged. Multiple fine-grained stages are combined into a smaller 
-set of biologically meaningful stages, yielding a simplified representation of the life 
-cycle.
+to another general MPM using the `mpmaggregate` package. Unlike Leslie-to-Leslie MPM 
+aggregation, which modifies the projection interval, general-to-general MPM aggregation 
+leaves the projection interval unchanged.  
 
-As a worked example, we use a size-structured matrix population model for *Rourea induta* 
+We demonstrate aggregation of a size-structured MPM for *Rourea induta* 
 originally published by Hoffmann (1999) and obtained from the COMPADRE database 
-(Salguero-Gómez et al., 2015), accessed via `Rcompadre` (Jones et al., 2022). 
-The model contains multiple fine-grained size stages and is therefore well suited 
-to illustrate how aggregation can be used to simplify stage structure while preserving 
+(Salguero-Gómez et al., 2015) via `Rcompadre` (Jones et al., 2022). 
+The model contains multiple fine-grained size stages and is well suited to illustrate 
+how aggregation can be used to simplify stage structure while preserving 
 key demographic properties (Salguero-Gómez & Plotkin, 2010).
 
-Throughout the vignette, we emphasize interpretation: how aggregation alters the 
+We emphasize interpretation throughout: how aggregation alters the 
 representation of the life cycle, what demographic information is preserved, and how 
 the resulting aggregated model can be used for comparison or subsequent demographic 
 analyses, such as estimating population growth rates, generation time, or elasticities. 
 Although *Rourea induta* is used here as an example, the approach is broadly applicable 
 to general stage-structured matrix population models across taxa.
 
-In addition, we emphasize how different aggregators influence the reduced model. 
+We also emphasize how different aggregators influence the reduced MPM. 
 The vignette compares all four alternative aggregation approaches of `mpm_aggregate()`, 
 which differ in the demographic quantities they are designed to preserve and in the 
-criteria used to fit aggregated transitions. By examining similarities and differences 
-among these approaches, we illustrate how methodological choices affect the structure 
-and interpretation of aggregated stage-structured models.
+criteria used to fit aggregated transitions.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -60,11 +58,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Packages
-We begin by loading the packages used to access matrix population models, perform 
-matrix aggregation, and format output for display.
+## Loading packages
+We begin by loading the `mpmaggregate` package, which provides the functions used 
+throughout this vignette for aggregating matrix population models under the \(\lambda\) 
+and \(R_0\) demographic frameworks. The package `knitr` is used for report generation, 
+and `kableExtra` is used for
+table formatting.
+
 ```{r packages}
 library(mpmaggregate)
+library(knitr)
 library(kableExtra)
 ```
 
@@ -76,6 +79,9 @@ which has a projection interval of 1 year.
 ```{r fetch-comadre}
 # Example matrices used in the general-to-general MPM aggregation examples below
 # Population projection matrix for Rourea induta
+
+# Not run: requires Rcompadre and internet access
+
 # MatrixID = 246781
 # Matrices can be retrieved with:
 # library(Rcompadre)
@@ -86,7 +92,9 @@ which has a projection interval of 1 year.
 # matF <- matF(mpm)[[1]]
 # matC <- matC(mpm)[[1]]
 
-# Not run: requires Rcompadre and internet access
+
+# The matrices are defined locally so that Rcompadre and internet access
+# are not required
 
 # Population projection matrix
 matA <- matrix(c(
@@ -230,7 +238,7 @@ We aggregate the model using the following four combinations of framework and cr
 
 In the \(\lambda\) framework, we consider both standard aggregation and elasticity-consistent 
 aggregation. Standard aggregation follows the method of Hooley (2000), while elasticity-consistent 
-aggregation uses the "genealogical collapsing" method of Bienvenu et al. (2017). Both approaches 
+aggregation uses the "genealogical collapse" method of Bienvenu et al. (2017). Both approaches 
 maintain the consistency of the asymptotic population growth rate \(\lambda\) and 
 stable stage distribution. Elasticity-consistent aggregation additionally maintains
 consistency of the reproductive values and the elasticities of \(\lambda\) with respect 
@@ -415,7 +423,7 @@ aggregation, with effectiveness values exceeding 0.99.
 ### Interpretation notes
 
 - Aggregation under the \(\lambda\) framework prioritizes preservation of long-term population growth.
-- Aggregation under the \(R_0\) framework emphasizes lifetime reproductive output.
+- Aggregation under the \(R_0\) framework prioritizes preservation net reproductive rate.
 
 ## Elasticities of \(\lambda\): making them comparable across models
 
@@ -433,7 +441,7 @@ where \( \mathbf{E}\!\bigl(\mathbf{A}\bigr) \) is the elasticity of
 \( \lambda \) with respect to the entries of the original projection
 matrix \( \mathbf{A} \), and \( \mathbf{P} \) is the partitioning matrix
 induced by `groups`. Elasticities for each aggregated model are then
-computed directly from its aggregated projection matrix, and the results
+computed directly from its aggregated population projection matrix, and the results
 for all models are plotted together.
 
 ```{r elasticities}
@@ -490,7 +498,7 @@ colnames(elast_mat) <- entries
 ### Plot elasticities of \(\lambda\) by matrix entry
 
 Each x-axis category corresponds to a matrix entry \([i,j]\) that is nonzero in at least 
-one of the five projection matrices. Within each category, elasticities are shown for 
+one of the five populationb projection matrices. Within each category, elasticities are shown for 
 the original model and the four aggregated models.
 
 **Figure 1. Elasticities of \(\lambda\) with respect to matrix entries.**  
@@ -564,11 +572,11 @@ par(op)
 ```
 
 **How to read Figure 1.** Each x-axis label corresponds to a vital rate represented by 
-a matrix entry \([i,j]\). Fertility entries \(F[i,j]\) describe sexual reproduction, 
+a matrix entry \([i,j]\). Fertility rates \(F[i,j]\) describe sexual reproduction, 
 representing the contribution of individuals in stage \(i\) to seedling production 
-over the projection interval. Clonal reproduction entries \(C[i,j]\) represent the 
+over the projection interval. Clonal reproduction rates \(C[i,j]\) represent the 
 contribution of individuals in stage \(i\) to the production of suckers over the 
-projection interval. Survival and transition entries \(U[i,j]\) give the probability 
+projection interval. Survival and transition probabilities \(U[i,j]\) give the probability 
 that an individual in stage \(i\) survives and transitions to stage \(j\) over the 
 projection interval.
 
@@ -589,7 +597,7 @@ where \( \mathbf{E}\!\bigl(\mathbf{A}\bigr) \) is the elasticity of
 \( R_0 \) with respect to the entries of the original projection
 matrix \( \mathbf{A} \), and \( \mathbf{P} \) is the partitioning matrix
 induced by `groups`. Elasticities for each aggregated model are then
-computed directly from its aggregated projection matrix, and the results
+computed directly from its aggregated population projection matrix, and the results
 for all models are plotted together.
 
 ```{r elasticities of R0}
@@ -598,8 +606,9 @@ for all models are plotted together.
 P <- mpm_partition(groups=groups, n=nrow(matA))
 
 # Elasticity matrices in aggregated space (k x k) for each model
-# The elasticity matrix of the original model is projected into the
-# aggregated space using the partitioning matrix P.
+# The elasticity matrix of the original model is presented in its aggregated
+# form using the partitioning matrix P. This is the true aggregated form of the elasticity matrix
+# to which elasticities derived from aggregated models are compared.
 E_A <- mpm_elasticity(matF=matF,matU=matU,framework="R0", normalize=TRUE)$elasticity
 E_list <- list(
   "Original" = P %*% E_A %*% t(P),
@@ -718,11 +727,11 @@ legend(
 par(op)
 ```
 **How to read Figure 2.** Each x-axis label corresponds to a vital rate represented by 
-a matrix entry \([i,j]\). Fertility entries \(F[i,j]\) describe sexual reproduction, 
+a matrix entry \([i,j]\). Fertility rates \(F[i,j]\) describe sexual reproduction, 
 representing the contribution of individuals in stage \(i\) to seedling production 
-over the projection interval. Clonal reproduction entries \(C[i,j]\) represent the 
+over the projection interval. Clonal reproduction rates \(C[i,j]\) represent the 
 contribution of individuals in stage \(i\) to the production of suckers over the 
-projection interval. Survival and transition entries \(U[i,j]\) give the probability 
+projection interval. Survival and transition probabilities \(U[i,j]\) give the probability 
 that an individual in stage \(i\) survives and transitions to stage \(j\) over the 
 projection interval.
 
@@ -769,11 +778,11 @@ parameters can sometimes be to even small deviations of the stable growth rate a
 unity.
 
 Despite these differences in scalar demographic quantities, elasticity patterns are 
-remarkably consistent across frameworks. Elasticities of \(\lambda\) and 
-\(R_0\) identify the same matrix entries as dominant contributors, with most of the elasticity 
+remarkably consistent across frameworks. Elasticities of \(\lambda\) and \(R_0\) identify 
+the same matrix entries as dominant contributors, with most of the elasticity 
 mass shared between them. This consistency suggests that, in this example, the 
-demographic processes driving population growth and reproductive output are essentially 
-the same, even when different aggregation objectives are used.
+demographic processes driving stable population growth and net reproductive rate 
+are similar, even when different aggregation objectives are used.
 
 ## References
 

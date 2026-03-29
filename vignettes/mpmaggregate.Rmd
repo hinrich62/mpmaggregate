@@ -38,20 +38,19 @@ the essential demographic behavior of the population.
 
 ### Demographic frameworks: \(\lambda\) and \(R_0\)
 
-Aggregation methods can be defined with respect to different demographic
-quantities. In matrix population models, two commonly used measures of growth
+Aggregation methods can be defined by the demographic quantities they are designed to 
+preserve. In matrix population models, two commonly used measures of growth
 are the population growth rate \(\lambda\) and the net reproductive rate \(R_0\).
-These quantities describe different aspects of population dynamics and therefore
-lead to different perspectives on aggregation.
+These quantities describe different aspects of population dynamics, and therefore
+preserving them leads to different frameworks for aggregation.
 
 The quantity \(\lambda\) is the dominant eigenvalue of the population projection matrix and 
-describes stable population growth per time step (Caswell, 2001). By contrast, 
+describes stable population growth per time step (Caswell, 2001). The quantity 
 \(R_0\) measures expected lifetime reproductive output and is interpreted 
-from a cohort-based perspective rather than a population-based one (Caswell, 2011). 
-In matrix population models, \(R_0\) is calculated from the next-generation matrix 
-\(F(I-U)^{-1}\) (Diekmann et al., 1990; Caswell, 2001).
+from a cohort-based perspective (Caswell, 2011). In MPMs, \(R_0\) is calculated from 
+the next-generation matrix \(F(I-U)^{-1}\) (Diekmann et al., 1990; Caswell, 2001).
 
-Although \(\lambda\) and \(R_0\) share the same persistence threshold, with 
+Although \(\lambda\) and \(R_0\) share the same population growth threshold, with 
 \(\lambda > 1\) if and only if \(R_0 > 1\), they summarize different aspects 
 of demography: \(\lambda\) emphasizes population trajectories through time, 
 whereas \(R_0\) emphasizes lifetime reproductive pathways through the life cycle 
@@ -83,15 +82,15 @@ knitr::include_graphics("figures/Slide1.PNG")
 ### Aggregation criteria: standard and elasticity-consistent
 
 Within each framework, users may choose between **standard aggregation**, which maintains 
-consistency of the stable population growth rate and stable stage distribution, and 
-**elasticity-consistent aggregation** (Hooley, 2000; Salguero-Gómez & Plotkin, 2010),  
+consistency of the stable population growth rate and stable stage distribution 
+(Hooley, 2000; Salguero-Gómez & Plotkin, 2010), and **elasticity-consistent aggregation**, 
 which additionally maintains consistency in reproductive values and elasticities 
 (Bienvenu et al., 2017). These aggregators are applied in two forms: general-to-general
 MPM aggregation and Leslie-to-Leslie MPM aggregation (Hinrichsen, 2023; 
 Hinrichsen et al., 2026). 
 
 When applying general-to-general MPM aggregation, the projection interval of the aggregated
-matrix does not change. In contrast, when applying Leslie-to-Leslie aggregation, the
+matrix does not change. But when applying Leslie-to-Leslie MPM aggregation, the
 projection interval changes because, in a Leslie MPM, the projection interval is equal
 to the age-class width, which increases with the level of aggregation
 (Hinrichsen et al., 2026).
@@ -100,23 +99,27 @@ to the age-class width, which increases with the level of aggregation
 Two primary functions are provided. The function `mpm_aggregate()` aggregates general 
 stage-structured MPMs (Caswell, 2001) to coarser stage classifications, whereas 
 leslie_aggregate() is designed specifically for age-structured Leslie matrices 
-(Leslie, 1945) and returns a lower-dimensional Leslie matrix that preserves Leslie 
-structure.  In both cases, aggregation is accompanied by an effectiveness metric 
-that quantifies the degree of agreement between the aggregated and original models. 
-Values close to 1 indicate minimal aggregation error and strong agreement, whereas 
-smaller values reflect increasing approximation.
+(Leslie, 1945) and returns a lower-dimensional Leslie matrix.  In both cases, 
+aggregation is accompanied by an effectiveness metric that quantifies the degree 
+of agreement between the aggregated and original models. Values close to 1 indicate 
+minimal aggregation error and strong agreement, whereas smaller values reflect 
+increasing approximation.
 
 Together, these tools make it possible to simplify complex matrix models, compare
 models constructed at different resolutions, and explore how demographic conclusions 
 depend on the level of aggregation.
 
-## Loading `mpmaggregate`
+## Loading packages
+
 We begin by loading the `mpmaggregate` package, which provides the functions used 
 throughout this vignette for aggregating matrix population models under the \(\lambda\) 
-and \(R_0\) demographic frameworks.
+and \(R_0\) demographic frameworks. The package `expm` is used to raise a matrix
+to a power, `knitr` is used for report generation, and `kableExtra` is used for
+table formatting.
+
 ```{r}
 library(mpmaggregate)
-library (expm)
+library(expm)
 library(knitr)
 library(kableExtra)
 ```

@@ -1,5 +1,9 @@
 #Changelog
 
+# mpmaggregate 0.2.4  (2026-03-28)
+
+- Improved vignettes
+
 # mpmaggregate 0.2.3  (2026-03-22)
 
 - Added documentation explaining effectiveness of aggregation.

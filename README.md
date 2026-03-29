@@ -16,7 +16,7 @@ Install the latest release of **mpmaggregate**:
 
 ```r
 install.packages(
-  "https://github.com/hinrich62/mpmaggregate/releases/download/v0.2.3/mpmaggregate_0.2.3.tar.gz",
+  "https://github.com/hinrich62/mpmaggregate/releases/download/v0.2.4/mpmaggregate_0.2.4.tar.gz",
   repos = NULL,
   type = "source"
 )

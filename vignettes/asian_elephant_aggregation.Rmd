@@ -26,20 +26,20 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-Age-structured matrix population models (MPMs) often differ in both age-class resolution 
+Age-structured matrix population models (MPMs) can differ in age-class width
 and projection interval, even when describing the same species. This creates 
-a common practical problem in comparative demography: how can models that represent 
-life cycles at different temporal scales be made comparable?
+a practical problem in comparative demography: how can models that represent 
+life cycles at different temporal resolution be compared?
 
 In this vignette, we demonstrate how to use the package **`mpmaggregate`** to aggregate a 
 fine-grained, annual (1-year) Asian elephant Leslie MPM into a coarser, 5-year 
 Leslie MPM, and then compare the aggregated model to an independently parameterized coarser 
-Leslie model representing a different population. Because age classes in a Leslie model 
+Leslie MPM that represents a different population. Because age classes in a Leslie model 
 are defined by the model’s time step, aggregating from 1-year to 5-year intervals 
 necessarily redefines the age-class structure (i.e., age classes become 5-year bins) 
 while producing transitions appropriate to the longer projection interval.
 
-We illustrate this aggregation and comparison using two Asian elephant populations from
+We illustrate this approach using two Asian elephant populations from
 **COMADRE** database (Salguero‐Gómez et al. 2016) accessed via **`Rcompadre`** (Jones et al. 2022):
 
 - Population/model ID: **249273** — a coarser model with a 5-year projection interval, 
@@ -48,11 +48,11 @@ Nagarhole National Park population, India (Chelliah et al. 2013)
 Periyar Reserve population, India (Goswami et al. 2014)
 
 Both MPMs are Leslie matrix models parameterized using a post-breeding census formulation. 
-Our primary focus is the aggregation of the model for the Priiyar Reserve population
-with an annual projection interval to a model with a 5-year projection interval. To do this, we use 
-`leslie_aggregate()`, which performs Leslie-to-Leslie MPM aggregation under four alternative assumptions 
-defined by the choice of demographic **framework** (`"lambda"` or `"R0"`) and 
-**criterion** (`"standard"` or `"elasticity"`):
+Our focus is the aggregation of the Leslie MPM for the Priiyar Reserve population
+with an annual projection interval to a Leslie MPM with a 5-year projection interval. 
+To do this, we use `leslie_aggregate()`, which performs Leslie-to-Leslie MPM aggregation 
+under four alternative assumptions defined by the choice of demographic **framework** 
+(`"lambda"` or `"R0"`) and **criterion** (`"standard"` or `"elasticity"`):
 
 1. `framework = "lambda"`, `criterion = "standard"`  
 2. `framework = "lambda"`, `criterion = "elasticity"`  
@@ -61,14 +61,18 @@ defined by the choice of demographic **framework** (`"lambda"` or `"R0"`) and
 
 `criterion = "elasticity"` implies elasticity-consitent aggregation (Hinrichsen et al., 2026).
 
-Throughout, we emphasize uncovering the important demographic differences between the two
+Throughout, we seek to uncover the substantive demographic differences between the two
 Asian elephant populations, using $\lambda$, $R_0$, generation times, and elasticities.  We also 
-examine at how results differ depending on  framework 
+examine at how results differ depending on framework 
 (`"lambda"` or `"R0"`) and criterion  (`"standard"` or `"elasticity"`).
 
-## Packages
-We begin by loading the packages used to access matrix population models, perform 
-matrix aggregation, and format output for display.
+## Loading packages
+
+We begin by loading the `mpmaggregate` package, which provides the functions used 
+throughout this vignette for aggregating matrix population models under the \(\lambda\) 
+and \(R_0\) demographic frameworks. The package `knitr` is used for report 
+generation, and `kableExtra` is used for table formatting.
+
 ```{r packages}
 library(mpmaggregate)
 library(kableExtra)
@@ -92,18 +96,18 @@ The Asian Elephant data is stored in the data directory.  Retrieve data using da
 # matA_elephant1 <- matA_elephant1[1:12,1:12]            # Confine to females 
 # mpm_elephant2 <- comadre[comadre$MatrixID == 249274, ]
 # matA_elephant2 <- matA(mpm_elephant2)[[1]]             # Projection interval is 1 year
-# matA_elephant2[60, 60] <- 0                            # Make a true Leslie Matrix
+# matA_elephant2[60, 60] <- 0                            # Remove statis to form a true Leslie Matrix
 # usethis::use_data(matA_elephant1, matA_elephant2,      # Write data (development)
 # overwrite = TRUE)    
 
-
+# Load data locally
 data(matA_elephant1, matA_elephant2, package="mpmaggregate")
 matA_coarse <- matA_elephant1 # 12x12 5-year projection interval
 matA_fine <- matA_elephant2   # 60x60 1-year projection interval
 ```
 ## Define the aggregation target
 
-We aggregate Periyar Reserve Asian elephant MPM from an annual time step to a 5-year time step, allowing
+We aggregate the Periyar Reserve Asian elephant MPM from an annual time step to a 5-year time step, allowing
 us to directly compare its vital rates to those of the Nagarhole National Park Asian elephant MPM.
 
 Rigorous methods for Leslie-to-Leslie MPM aggregation are implemented using the function 
@@ -111,12 +115,11 @@ Rigorous methods for Leslie-to-Leslie MPM aggregation are implemented using the 
 the asymptotic population growth rate, one uses `framework = "lambda"`. Alternatively, 
 if the goal is to preserve the net reproductive rate, one uses `framework = "R0"`.
 
-Within either framework, aggregation can be performed using a standard or an 
+Within either framework, aggregation is performed using a standard or an 
 elasticity-consistent criterion. The standard aggregator ensures consistency of the stable age 
 distribution implied by the model, while the elasticity-consistent aggregator additionally 
 ensures consistency of reproductive values. In the `R0` framework, the stable age distribution 
-is the cohort stable age distribution, and reproductive values are the 
-cohort reproductive values.
+is the cohort stable age distribution, and reproductive values are the cohort reproductive values.
 
 We now run `leslie_aggregate()` under the four combinations.
 
@@ -162,7 +165,7 @@ matB_R0_elast_eff <- res$effectiveness
 ## Comparison to an existing coarse (5-year) matrix
 
 The COMADRE matrix for Asian elephants in the Nagarhole National Park already has 
-`ProjectionInterval == 5`, so we compare the aggregated annual-to-5-year matrices 
+`ProjectionInterval == 5`, so we compare the aggregated 5-year matrices 
 for Asian elephants in the Periyar Reserve against it.
 
 ## Demographic metrics for Leslie matrices 
@@ -174,6 +177,7 @@ rate \( \mathbf{F} \)components.
 
 ```{r leslie-metrics}
 
+# Decompose a Leslie matrix into its components U and F
 leslie_UF <- function(A) {
   F <- matrix(0, nrow(A), ncol(A))
   F[1, ] <- A[1, ]
@@ -182,6 +186,7 @@ leslie_UF <- function(A) {
   list(U = U, F = F)
 }
 
+# Return R0, the net reproductive rate
 get_R0_leslie <- function(A) {
   uf <- leslie_UF(A)
   U <- uf$U
@@ -193,6 +198,7 @@ get_R0_leslie <- function(A) {
   spectral_radius(K)
 }
 
+# Return generation time in the lambda framework
 get_generation_time_lambda <- function(A) {
   uf <- leslie_UF(A)
   U <- uf$U
@@ -203,6 +209,7 @@ get_generation_time_lambda <- function(A) {
   return(gt)
 }
 
+# Return cohort generation time
 get_generation_time_R0 <- function(A) {
   uf <- leslie_UF(A)
   U <- uf$U
@@ -231,6 +238,7 @@ models <- list(
 
 ```{r lambda - r0 - table}
 
+#Form the data frame that contains the table information
 results <- data.frame(
   Model  = names(models),
   lambda = sapply(models, spectral_radius),
@@ -245,6 +253,7 @@ results <- data.frame(
 
 n_rows <- nrow(results)
 
+#Construct a table using function kable
 knitr::kable(
   results,
   col.names = c(
@@ -325,7 +334,7 @@ the Figure Legend are as described in the caption of Table 1.
 # Write image 
 # png::writePNG(unclass(img), "inst/extdata/elephant.png")
 
-
+#Load the image file that is stored locally 
 img_file <- system.file("extdata", "elephant.png", package = "mpmaggregate")
 
 if (!nzchar(img_file)) {
@@ -460,14 +469,14 @@ par(xpd = FALSE)
 
 par(op)
 ```
-**How to read Figure 1.** Each x-axis label is a vital rate. For fertility, \(F_i\) 
+**How to read Figure 1.** Each x-axis label is a vital rate. Fertility rate, \(F_i\) 
 is the contribution of age class \(i\) to newborns over the projection interval. 
-For survival, \(S_i\) is the probability of surviving and advancing from age class \(i\) 
+Survival probability, \(S_i\) is the probability of surviving and advancing from age class \(i\) 
 to \(i+1\) over the projection interval. Because the four aggregated matrices are 
 all 5-year models, differences among them reflect the aggregation objective
 (\(\lambda\) vs \(R_0\)) and the fitting criterion (standard vs elasticity-consistent), 
 rather than differences in projection interval. The figure shows that the Nagarhole 
-National Park population has lower growth rate than the Periyar Reserve population 
+National Park population has lower population growth rate than the Periyar Reserve population 
 due to lower fertility rates.The silhouette is from PhyloPic 
 (https://www.phylopic.org; Keesey, 2023) and were added using the rphylopic R 
 package (Gearty & Jones, 2023). The silhouette was contributed as follows: 
@@ -496,7 +505,7 @@ figure legend are as described in the caption of Table 1.
 # Write image 
 # png::writePNG(unclass(img), "inst/extdata/elephant.png")
 
-
+#Load a local copy of the image file
 img_file <- system.file("extdata", "elephant.png", package = "mpmaggregate")
 
 if (!nzchar(img_file)) {
@@ -645,7 +654,7 @@ Elasticities quantify the proportional effect on \(R_0\) of proportional changes
 in each vital rate. Panel (a) shows elasticities with respect to fertility rates 
 (first row), and panel (b) shows elasticities with respect to survival probabilities 
 (subdiagonal). Bars are grouped by vital rate, with colors indicating the five
-different models ((original coarse model for the Nagarhole National Park population  
+different models (original coarse model for the Nagarhole National Park population  
 and four 5-year aggregations of the model for the Periyar Reserve population).
 Elasticities are normalized to sum to 1 within each matrix, so the panels 
 show how the influence on \(R_0\) is distributed across life-history components. 
@@ -806,10 +815,10 @@ par(op)
 ```
 **How to read Figure 3.** A larger elasticity (of \(R_0\) with respect to matrix 
 entries) for a given vital rate means that small proportional changes to that vital 
-rate would have a comparatively larger effect on long-term population growth. For 
+rate would have a comparatively larger effect on net reproductive rate. For 
 Asian elephants, elasticities are  concentrated in survival probabilities rather 
 than fertility rates, reflecting the strong influence of survivorship on \(R_0\). 
-Aggregation methods yield similar elasticities.  Fertility rates and late-life 
+Aggregation methods yield similar elasticities.  Late-life fertility rates and
 survival probabilities have higher elasticities in the Nagarhole National Park 
 population than in the Periyar Reserve population.The silhouette is from PhyloPic 
 (https://www.phylopic.org; Keesey, 2023) and were added using the rphylopic R 
@@ -844,17 +853,17 @@ the dominant contributor in both cases.
 
 ## Summary
 
-This vignette demonstrates how age-structured matrix population models defined at 
-different projection intervals can be made comparable through aggregation using 
-`leslie_aggregate()`. By aggregating an annual Leslie model for the Asian elephant 
-Periyar Reserve population to a 5-year time step, we directly compared it to an independently 
-parameterized coarser model representing the Nagarhole National Park population.
+This vignette demonstrates how age-structured matrix population models (MPMs) defined with 
+different projection intervals can be compared by aggregating the coarser model with
+`leslie_aggregate()`. Aggregating the annual Leslie MPM for the Asian elephant 
+Periyar Reserve population to a 5-year Leslie MPM allowed us to directly 
+compare it to a 5-year Leslie MPM of the Nagarhole National Park population.
 
 Estimates of \(\lambda\) and \(R_0\) for the Periyar Reserve population indicate faster 
 population growth and shorter generation time relative to the Nagarhole National Park 
-population (Table 1). The lower growth rate of the Nagarhole National Park population 
-is primarily attributable to lower fertility rates, as reflected in the aggregated 
-models (Figure 1). Elasticities indicate the survival probability dominates fertility rates
+population (Table 1). The lower population growth rate of the Nagarhole National Park population 
+is attributable to lower fertility rates, as demonstrated by Figure 1. 
+Elasticities indicate the survival probability dominates fertility rates
 as the most influential group of vital rates controlling \(\lambda\) and \(R_0\).
 
 

@@ -26,18 +26,20 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-Matrix population models (MPMs) are often constructed at different levels of age 
-or stage resolution, which can complicate comparison across models. For age-structured 
-populations, this commonly occurs when a finely resolved Leslie matrix must be compared 
-with a coarser age-structured representation. In this setting, aggregation can be 
-used to collapse fine age classes into a smaller number of broader age groups, 
-yielding a coarser Leslie matrix that is directly comparable to the original while 
-retaining its key demographic properties.
+Matrix population models (MPMs) are constructed at different age or stage resolutions, 
+which complicates demographic comparisons across populations. For age-structured populations, 
+such complications arise when a Leslie matrix model (MPM1) with a small age-class 
+width is compared with a coarser Leslie matrix model (MPM2). In such a case, aggregation 
+can be used to group fine age classes of MPM1 into a smaller number of wider age classes 
+that are compatible with MPM2, thus allowing direct comparison of the demographic 
+features. Aggregation must proceed carefully because certain demographic parameters 
+are known to change with aggregation.
 
-In this vignette, we demonstrate how to aggregate a Leslie matrix population model to
-another Leslie matrix population model using the `mpmaggregate` package. Leslie-to-Leslie
-aggregation reconciles differences in age resolution while keeping the model within the
-Leslie class of age-structured projection matrices.
+In this vignette, we demonstrate Leslie-to-Leslie MPM aggregation using the 
+`mpmaggregate` package. Leslie-to-Leslie MPM aggregation proceeds by reducing the number of
+age classes of the Leslie MPM while retaining its Leslie form. Unlike general-to-general 
+MPM aggregation, Leslie-to-Leslie MPM aggregation changes the projection interval to ensure that 
+it is equal to the age-class width.
 
 As a worked example, we use an age-structured matrix population model for the
 yellow-bellied marmot *Marmota flaviventris* obtained from the COMADRE database
@@ -46,10 +48,13 @@ Ozgul et al. (2009). We focus on aggregation using `leslie_aggregate()`, and we 
 four combinations of demographic framework and aggregation criterion, highlighting what
 each approach preserves and how the aggregated models differ in interpretation.
 
-## Packages
+## Loading packages
 
-We begin by loading the packages used to access matrix population models, perform matrix
-aggregation, and format output for display.
+We begin by loading the `mpmaggregate` package, which provides the functions used 
+throughout this vignette for aggregating matrix population models under the \(\lambda\) 
+and \(R_0\) demographic frameworks. The package `expm` is used to raise a matrix
+to a power, `knitr` is used for report generation, and `kableExtra` is used for
+table formatting.
 
 ```{r packages}
 library(mpmaggregate)
@@ -60,10 +65,11 @@ library(expm)
 
 ## Data acquisition
 
-To demonstrate Leslie-to-Leslie aggregation, we use a 10 × 10 age-structured matrix
-population model for *Marmota flaviventris* (MatrixID **249455**) from the COMADRE database
-(Ozgul et al. 2009). The model contains multiple fine-grained age classes, making it a
-suitable candidate for Leslie-to-Leslie aggregation (Hinrichsen, 2023; Hinrichsen et al., 2026).
+To demonstrate Leslie-to-Leslie MPM aggregation, we use an age-structured MPM for
+*Marmota flaviventris* (MatrixID **249455**) from the COMADRE database
+(Ozgul et al. 2009). We aggregate this Leslie MPM with 10 age classes to a Leslie MPM
+with 5 age classes. Age classes 1-2 are combined to form a new age class 1, age classes 3-4 
+are combined to form a new age class 2, etc..
 
 The yellow-bellied marmot *Marmota flaviventris* is a large, stout-bodied ground squirrel
 (rodent) native to the mountainous regions of western North America.
@@ -71,6 +77,8 @@ The yellow-bellied marmot *Marmota flaviventris* is a large, stout-bodied ground
 ```{r}
 # Leslie population projection matrix for Marmota flaviventris
 # MatrixID = 249455
+
+# Not run: requires Rcompadre and internet access
 
 # Matrices can be retrieved with:
 # library(Rcompadre)
@@ -80,7 +88,8 @@ The yellow-bellied marmot *Marmota flaviventris* is a large, stout-bodied ground
 # matU <- matU(mpm)[[1]]
 # matF <- matF(mpm)[[1]]
 
-# Not run: requires Rcompadre and internet access
+
+# Matrices are defined locally to avoid requiring the use of the internet and Rcompadre
 
 # Leslie population projection matrix
 matA <- matrix(c(
@@ -142,6 +151,7 @@ We compute:
 ```{r helpers}
 `%||%` <- function(x, y) if (!is.null(x)) x else y
 
+# Return R0, the net reproductive rate
 get_R0 <- function(U, F) {
   I <- diag(nrow(U))
   N <- solve(I - U)
@@ -149,10 +159,12 @@ get_R0 <- function(U, F) {
   spectral_radius(K)
 }
 
+# Return generation time
 get_Ta <- function(U, F) {
   generation_time(F, U, framework = "lambda")$generation_time
 }
 
+# Return cohort generation time
 get_Tc <- function(U, F) {
   generation_time(F, U, framework = "R0")$generation_time
 }
@@ -168,17 +180,19 @@ We aggregate the model using the following four combinations of framework and cr
 4. `framework = "R0"`, `criterion = "elasticity"`
 
 In the \(\lambda\) framework, standard aggregation follows the method of Hooley (2000),
-while elasticity-consistent aggregation was first described by Bienvenu et al. (2017)
-and extended to handle Leslie-to-Leslie aggregation (Hinrichsen, 2023; Hinrichsen et al., 2026).
-Both approaches maintain  consistency of the asymptotic growth rate \(\lambda\) and the stable
-age distribution. Elasticity-consistent aggregation additionally maintains consistency
-of the reproductive values and the elasticities of \(\lambda\) with respect to entries of 
-\( \mathbf{A}^k \), where \(k = n/m\).
+while elasticity-consistent aggregation follows Bienvenu et al. (2017).
+These methods are extended to Leslie-to-Leslie aggregation (Hinrichsen, 2023; 
+Hinrichsen et al., 2026). Both approaches maintain  consistency of the asymptotic 
+growth rate \(\lambda\) and the stable age distribution. Elasticity-consistent aggregation 
+additionally maintains consistency of the reproductive values and the elasticities 
+of \(\lambda^k\) with respect to entries of \( \mathbf{A}^k \), where \(k = n/m\).
 
-We extend these approaches to the \(R_0\) framework, where standard aggregation maintains the 
-consistency of the net reproductive rate \(R_0\) and cohort stable age distribution.
-Elasticity-consistent aggregation in this framework additionally maintains the consistency of
-the cohort reproductive values and elasticities of \(R_0\) with respect to matrix entries.
+We extend these Leslie-to-Leslie approaches to the \(R_0\) framework, where standard 
+aggregation maintains the consistency of the net reproductive rate \(R_0\) and cohort 
+stable age distribution. Elasticity-consistent aggregation in this framework 
+additionally maintains the consistency of the cohort reproductive values and 
+elasticities of \(R_0\) with respect to matrix entries of \( \mathbf{A}_k \),
+which is a k-step-ahead version of \( \mathbf{A}\) in the \(R_0\) framework.
 
 ```{r aggregate}
 # Aggregate into 5 x 5 matrices (m = 5)
@@ -254,17 +268,17 @@ print("Agg R0 + standard");  m3$A
 print("Agg R0 + elasticity");m4$A
 ```
 
-**Important.** Unlike general-to-general aggregation, Leslie-to-Leslie aggregation cannot
-produce survival probabilities greater than 1. It is always true that the survival
-probabilities are the same under standard and elasticity-consistent aggregation within each
-framework, while the fertility schedules can differ between the standard and elasticity-consistent
-aggregated Leslie matrices (Hinrichsen et al., 2026).
+**Important.** Unlike general-to-general MPM aggregation, Leslie-to-Leslie MPM aggregation 
+cannot produce survival probabilities greater than 1. Furthermore, within each framework, 
+the survival probabilities are the same under standard and elasticity-consistent 
+aggregation, while the fertility schedules can differ between the standard and 
+elasticity-consistent aggregated Leslie matrices (Hinrichsen et al., 2026).
 
 ## Compare \(\lambda\), \(R_0\), \(T_a\), and \(T_c\) in a table
 
 ```{r results-table alt}
 # Adjust lambdas so that they are all per capita growth rate over a year
-# Adjust generation times so they are all based on years
+# Adjust generation times so they all use units of 1 year
 adj = c(1,2,2,2,2)
 
 lambda = sapply(models, function(m) spectral_radius(m$A))
@@ -333,14 +347,14 @@ rows report estimates obtained from aggregated Leslie matrices.
 
 ### Interpretation notes
 
-- Aggregation under the **\(\lambda\) framework** prioritizes consistency of long-term population growth.
+- Aggregation under the **\(\lambda\) framework** prioritizes consistency of stable population growth rate.
 - Aggregation under the **\(R_0\) framework** prioritizes consistency of net reproductive rate.
 
 
 ## Elasticities of \(\lambda\): making them comparable across models
 
 To make the elasticities of the original model comparable with those of the
-aggregated models, we transform the original elasticity matrix to the
+aggregated models, we map the original elasticity matrix to the
 aggregated age structure as
 
 \[
@@ -353,7 +367,7 @@ where \( \mathbf{E}\!\bigl(\mathbf{A}^{k}\bigr) \) is the elasticity of
 \( \lambda^{k} \) with respect to the entries of the original
 \( \mathbf{A}^{k} \), and \( \mathbf{P} \) is the partitioning matrix
 induced by `groups`. Elasticities for each aggregated model are then
-computed directly from its aggregated projection matrix, and the results
+computed directly from its aggregated population projection matrix, and the results
 for all models are plotted together.
 
 ```{r elasticities-lambda^k}
@@ -364,7 +378,7 @@ groups <- list(c(1,2), c(3,4), c(5,6), c(7,8), c(9,10))
 # Partitioning matrix induced by the age groups.
 # This matrix is constructed internally by leslie_aggregate(),
 # but we construct it explicitly here so it can be used to
-# project quantities from the original age-class space to the
+# map quantities from the original age-class space to the
 # aggregated space.
 P <- mpm_partition(groups = groups, n = nrow(matA))
 
@@ -375,7 +389,7 @@ k <- n / m
 
 matAk <- matA %^% k
 
-# Elasticity of lambda^k with respect to entries of A^k (closest to what aggregated matrices yield)
+# Elasticity of lambda^k with respect to entries of A^k
 E_A <- mpm_elasticity(matA = matAk, framework = "lambda")$elasticity
 
 E_list <- list(
@@ -419,19 +433,21 @@ the five \(A\) matrices. Within each category, we plot elasticities for the orig
 
 **Figure 1. Elasticities of \( \lambda^k \) with respect to matrix entries.**  
 Elasticities quantify the proportional change in \( \lambda^k \) resulting from proportional
-changes in individual vital rates. Bars are grouped by matrix entry, with colors indicating the
-five models. Because elasticities sum to 1 within each matrix, the figure illustrates how the
-influence on \( \lambda^k \) is distributed across life-history components. The models shown in
-the legend correspond to those described in Table 1.
+changes in entries of the entries of \( \mathbf{A}^{k} \) . Bars are grouped by matrix entry, 
+with colors indicating the five models. Because elasticities sum to 1 within each matrix, 
+the figure illustrates how the influence on \( \lambda^k \) is distributed across 
+life-history components. The models shown in the legend correspond to those described in Table 1.
 
 ```{r elasticity-plot, fig.width=12, fig.height=6}
+# Not run: requires internet access
+
 # Marmot 2012 Feb 2 by T. Michael Keesey, CC0 1.0, Marmota monax (Linnaeus 1758)
 # uuid <- "eee50efb-40dc-47d0-b2cb-52a14a5e0e51"
 # img <- get_phylopic(uuid = uuid, format = "raster", height = 869)
 # Write image 
 # png::writePNG(unclass(img), "inst/extdata/marmot.png")
-# Not run: requires internet access
 
+# Load image locally
 img_file <- system.file("extdata", "marmot.png", package = "mpmaggregate")
 
 if (!nzchar(img_file)) {
@@ -482,20 +498,22 @@ add_phylopic_base(
 par(op)
 ```
 
-**How to read Figure 1.** Each x-axis label corresponds to a vital rate represented by a matrix
-entry \([i,j]\). For fertility, \(F[i,j]\) denotes reproduction over the projection interval. For
-survival, \(U[i,j]\) gives the probability of surviving and transitioning from age class \(i\) to
-age class \(j\) over the projection interval. Note that there is exact agreement between the
-elasticities of models “Original” and “Agg \(\lambda\) + elasticity,” which is by design.
-The silhouette is from PhyloPic (https://www.phylopic.org; Keesey, 2023) and were added 
-using the rphylopic R package (Gearty & Jones, 2023). The silhouette was contributed as follows: 
-*Marmota monax* by  T. Michael Keesey (2012; CC0 1.0).
+**How to read Figure 1.** Each x-axis label corresponds to a vital rate represented 
+by a matrix entry in the aggregated space. Fertility rate, \(F[1,i]\) denotes 
+reproduction of age class \(i\) over the projection interval. Survival probability, 
+\(U[i+1,i]\) gives  the probability of surviving and transitioning from age class 
+\(i\) to age class  \(i+1\) over the projection interval. There is exact agreement 
+between the elasticities  of models “Original” and “Agg \(\lambda\) + elasticity,” 
+which is by design. The silhouette is from PhyloPic (https://www.phylopic.org; 
+Keesey, 2023) and were added  using the rphylopic R package (Gearty & Jones, 2023). 
+The silhouette was contributed as follows:  *Marmota monax* by  T. Michael Keesey 
+(2012; CC0 1.0).
 
 ## Elasticities of \(R_0\): making them comparable across models
 
 To make the elasticities of the original model comparable with those of the
-aggregated models, we transform the original elasticity matrix to the
-aggregated stage structure as
+aggregated models, we map the original elasticity matrix to the
+aggregated age structure as
 
 \[
 \mathbf{E}^{\mathrm{true}}_{\mathrm{agg}}
@@ -504,7 +522,7 @@ aggregated stage structure as
 \]
 
 where \( \mathbf{E}\!\left(\mathbf{A}_{k}\right) \) is the normalized elasticity of
-\( R_0 \) with respect to the entries of the \( k \)-step-ahead projection matrix
+\( R_0 \) with respect to the entries of the \( k \)-step-ahead population projection matrix
 \( \mathbf{A}_{k} \) in the \( R_0 \) framework, and \( \mathbf{P} \) is the partitioning
 matrix induced by `groups`. Elasticities for each aggregated model are then
 computed directly from its corresponding \( \mathbf{U}_{k} \) and
@@ -515,7 +533,7 @@ computed directly from its corresponding \( \mathbf{U}_{k} \) and
 # can be read independently)
 groups <- list(c(1,2), c(3,4), c(5,6), c(7,8), c(9,10))
 
-# Partitioning matrix induced by the stage groups.
+# Partitioning matrix induced by the age groups.
 # Constructed internally by leslie_aggregate(), but reproduced here
 # because it is used to map quantities to aggregated space.
 P <- mpm_partition(groups = groups, n = nrow(matA))
@@ -573,13 +591,16 @@ The elasticities of \(R_0\) are normalized to sum to 1, so each elasticity can b
 the fraction of the total contribution to \(R_0\) attributable to that matrix entry.
 
 ```{r elasticity-r0-plot, fig.width=12, fig.height=6}
+
+# Not run: requires internet access
+
 # Marmot 2012 Feb 2 by T. Michael Keesey, CC0 1.0, Marmota monax (Linnaeus 1758)
 # uuid <- "eee50efb-40dc-47d0-b2cb-52a14a5e0e51"
 # img <- get_phylopic(uuid = uuid, format = "raster", height = 869)
 # Write image 
 # png::writePNG(unclass(img), "inst/extdata/marmot.png")
-# Not run: requires internet access
 
+# Load the image file locally
 img_file <- system.file("extdata", "marmot.png", package = "mpmaggregate")
 
 #For development
@@ -624,23 +645,24 @@ add_phylopic_base(
 par(op)
 ```
 
-**How to read Figure 2.** Each x-axis label corresponds to a vital rate represented by a matrix
-entry \([i,j]\). For fertility, \(F[i,j]\) denotes reproduction over the projection interval. For
-survival, \(U[i,j]\) gives the probability of surviving and transitioning from age class \(i\) to
-age class \(j\) over the projection interval. Note that there is exact agreement between the
-elasticities of models “Original” and “Agg \(R_0\) + elasticity,” which is by design.
-The silhouette is from PhyloPic (https://www.phylopic.org; Keesey, 2023) and were added 
-using the rphylopic R package (Gearty & Jones, 2023). The silhouette was contributed as follows: 
-*Marmota monax* by  T. Michael Keesey (2012; CC0 1.0).
+**How to read Figure 2.** Each x-axis label corresponds to a vital rate represented 
+by a matrix entry in the aggregated space. Fertility rate, \(F[1,i]\) 
+denotes reproduction of age class \(i\) over the projection interval.  Survival 
+probability, \(U[i,i+1]\)  gives the probability of surviving and transitioning from 
+age class \(i\) to age  class \(i+1\) over the projection interval. There is exact 
+agreement between the elasticities of models “Original” and “Agg \(R_0\) + elasticity,” 
+which is by design. The silhouette is from PhyloPic (https://www.phylopic.org; 
+Keesey, 2023) and wereadded  using the rphylopic R package (Gearty & Jones, 2023). 
+The silhouette was contributed as follows: *Marmota monax* by  T. Michael Keesey 
+(2012; CC0 1.0).
 
 ### Comparing elasticities of \(\lambda^k\) and \(R_0\)
 
-Within each framework, true elasticities and those derived from aggregated matrices show strong
-qualitative agreement, regardless of aggregation method. Both approaches identify early survival
-and early fertility as dominant contributors to population performance for both \(\lambda^k\) and
-\(R_0\).
+Within each framework, true elasticities and those derived from aggregated matrices agree
+qualitatively, regardless of aggregation method. Both frameworks identify early survival
+and early fertility as dominant contributors \(\lambda^k\) and \(R_0\).
 
-Overall, fertility plays a larger role in determining \(R_0\) than \(\lambda^k\), accounting for
+Overall, fertility rates play a larger role in determining \(R_0\) than \(\lambda^k\), accounting for
 approximately 51\% versus 45\% of total elasticity mass, respectively. Across analyses,
 early survival probability (the transition \(U[2,1]\)) is the single most influential vital rate.
 
