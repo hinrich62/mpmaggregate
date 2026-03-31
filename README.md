@@ -119,6 +119,15 @@ https://github.com/hinrich62/mpmaggregate/issues
 
 When reporting a bug, please include a minimal reproducible example if possible.
 
+## Acknowledgements
+
+R.A.H. is grateful to Charlie Johnson for suggesting Leslie model 
+aggregation as a line of research during his graduate studies at Clemson University 
+and to Eric Howe, Yoh Iwasa, and Simon Levin for helpful discussions. R.S.-G. was 
+supported by a NERC Pushing the Frontiers grant (NE/X013766/1). H.Y. was supported 
+by JSPS KAKENHI Grant Number 25K09778.
+
+
 ## Dedication
 
 R. A. Hinrichsen dedicates this package to Robert Y. Dean, who introduced him to the 
