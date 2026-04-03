@@ -1,11 +1,11 @@
 citHeader("To cite the mpmaggregate package in publications:")
 
-citEntry(
-  entry = "Manual",
+bibentry(
+  bibtype = "Manual",
   key = "mpmaggregate",
   title = "mpmaggregate: Aggregate Matrix Population Models",
-  author = personList(
-    person(given = c("Richard","A."), family = "Hinrichsen"),
+  author = c(
+    person(given = c("Richard", "A."), family = "Hinrichsen"),
     person(given = "Hiroyuki", family = "Yokomizo"),
     person(given = "Roberto", family = "Salguero-Gomez")
   ),

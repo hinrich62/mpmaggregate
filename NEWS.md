@@ -1,5 +1,14 @@
 #Changelog
 
+# mpmaggregate 0.2.5  (2026-03-30)
+
+## Initial CRAN release
+
+- First release of the package on CRAN.
+- Provides tools for aggregating matrix population models under
+  lambda- and R0-based frameworks.
+- Includes vignettes demonstrating typical workflows and usage.
+
 # mpmaggregate 0.2.4  (2026-03-28)
 
 - Improved vignettes

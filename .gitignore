@@ -7,7 +7,6 @@
 
 doc/
 Meta/
-check/
 
 .Rcheck/
 *.Rcheck/

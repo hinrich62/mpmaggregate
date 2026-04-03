@@ -12,11 +12,17 @@ representations that remain comparable across studies.
 
 ## Installation
 
-Install the latest release of **mpmaggregate**:
+### Install from CRAN (recommended)
+
+```r
+install.packages("mpmaggregate")
+```
+
+### Install a specific release (includes vignettes)
 
 ```r
 install.packages(
-  "https://github.com/hinrich62/mpmaggregate/releases/download/v0.2.4/mpmaggregate_0.2.4.tar.gz",
+  "https://github.com/hinrich62/mpmaggregate/releases/download/v0.2.5/mpmaggregate_0.3.5.tar.gz",
   repos = NULL,
   type = "source"
 )
@@ -67,7 +73,7 @@ out$elasticity
 
 ## Documentation
 
-After installing the release version of the package, the vignettes can be viewed with:
+After installing the package, the vignettes can be viewed with:
 
 ```r
 browseVignettes("mpmaggregate")
@@ -109,7 +115,7 @@ https://doi.org/10.64898/2026.02.04.703802
 
 ## Status
 
-This package is under active development. Feedback, testing, and bug reports are welcome.
+This package is available on CRAN and under active development. Feedback, testing, and bug reports are welcome.
 
 ## Bug Reports and Feedback
 
