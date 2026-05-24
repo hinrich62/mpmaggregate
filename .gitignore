@@ -11,3 +11,4 @@ Meta/
 .Rcheck/
 *.Rcheck/
 ..Rcheck/
+.positai
