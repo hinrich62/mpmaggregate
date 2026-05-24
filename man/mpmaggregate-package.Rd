@@ -135,6 +135,7 @@ Bienvenu, F., Akçay, E., Legendre, S. & McCandlish, D.M. (2017). The genealogic
 
 Authors:
 \itemize{
+  \item Richard A. Hinrichsen \email{r.hinrichsen.ecology@gmail.com} (\href{https://orcid.org/0000-0003-0761-3005}{ORCID})
   \item Roberto Salguero-Gomez \email{rob.salguero@zoo.ox.ac.uk} (\href{https://orcid.org/0000-0002-6085-4433}{ORCID})
   \item Hiroyuki Yokomizo \email{hiroyuki.yokomizo@nies.go.jp} (\href{https://orcid.org/0000-0001-9814-8465}{ORCID})
 }

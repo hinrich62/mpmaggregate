@@ -22,7 +22,7 @@ install.packages("mpmaggregate")
 
 ```r
 install.packages(
-  "https://github.com/hinrich62/mpmaggregate/releases/download/v0.2.5/mpmaggregate_0.2.5.tar.gz",
+  "https://github.com/hinrich62/mpmaggregate/releases/download/v0.2.6/mpmaggregate_0.2.6.tar.gz",
   repos = NULL,
   type = "source"
 )

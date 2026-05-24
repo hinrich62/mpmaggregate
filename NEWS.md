@@ -1,5 +1,13 @@
 #Changelog
 
+# mpmaggregate 0.2.6  (2026-05-23)
+
+## Patch release
+
+- Corrected package citation information returned by `citation("mpmaggregate")`.
+- Corrected GitHub release installation instructions.
+- Removed `renv` project files from the public repository.
+
 # mpmaggregate 0.2.5  (2026-03-30)
 
 ## Initial CRAN release
